@@ -130,7 +130,7 @@ ok(results.innerHTML.indexOf("（目录口径") < 0, "行内无'（目录口径'
 ok(results.innerHTML.indexOf("未上榜(前50%以外或未开设)") < 0, "详情表无括号式'未上榜'");
 ok(results.innerHTML.indexOf("（点击设为意向专业）") < 0, "chip无'（点击设为意向专业）'");
 // 悬停提示应保留信息
-ok(results.innerHTML.indexOf("title=\"按教育部专业目录推断") >= 0, "大类招生徽章有悬停说明");
+ok(results.innerHTML.indexOf("title=\"所含专业已按该校实际开设情况筛减") >= 0, "大类招生徽章有悬停说明(按实际开设筛减)");
 ok(results.innerHTML.indexOf("｜点击设为意向专业") >= 0, "chip悬停提示含'点击设为意向专业'");
 
 console.log("== 我的选科功能 ==");

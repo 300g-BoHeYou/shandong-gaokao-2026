@@ -180,7 +180,7 @@ if syb_json.exists():
         syb_data = json.load(f)
     print("试验班查证数据条目:", len(syb_data))
 
-td_rows = []          # [sc, school, core, note, xk, score, rank, type, syb]
+td_rows = []          # [sc, school, core, note, xk, score, rank, type, syb, lei_majors]
 td_schools = set()
 type_map = {}
 xk_map = {}
@@ -204,7 +204,7 @@ for _, r in df.iterrows():
     typ = str(r["专项计划/中外合作"]).strip() if pd.notna(r["专项计划/中外合作"]) else "普通"
     syb_key = f"{sc}|{full}|{rank}"
     syb = syb_data.get(syb_key) if syb_data else None
-    td_rows.append([sc, school, core, note, xk, score, rank, typ, syb])
+    td_rows.append([sc, school, core, note, xk, score, rank, typ, syb, None])
     td_schools.add(school)
     type_map[typ] = type_map.get(typ, 0) + 1
     xk_map[xk] = xk_map.get(xk, 0) + 1
@@ -212,6 +212,40 @@ for _, r in df.iterrows():
     if not rk:
         unmatched_schools.setdefault(school, 0)
         unmatched_schools[school] += 1
+
+# ---------------------------------------------------------------- 3b. 大类展开: 按该校实际开设专业筛减
+# 学校实际开设专业 = 软科收录 ∪ 投档表直接招生 ∪ 试验班查证 (统一归一到软科校名)
+school_open = {}   # 软科校名(或原始校名) -> set(专业名)
+for key, ranks in rk_major.items():
+    name = key.split(" ", 1)[1] if " " in key else key
+    for school in ranks:
+        school_open.setdefault(school, set()).add(name)
+for row in td_rows:
+    school = row[1]
+    rk_name = canonical_school(school) or school
+    core = row[2]
+    if core in name2keys:  # 直接招生(具体专业)
+        school_open.setdefault(rk_name, set()).add(core)
+    if row[8] and row[8].get("mode") == "list":  # 试验班查证
+        school_open.setdefault(rk_name, set()).update(row[8]["majors"])
+
+# 大类行: 目录类下专业 ∩ 该校实际开设
+lei_reduced = 0
+lei_empty = 0
+for row in td_rows:
+    core = row[2]
+    if core not in lei2major:
+        continue
+    rk_name = canonical_school(row[1]) or row[1]
+    opened = school_open.get(rk_name, set())
+    kept = [k for k in lei2major[core] if (k.split(" ", 1)[1] if " " in k else k) in opened]
+    if kept:
+        row[9] = kept
+        if len(kept) < len(lei2major[core]):
+            lei_reduced += 1
+    else:
+        lei_empty += 1  # 空交集: 回退目录全集(前端标注)
+print(f"\n大类行筛减: 减少 {lei_reduced} 行, 交集为空回退目录 {lei_empty} 行")
 
 print("投档行数:", len(td_rows))
 if truncated_rows:
@@ -295,8 +329,9 @@ with open(OUT / "data_ruanke.js", "w", encoding="utf-8") as f:
 
 with open(OUT / "data_toudang.js", "w", encoding="utf-8") as f:
     f.write("/* 2026山东高考第一次投档表 志愿类数据 */\n")
-    f.write("/* [院校代号,院校名,专业核心名,括号备注,选科要求,最低分,最低位次,招生类型,试验班查证] */\n")
+    f.write("/* [院校代号,院校名,专业核心名,括号备注,选科要求,最低分,最低位次,招生类型,试验班查证,大类有效专业] */\n")
     f.write("/* 试验班查证: null=未公开; {mode:'list',majors:[专业名]} ; {mode:'renxuan',dir:'理科任选'} ; {mode:'notfound'} */\n")
+    f.write("/* 大类有效专业: 该校实际开设(软科收录∪投档直接∪查证)∩目录类; null=回退目录全集 */\n")
     f.write("window.TD2026=" + js_str(td_rows) + ";\n")
     # 院校名 -> 软科院校名 映射
     td_school_rk = {s: canonical_school(s) for s in td_schools}

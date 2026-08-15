@@ -40,7 +40,7 @@ console.log("== 意向专业匹配 ==");
 const r = tdQh;
 ok(app.rowMatchesIntent(r, { "计算机科学与技术": true }, false) === true, "大类含意向专业 -> 命中");
 ok(app.rowMatchesIntent(r, { "计算机科学与技术": true }, true) === false, "仅直接招生 -> 大类不命中");
-ok(app.rowMatchesIntent(r, { "密码科学与技术": true }, false) === true, "大类含其他目录专业也命中(目录口径)");
+ok(app.rowMatchesIntent(r, { "密码科学与技术": true }, false) === false, "清华未开设的目录专业不再命中(按该校实际开设筛减)");
 const direct = app.TD.find((x) => x[2] === "软件工程");
 ok(app.rowMatchesIntent(direct, { "软件工程": true }, true) === true, "直接招生命中");
 
@@ -55,12 +55,12 @@ ok(app.bandOf(null, 60000, 0.8, 1.15) === null, "未填位次 -> null");
 console.log("== 筛选 ==");
 app.S.intent = { "数据科学与大数据技术": true };
 let idx = app.filteredIndices();
-ok(idx.length === 397, "意向专业=数据科学与大数据技术 命中 397(含试验班查证7行), 实际 " + idx.length);
+ok(idx.length === 383, "意向专业=数据科学与大数据技术 命中 383(大类已按实际开设筛减), 实际 " + idx.length);
 const cntDirect = idx.filter((i) => app.TD[i][2] === "数据科学与大数据技术").length;
 ok(cntDirect === 320, "其中直接招生 320, 实际 " + cntDirect);
 // 大类命中的行应全部含提醒条件
 const leiHit = idx.filter((i) => app.TD[i][2] !== "数据科学与大数据技术" && app.containedKeys(app.TD[i][2]).length > 1);
-ok(leiHit.length > 0, "大类命中行数 " + leiHit.length);
+ok(leiHit.length === 56, "大类命中行数 56(筛减后), 实际 " + leiHit.length);
 
 app.S.intent = {};
 app.S.schoolKw = "山东大学";
@@ -202,6 +202,33 @@ app.TD.forEach((r) => {
   else sybCnt[s.mode]++;
 });
 console.log("  试验班查证分布:", JSON.stringify(sybCnt), " (list=", sybCnt.list, ", renxuan=", sybCnt.renxuan, ")");
+
+console.log("== 大类按该校实际开设筛减 (重大修复) ==");
+// 清华 计算机类: 目录19 -> 该校实际开设(软科∩)应远少于19
+const qhRow2 = app.TD.find((r) => r[1] === "清华大学" && r[2] === "计算机类");
+ok(qhRow2 && qhRow2[9], "清华计算机类有预计算有效专业");
+ok(qhRow2[9].length < 10, "清华计算机类有效专业 <10, 实际 " + qhRow2[9].length);
+console.log("  清华计算机类:", qhRow2[9].map((k) => app.keyName(k)).join("、"));
+// 意向专业匹配基于筛减后专业: 网络工程(清华未开设)不应命中清华计算机类
+ok(app.rowMatchesIntent(qhRow2, { "计算机科学与技术": true }, false) === true, "计科命中清华计算机类");
+ok(app.rowMatchesIntent(qhRow2, { "网络工程": true }, false) === false, "网络工程(清华未开设)不再命中清华计算机类");
+ok(app.rowMatchesIntent(qhRow2, { "软件工程": true }, false) === true, "软工命中");
+// 全量: 大类筛减后命中数变化
+app.S.intent = { "数据科学与大数据技术": true };
+let idx2 = app.filteredIndices();
+console.log("  意向专业=数据科学与大数据技术 命中:", idx2.length);
+app.S.intent = {};
+// 大类行平均专业数(筛减后)
+let leiCnt = 0, leiRows = 0;
+app.TD.forEach((r) => {
+  if (r[9]) { leiCnt += r[9].length; leiRows++; }
+});
+ok(leiRows > 0, "有预计算大类行 " + leiRows);
+console.log("  筛减后大类行平均专业数:", (leiCnt / leiRows).toFixed(2));
+// 回退目录全集的行(该校无数据): 国防科大等
+const gkRow = app.TD.find((r) => r[1] === "国防科技大学" && r[2] === "电子信息类");
+ok(gkRow && gkRow[9] == null, "国防科大(软科未收录)回退目录全集");
+ok(app.rowMajors(gkRow).length >= 20, "回退行仍用目录全集, 专业数 " + app.rowMajors(gkRow).length);
 
 console.log("== 试验班统计(问题4) ==");
 const shiyan = app.TD.filter((r) => /试验班|实验班|试点班/.test(r[2]));

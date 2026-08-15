@@ -169,20 +169,14 @@
   })();
 
   /* ---------------- 志愿类 与 意向专业匹配 ---------------- */
-  // 该志愿类是否包含意向专业 (大类: 目录口径; 试验班: 查证列表)
+  // 该志愿类是否包含意向专业 (大类: 该校实际开设∩目录; 试验班: 查证列表)
   function rowMatchesIntent(r, intentNames, onlyDirect) {
     var core = r[2];
     if (intentNames[core]) return true;          // 直接招生
     if (onlyDirect) return false;
-    var keys = containedKeys(core);
+    var keys = rowMajors(r);
     for (var i = 0; i < keys.length; i++) {
       if (intentNames[keyName(keys[i])]) return true;
-    }
-    var syb = r[8];
-    if (syb && syb.mode === "list") {
-      for (var j = 0; j < syb.majors.length; j++) {
-        if (intentNames[syb.majors[j]]) return true;
-      }
     }
     return false;
   }
@@ -192,16 +186,10 @@
     var out = {};
     var core = r[2];
     if (intentNames[core]) out[core] = true;
-    var keys = containedKeys(core);
+    var keys = rowMajors(r);
     for (var i = 0; i < keys.length; i++) {
       var n = keyName(keys[i]);
       if (intentNames[n]) out[n] = true;
-    }
-    var syb = r[8];
-    if (syb && syb.mode === "list") {
-      for (var j = 0; j < syb.majors.length; j++) {
-        if (intentNames[syb.majors[j]]) out[syb.majors[j]] = true;
-      }
     }
     return out;
   }
@@ -216,6 +204,18 @@
       keys.push((NAME2KEYS[n] && NAME2KEYS[n][0]) || n);
     }
     return keys;
+  }
+
+  // 行级包含专业 keys (优先级):
+  //   1) 大类预计算: 该校实际开设∩目录类 (r[9], 构建期生成; null=回退目录全集)
+  //   2) 具体专业/未收录名称: containedKeys(core)
+  //   3) 试验班查证列表: sybKeys(r)
+  function rowMajors(r) {
+    if (r[9]) return r[9];
+    var keys = containedKeys(r[2]);
+    if (keys.length) return keys;
+    var sk = sybKeys(r);
+    return sk || [];
   }
 
   /* ---------------- 冲稳保 ---------------- */
@@ -453,12 +453,9 @@
       var band = bandOf(S.myRank, rk, S.c1, S.c2);
       var matched = matchedNamesInRow(r, S.intent);
       var isLei = !!LEI_NAMES[core];
-      var keys = containedKeys(core);
-      var isSybList = false;
-      if (!keys.length && syb && syb.mode === "list") {
-        keys = sybKeys(r);
-        isSybList = true;
-      }
+      var leiFallback = isLei && !r[9];   // 大类但构建期无该校数据 -> 回退目录全集
+      var isSybList = !!syb && syb.mode === "list";
+      var keys = rowMajors(r);
 
       var chips = "";
       var entries = [];
@@ -509,7 +506,7 @@
       for (var nbI = 0; nbI < nb.length; nbI++) {
         badges += '<span class="badge note">' + esc(nb[nbI]) + "</span>";
       }
-      if (isLei) badges += '<span class="badge lei" title="按教育部专业目录推断所含专业，实际以院校当年招生简章为准">大类招生</span>';
+      if (isLei) badges += '<span class="badge lei" title="所含专业已按该校实际开设情况筛减（软科收录/2026投档/查证口径），实际以院校当年招生简章为准">大类招生' + (leiFallback ? "·目录口径" : "") + "</span>";
       if (isSybList) badges += '<span class="badge syb" title="包含专业来自院校2026年招生信息，人工查证整理">试验班·已查证</span>';
       if (syb && syb.mode === "renxuan") badges += '<span class="badge syb" title="可任选该校开设的专业，方向限制：' + esc(syb.dir) + '">试验班·任选</span>';
       if (rkSchool && rkSchool !== school) badges += '<span class="badge rk" title="该校排名按校本部口径">排名按校本部「' + esc(rkSchool) + '」</span>';
@@ -536,10 +533,10 @@
         var others = entries.map(function (x) { return x.name; }).filter(function (n) { return !matched[n]; });
         warn = '<div class="warn">⚠ 该志愿类为「' + esc(core) + '」大类招生，除所选专业外还包含：'
           + esc(others.slice(0, 12).join("、")) + (others.length > 12 ? " 等共" + keys.length + "个专业" : "")
-          + "。所含专业按目录口径推断，实际以院校当年招生简章为准</div>";
+          + "。所列专业已按该校实际开设情况筛减" + (leiFallback ? "（该校无软科/投档数据，为目录口径）" : "（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
       } else if (isLei && keys.length > 1) {
         warn = '<div class="hint">该志愿类为「' + esc(core) + '」大类招生，含 ' + keys.length
-          + " 个专业，按专业目录口径推断，实际以院校当年招生简章为准</div>";
+          + " 个专业，已按该校实际开设情况筛减" + (leiFallback ? "（目录口径）" : "（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
       } else if (syb && syb.mode === "list") {
         if (keys.length > 1 && Object.keys(S.intent).length) {
           var others2 = entries.map(function (x) { return x.name; }).filter(function (n) { return !matched[n]; });
@@ -668,9 +665,8 @@
       for (var t = 0; t < indices.length; t++) {
         var i = indices[t], r = TD[i];
         var rkSchool = TD_SCHOOL_RK[r[1]] || "";
-        var keys = containedKeys(r[2]);
+        var keys = rowMajors(r);
         var syb = r[8];
-        if (!keys.length && syb && syb.mode === "list") keys = sybKeys(r);
         var majors = [];
         if (syb && syb.mode === "renxuan") {
           majors.push("任选该校开设专业(" + syb.dir + ")");
@@ -949,6 +945,7 @@
       rowMatchesIntent: rowMatchesIntent, matchedNamesInRow: matchedNamesInRow,
       bandOf: bandOf, scoreToRank: scoreToRank, rankToScore: rankToScore,
       filteredIndices: filteredIndices, S: S, subjectState: subjectState, cleanNum: cleanNum,
+      rowMajors: rowMajors,
       SUBJ_ALL: SUBJ_ALL, ALL_TYPES: ALL_TYPES
     };
   }
