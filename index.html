@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026山东高考志愿参考 · 2027届参考版</title>
+<style>
+  :root{
+    --c-main:#1d4ed8; --c-main-soft:#eff6ff; --c-line:#e5e7eb;
+    --c-chong:#ea580c; --c-wen:#2563eb; --c-bao:#16a34a; --c-nan:#6b7280;
+    --c-bg:#f8fafc; --c-card:#fff;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+    background:var(--c-bg);color:#1f2937;font-size:14px;line-height:1.6;}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;}
+  header h1{margin:0;font-size:20px;}
+  header .sub{opacity:.85;font-size:12px;margin-top:2px;}
+  main{max-width:1180px;margin:0 auto;padding:12px 14px 40px;}
+  .panel{background:var(--c-card);border:1px solid var(--c-line);border-radius:10px;
+    padding:12px 14px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .panel h2{margin:0 0 8px;font-size:15px;color:var(--c-main);}
+  .rowgroup{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .rowgroup+.rowgroup{margin-top:8px;}
+  label{font-size:13px;color:#374151;white-space:nowrap;}
+  input[type=text],input[type=number],select{
+    border:1px solid #cbd5e1;border-radius:6px;padding:5px 8px;font-size:13px;background:#fff;}
+  input:focus,select:focus{outline:2px solid #93c5fd;border-color:var(--c-main);}
+  .num{width:86px;}
+  .btn{border:1px solid var(--c-main);background:var(--c-main);color:#fff;border-radius:6px;
+    padding:6px 12px;font-size:13px;cursor:pointer;}
+  .btn.ghost{background:#fff;color:var(--c-main);}
+  .chip{display:inline-block;border:1px solid #cbd5e1;background:#f8fafc;border-radius:999px;
+    padding:1px 10px;font-size:12px;cursor:pointer;line-height:1.9;white-space:nowrap;}
+  .chip.on{background:var(--c-main-soft);border-color:var(--c-main);color:var(--c-main);font-weight:600;}
+  .chip.hot{border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8;}
+  .chip.hot:hover{background:#dbeafe;}
+  .xk-all{border:1px dashed #94a3b8;border-radius:6px;background:#fff;color:#475569;
+    padding:3px 8px;font-size:12px;cursor:pointer;}
+  .intent-box{flex:1 1 420px;min-width:280px;position:relative;}
+  .autocomplete{position:relative;}
+  #intentInput{width:100%;}
+  #intentChips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;}
+  .intent-chip{background:#dbeafe;border-color:#60a5fa;color:#1e40af;padding-right:4px;}
+  .intent-chip .x{border:none;background:transparent;color:#1e40af;font-size:13px;cursor:pointer;margin-left:2px;}
+  .drop{position:absolute;top:100%;left:0;right:0;z-index:50;background:#fff;border:1px solid #cbd5e1;
+    border-radius:8px;max-height:55vh;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.12);}
+  .drop.hidden{display:none;}
+  .drop-men{font-size:11px;color:#64748b;background:#f1f5f9;padding:2px 10px;position:sticky;top:0;}
+  .drop-item{padding:6px 10px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;}
+  .drop-item:hover{background:var(--c-main-soft);}
+  .drop-item .dn{color:#111827;}
+  .drop-item .dl{color:#94a3b8;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;}
+  #stats{font-size:14px;}
+  #stats b{color:var(--c-main);}
+  .c-chong{color:var(--c-chong)!important;} .c-wen{color:var(--c-wen)!important;}
+  .c-bao{color:var(--c-bao)!important;} .c-nan{color:var(--c-nan)!important;}
+  #pager{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  #pager button{border:1px solid #cbd5e1;background:#fff;border-radius:6px;padding:4px 12px;cursor:pointer;}
+  #pager button:disabled{opacity:.4;cursor:default;}
+  /* 结果卡片 */
+  .row{background:var(--c-card);border:1px solid var(--c-line);border-left:5px solid #cbd5e1;
+    border-radius:8px;padding:10px 14px;margin-bottom:8px;}
+  .row.b-冲{border-left-color:var(--c-chong);}
+  .row.b-稳{border-left-color:var(--c-wen);}
+  .row.b-保{border-left-color:var(--c-bao);}
+  .row.b-难{border-left-color:var(--c-nan);}
+  .row-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .band{font-weight:700;font-size:13px;border-radius:6px;padding:1px 8px;color:#fff;}
+  .b-冲{background:var(--c-chong);} .b-稳{background:var(--c-wen);}
+  .b-保{background:var(--c-bao);} .b-难{background:var(--c-nan);}
+  .star{border:none;background:none;font-size:16px;cursor:pointer;color:#f59e0b;padding:0 2px;}
+  .school{font-weight:700;color:#111827;}
+  .core{font-size:14px;color:var(--c-main);font-weight:600;}
+  .badge{border-radius:5px;padding:0 7px;font-size:11px;line-height:1.8;white-space:nowrap;}
+  .badge.note{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;}
+  .badge.t-中外合作办学{background:#fce7f3;color:#9d174d;border:1px solid #fbcfe8;}
+  .badge.t-高校专项计划{background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;}
+  .badge.t-地方专项计划{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}
+  .badge.t-普通{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
+  .badge.lei{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;}
+  .badge.rk{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}
+  .badge.miss{background:#fee2e2;color:#b91c1c;border:1px solid #f87171;font-weight:600;}
+  .badge.syb{background:#f0f9ff;color:#075985;border:1px solid #7dd3fc;}
+  .chip.sj.on{background:#dcfce7;border-color:#4ade80;color:#14532d;font-weight:700;}
+  .row-meta{font-size:13px;color:#4b5563;margin:6px 0 6px;}
+  .row-meta b{color:#111827;}
+  .ok{color:var(--c-bao);} .bad{color:var(--c-chong);}
+  .chips{display:flex;flex-wrap:wrap;gap:5px;}
+  .chips .chip{font-size:12px;padding:0 8px;}
+  .chip.hit{background:#fef08a;border-color:#facc15;color:#713f12;font-weight:700;}
+  .chip.has-rank{background:#ecfdf5;border-color:#6ee7b7;color:#065f46;}
+  .chip.no-rank{background:#f8fafc;border-color:#e2e8f0;color:#94a3b8;}
+  .chip.chip-special{background:#fdf4ff;border-color:#e9d5ff;color:#6b21a8;}
+  .chip.chip-special i{color:#a855f7;}
+  .chip.chip-notpub{background:#f1f5f9;border-color:#cbd5e1;color:#475569;}
+  .chip.chip-notpub i{color:#94a3b8;}
+  .chip.none{background:#f8fafc;border-color:#e2e8f0;color:#64748b;cursor:default;}
+  .chip.has-rank b{color:#047857;}
+  .chip i{font-style:normal;color:#94a3b8;}
+  .warn{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:6px;
+    padding:5px 9px;font-size:12px;margin-top:7px;}
+  .hint{background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;border-radius:6px;
+    padding:4px 9px;font-size:12px;margin-top:7px;}
+  .det{margin-top:8px;}
+  .det summary{cursor:pointer;font-size:12px;color:var(--c-main);}
+  .rk-detail{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
+  .rk-detail th,.rk-detail td{border:1px solid #e5e7eb;padding:3px 8px;text-align:left;}
+  .rk-detail th{background:#f1f5f9;}
+  .rk-detail a{color:var(--c-main);text-decoration:none;}
+  .rk-detail a:hover{text-decoration:underline;}
+  .dim{color:#9ca3af;font-size:12px;}
+  .empty{padding:40px;text-align:center;color:#9ca3af;}
+  .guide{font-size:13px;color:#374151;}
+  .guide summary{cursor:pointer;font-weight:600;color:var(--c-main);}
+  .guide ul{margin:6px 0;padding-left:20px;}
+  .guide li{margin:3px 0;}
+  .two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}
+  .footer-note{max-width:1180px;margin:10px auto;padding:0 14px;font-size:12px;color:#9ca3af;}
+  details.det .rk-detail{display:none;}
+  details.det[open] .rk-detail{display:table;}
+  @media print{
+    header,.no-print,footer,.guide,details.det summary{display:none!important;}
+    body{background:#fff;}
+    .row{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>山东 2026 高考志愿参考 <span style="font-weight:400;font-size:14px;">供 2027 届考生参考</span></h1>
+  <div class="sub">数据：山东省2026年普通类常规批第1次志愿投档表（23853个志愿类）· 软科2026中国大学专业排名（仅前50%院校上榜）· 山东省2026年一分一段表</div>
+</header>
+
+<main>
+  <details class="panel guide" open>
+    <summary>📖 使用说明与数据口径 ｜ 点击展开/收起</summary>
+    <ul>
+      <li><b>志愿类</b>：山东高考志愿的单位是「志愿类」＝ 一所高校的一个或多个专业，每位考生最多填报 96 个志愿类，<b>不是</b>其他省份的「专业组」。本页每一行就是一个志愿类。</li>
+      <li><b>三步使用</b>：① 输入意向专业，含该专业的大类招生也会被筛出，并会<b>提醒您该大类还包含其他专业</b>；② 选择<b>我的选科</b>（物理/化学/生物/政治/历史/地理，3+3 选 3 科），查看该组合可报考的志愿类，未选满的科目会标注"缺：××"；③ 输入您的预估位次查看「冲 / 稳 / 保」判断；④ 收藏对比、导出 CSV。</li>
+      <li><b>包含专业</b>：志愿类为「××类」大类招生时，所含具体专业按教育部《普通高等学校本科专业目录（2026年）》推断，<b>实际以院校当年招生简章和计划为准</b>；试验班/特色班不推断具体专业，共有 312 个此类志愿类。</li>
+      <li><b>软科排名口径</b>：四种状态——<b>第X名</b>为软科2026上榜前50%；<b>未上榜</b>表示该专业软科发布排名但该校未进前50%，≠未开设；<b>特色专业</b>是开设院校&lt;4所的少设专业，软科仅发布开设名单、不计算排名；<b>未排名</b>是不在软科2026发布的838个专业内。威海/深圳/医学部等校区沿用<b>校本部</b>口径，有徽章标注；软科未收录的院校无排名。</li>
+      <li><b>官方参考</b>：<a href="https://www.shanghairanking.cn/rankings/bcmr/2026" target="_blank" rel="noopener">软科2026中国大学专业排名</a> ｜ <a href="https://www.shanghairanking.cn/methodology/bcmr/2026" target="_blank" rel="noopener">软科排名方法说明</a>。展开各志愿类的「排名明细与说明」，点击专业名可直接跳转软科官网查看该专业完整排名。</li>
+      <li><b>位次提醒</b>：2026 年位次不能直接等同 2027 年位次，考生人数、计划、选科政策均会变化，冲稳保仅为粗略参考，建议结合多年数据与位次差综合判断。</li>
+      <li><b>选科提醒</b>：表中选科要求为 2026 年口径，2027 年要求以省考试院公布为准。</li>
+      <li><b>打印</b>：浏览器 Ctrl+P 可直接打印当前筛选结果。</li>
+    </ul>
+  </details>
+
+  <section class="panel no-print">
+    <h2>① 分数 ↔ 位次换算（2026 一分一段表）</h2>
+    <div class="rowgroup">
+      <label>输入分数：<input type="number" id="fenScore" class="num" min="1" max="750" placeholder="如 620"> </label>
+      <button class="btn ghost" id="fenBtn1">换算位次</button>
+      <div id="fenOut1" class="dim" style="margin-left:10px;"></div>
+    </div>
+    <div class="rowgroup">
+      <label>输入位次：<input type="number" id="fenRank" class="num" min="1" placeholder="如 10000"> </label>
+      <button class="btn ghost" id="fenBtn2">换算分数</button>
+      <div id="fenOut2" class="dim" style="margin-left:10px;"></div>
+    </div>
+    <div class="rowgroup" style="color:#64748b;font-size:12px;">先用模拟分数换算位次，点「填入冲稳保位次」后到 ③ 查看冲稳保；只接受正整数。</div>
+  </section>
+
+  <section class="panel no-print">
+    <h2>② 筛选</h2>
+    <div class="rowgroup">
+      <div class="intent-box">
+        <div id="intentChips"></div>
+        <div class="autocomplete">
+          <input type="text" id="intentInput" placeholder="输入意向专业，支持专业代码/名称，如：计算机 / 临床 / 080901 …">
+          <div id="intentDrop" class="drop hidden"></div>
+        </div>
+        <button class="btn ghost" id="intentClear" style="margin-top:4px;">清空意向专业</button>
+      </div>
+      <label>院校：<input type="text" id="schoolKw" placeholder="如 山东大学" style="width:150px;"></label>
+      <label>全文：<input type="text" id="textKw" placeholder="志愿类名称关键字" style="width:150px;"></label>
+      <button class="btn ghost" id="resetBtn">重置全部筛选</button>
+    </div>
+    <div class="rowgroup">
+      <label class="dim">热门：</label><span id="hotRow" class="rowgroup"></span>
+    </div>
+    <div class="rowgroup" style="margin-top:8px;">
+      <label>我的选科（3+3，选3科）：</label><span id="subjBox" class="rowgroup"></span>
+      <button class="btn ghost" id="subjClear">清空</button>
+    </div>
+    <div class="rowgroup" id="subjHint" style="color:#64748b;font-size:12px;"></div>
+    <div class="rowgroup">
+      <label>招生类型：</label><span id="typeBox" class="rowgroup"></span>
+    </div>
+    <div class="rowgroup">
+      <label>分数：<input type="number" class="num" id="scoreMin" placeholder="最低分"> ～ <input type="number" class="num" id="scoreMax" placeholder="最高分"></label>
+      <label>位次：<input type="number" class="num" id="rankMin" placeholder="最前"> ～ <input type="number" class="num" id="rankMax" placeholder="最后"></label>
+      <label><input type="checkbox" id="onlyFav"> 只看收藏</label>
+      <label><input type="checkbox" id="intentOnlyDirect"> 仅直接招生（不含大类/试验班）</label>
+    </div>
+  </section>
+
+  <section class="panel no-print">
+    <h2>③ 我的位次 · 冲稳保</h2>
+    <div class="rowgroup">
+      <label>我的预估位次：<input type="number" class="num" id="myRank" placeholder="如 50000"></label>
+      <label>冲/稳边界：<input type="range" id="c1" min="0.5" max="1" step="0.05" value="0.8"> <span id="c1v">0.80</span></label>
+      <label>稳/保边界：<input type="range" id="c2" min="1" max="2" step="0.05" value="1.15"> <span id="c2v">1.15</span></label>
+      <span class="dim">位次越小越靠前。冲＝去年投档位次在我之前；稳＝略在我之后；保＝明显在我之后；差距大＝慎报。</span>
+    </div>
+    <div class="rowgroup">
+      <label>排序：<select id="sortSel">
+        <option value="rankAsc">最低位次 ↑（分数高→低）</option>
+        <option value="rankDesc">最低位次 ↓</option>
+        <option value="scoreDesc">最低分 ↓</option>
+        <option value="scoreAsc">最低分 ↑</option>
+        <option value="school">院校名称</option>
+      </select></label>
+      <button class="btn" id="exportBtn">导出当前结果 CSV</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>④ 结果 <span id="stats" style="font-weight:400;color:#374151;"></span></h2>
+    <div id="results"></div>
+    <div id="pager"></div>
+  </section>
+</main>
+
+<footer class="footer-note">
+  免责声明：本页为 2026 年录取数据整理，仅作 2027 届志愿填报参考，不构成填报建议；一切以山东省教育招生考试院及院校当年官方公布为准。
+</footer>
+
+<script src="data_ruanke.js"></script>
+<script src="data_toudang.js"></script>
+<script src="data_fen.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

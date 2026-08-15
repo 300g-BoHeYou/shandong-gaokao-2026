@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# 运行时临时文件
+scripts/.chrome-profile*/
+scripts/headless_*
+scripts/shiyanban_sources/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 打包产物
+*.zip
