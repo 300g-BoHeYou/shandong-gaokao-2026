@@ -172,13 +172,14 @@ def canonical_school(td_name):
 
 
 # ---------------------------------------------------------------- 3. 组装投档行
-# 试验班查证结果: key="院校代码|志愿类全名|最低位次" -> {mode:'list'|'renxuan'|'notfound', ...}
-syb_data = {}
-syb_json = ROOT / "scripts" / "syb_data.json"
-if syb_json.exists():
-    with open(syb_json, encoding="utf-8") as f:
-        syb_data = json.load(f)
-    print("试验班查证数据条目:", len(syb_data))
+# 人工查证数据(统一文件): { "试验班": {...}, "大类": {...} }, key="院校代码|志愿类全名|最低位次"
+manual_check = {"试验班": {}, "大类": {}}
+mc_json = ROOT / "scripts" / "manual_check.json"
+if mc_json.exists():
+    with open(mc_json, encoding="utf-8") as f:
+        manual_check = json.load(f)
+    print("人工查证条目: 试验班", len(manual_check.get("试验班", {})), " 大类", len(manual_check.get("大类", {})))
+syb_data = manual_check.get("试验班", {})
 
 td_rows = []          # [sc, school, core, note, xk, score, rank, type, syb, lei_majors]
 td_schools = set()
@@ -214,13 +215,8 @@ for _, r in df.iterrows():
         unmatched_schools[school] += 1
 
 # ---------------------------------------------------------------- 3b. 大类展开: 人工查证优先, 否则按该校实际开设筛减
-# 人工查证(软科未收录院校): key="院校代码|志愿类全名|最低位次" -> {mode:'list',majors}
-lei_check = {}
-lei_json = ROOT / "scripts" / "lei_check.json"
-if lei_json.exists():
-    with open(lei_json, encoding="utf-8") as f:
-        lei_check = json.load(f)
-    print("大类人工查证条目:", len(lei_check))
+lei_check = manual_check.get("大类", {})
+print("大类人工查证条目:", len(lei_check))
 
 # 学校实际开设专业 = 软科收录 ∪ 投档表直接招生 ∪ 试验班查证 (统一归一到软科校名)
 school_open = {}   # 软科校名(或原始校名) -> set(专业名)

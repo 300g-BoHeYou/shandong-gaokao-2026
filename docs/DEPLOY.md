@@ -1,6 +1,8 @@
-# 上线指引：发布到 GitHub + GitHub Pages
+# 上线指引
 
-本项目是纯静态站点（无构建步骤、无服务器依赖），发布非常简单。以下两种方式任选。
+> **当前线上状态**：站点已部署于 **Cloudflare Pages**，地址 https://sdgk.pages.dev 。
+> 更新数据后推送仓库，并在 Cloudflare Pages 面板触发重新部署即可（也可配置自动构建）。
+> 以下为备选方案（GitHub Pages / Actions）的完整步骤。
 
 ## 方式 A：网页操作（最简）
 

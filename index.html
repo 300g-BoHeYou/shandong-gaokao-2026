@@ -117,6 +117,12 @@
   .guide li{margin:3px 0;}
   .two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}
   .footer-note{max-width:1180px;margin:10px auto;padding:0 14px;font-size:12px;color:#9ca3af;}
+  .notice{background:#fff7ed;border:2px solid #f97316;border-radius:10px;color:#7c2d12;
+    padding:10px 14px;margin:10px 0;font-size:13px;line-height:1.7;}
+  .notice b{color:#c2410c;}
+  .notice a{color:#b91c1c;font-weight:600;}
+  .notice .tag{display:inline-block;background:#f97316;color:#fff;border-radius:6px;
+    padding:0 8px;font-size:12px;margin-right:6px;}
   details.det .rk-detail{display:none;}
   details.det[open] .rk-detail{display:table;}
   @media print{
@@ -133,12 +139,19 @@
 </header>
 
 <main>
+  <div class="notice">
+    <span class="tag">重要提醒</span><b>大类招生（××类）的具体包含专业可能不够可靠：</b>
+    本页所列大类专业为「目录推断 + 该校实际开设筛减 + 人工查证」的综合口径，可能与院校实际招生计划存在出入，
+    部分院校还可能调整大类内专业。试验班/特色班的包含专业同样以人工查证为准。填报前请务必查阅
+    <b>院校当年招生简章和官方招生计划</b>。
+  </div>
+
   <details class="panel guide" open>
     <summary>📖 使用说明与数据口径 ｜ 点击展开/收起</summary>
     <ul>
       <li><b>志愿类</b>：山东高考志愿的单位是「志愿类」＝ 一所高校的一个或多个专业，每位考生最多填报 96 个志愿类，<b>不是</b>其他省份的「专业组」。本页每一行就是一个志愿类。</li>
       <li><b>三步使用</b>：① 输入意向专业，含该专业的大类招生也会被筛出，并会<b>提醒您该大类还包含其他专业</b>；② 选择<b>我的选科</b>（物理/化学/生物/政治/历史/地理，3+3 选 3 科），查看该组合可报考的志愿类，未选满的科目会标注"缺：××"；③ 输入您的预估位次查看「冲 / 稳 / 保」判断；④ 收藏对比、导出 CSV。</li>
-      <li><b>包含专业</b>：志愿类为「××类」大类招生时，所含具体专业按教育部《普通高等学校本科专业目录（2026年）》推断，<b>实际以院校当年招生简章和计划为准</b>；试验班/特色班不推断具体专业，共有 312 个此类志愿类。</li>
+      <li><b>包含专业</b>：志愿类为「××类」大类招生时，所含具体专业按教育部《普通高等学校本科专业目录（2026年）》定位范围，再按<b>该校实际开设情况筛减</b>（软科收录/2026投档/人工查证口径）；人工查证的标「已查证」，无法确定的标「目录口径」。⚠️ 以上均为推断口径，<b>实际以院校当年招生简章和计划为准</b>；试验班/特色班共 312 个志愿类，其中 249 个已查证、16 个标注「任选」、47 个待补。</li>
       <li><b>软科排名口径</b>：四种状态——<b>第X名</b>为软科2026上榜前50%；<b>未上榜</b>表示该专业软科发布排名但该校未进前50%，≠未开设；<b>特色专业</b>是开设院校&lt;4所的少设专业，软科仅发布开设名单、不计算排名；<b>未排名</b>是不在软科2026发布的838个专业内。威海/深圳/医学部等校区沿用<b>校本部</b>口径，有徽章标注；软科未收录的院校无排名。</li>
       <li><b>官方参考</b>：<a href="https://www.shanghairanking.cn/rankings/bcmr/2026" target="_blank" rel="noopener">软科2026中国大学专业排名</a> ｜ <a href="https://www.shanghairanking.cn/methodology/bcmr/2026" target="_blank" rel="noopener">软科排名方法说明</a>。展开各志愿类的「排名明细与说明」，点击专业名可直接跳转软科官网查看该专业完整排名。</li>
       <li><b>位次提醒</b>：2026 年位次不能直接等同 2027 年位次，考生人数、计划、选科政策均会变化，冲稳保仅为粗略参考，建议结合多年数据与位次差综合判断。</li>
@@ -225,6 +238,7 @@
 
 <footer class="footer-note">
   免责声明：本页为 2026 年录取数据整理，仅作 2027 届志愿填报参考，不构成填报建议；一切以山东省教育招生考试院及院校当年官方公布为准。
+  <br>在线使用：<a href="https://sdgk.pages.dev" target="_blank" rel="noopener">sdgk.pages.dev</a>（Cloudflare Pages）｜ 数据有误或想贡献：<a href="https://github.com/300g-BoHeYou/shandong-gaokao-2026" target="_blank" rel="noopener">GitHub 仓库</a>（欢迎提 Issue / PR）
 </footer>
 
 <script src="data_ruanke.js"></script>

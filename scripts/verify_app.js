@@ -225,10 +225,11 @@ app.TD.forEach((r) => {
 });
 ok(leiRows > 0, "有预计算大类行 " + leiRows);
 console.log("  筛减后大类行平均专业数:", (leiCnt / leiRows).toFixed(2));
-// 回退目录全集的行(该校无软科且无查证): 重庆外语外事学院 中国语言文学类
+// 重庆外语外事学院 中国语言文学类: 已人工查证
 const cqRow = app.TD.find((r) => r[1] === "重庆外语外事学院" && r[2] === "中国语言文学类");
-ok(cqRow && cqRow[9] == null, "重庆外语外事学院(未收录且未查证)回退目录全集");
-ok(app.rowMajors(cqRow).length >= 5, "回退行仍用目录全集, 专业数 " + app.rowMajors(cqRow).length);
+ok(cqRow && cqRow[9], "重庆外语外事学院大类有人工查证");
+const cqNames = cqRow[9].map((k) => app.keyName(k));
+ok(JSON.stringify(cqNames) === JSON.stringify(["汉语言文学", "汉语国际教育"]), "查证=汉语言文学/汉语国际教育, 实际 " + cqNames.join("、"));
 
 console.log("== 大类人工查证 (软科未收录院校) ==");
 // 国防科大 计算机类: 人工查证为 计科/软工/网络工程/信息安全

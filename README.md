@@ -2,9 +2,11 @@
 
 > 把 2026 年山东投档数据与软科 2026 专业排名整理成可筛选、可对比的交互页面，供 2027 届考生了解各**志愿类**的录取分数/位次、所包含专业及其软科排名。
 
-**🌐 在线使用**：https://\<你的用户名\>.github.io/shandong-gaokao-2026/ （发布后在此确认并填写）
+**🌐 在线使用**：https://sdgk.pages.dev （Cloudflare Pages）
 
 **📂 本地使用**：双击仓库根目录的 `index.html` 即可（Chrome / Edge / Firefox 均可，纯前端、无依赖、无需联网）。
+
+**🐙 反馈与贡献**：https://github.com/300g-BoHeYou/shandong-gaokao-2026 （欢迎提 Issue / PR）
 
 > 山东志愿的单位是「**志愿类**」＝ 一所高校的一个或多个专业（最多填报 96 个），**不同于**其他省份的「专业组」。
 
@@ -37,14 +39,13 @@
 ```
 ├── index.html / app.js          页面与应用逻辑（纯前端，无依赖）
 ├── data_ruanke.js               软科2026排名数据（838专业 × 1136校）
-├── data_toudang.js              投档表数据（23853个志愿类，含试验班查证）
+├── data_toudang.js              投档表数据（23853个志愿类，含大类筛减与人工查证）
 ├── data_fen.js                  一分一段表
-├── 试验班查证清单.xlsx           人工查证过程数据（可继续补充）
+├── 试验班查证清单.xlsx / 大类查证清单*.xlsx   人工查证过程数据（可继续补充）
 ├── scripts/                     数据构建与自测工具链
 │   ├── parse_catalog.py         解析《本科专业目录.pdf》→ catalog_tree.json
-│   ├── merge_shiyanban.py       查证清单 → syb_data.json
+│   ├── merge_manual_check.py    全部人工查证清单 → manual_check.json（统一文件）
 │   ├── build_data.py            原始数据 → data_*.js（输出到仓库根目录）
-│   ├── make_shiyanban_sheet.py  生成查证清单模板
 │   ├── fetch_shiyanban_sources.py  官网招生专业页抓取+OCR 辅助工具
 │   └── verify_*.js / check_*.js 自测脚本（node 运行）
 ├── 2026山东高考第一批次投档.xlsx  原始数据（公开）
@@ -58,8 +59,8 @@
 # 1) 解析目录（首次或目录更新后）
 python scripts/parse_catalog.py
 
-# 2) 合并试验班查证（更新过清单后）
-python scripts/merge_shiyanban.py
+# 2) 合并全部人工查证（更新过查证清单后；试验班+大类统一到一个文件）
+python scripts/merge_manual_check.py
 
 # 3) 生成站点数据（需要 pandas + openpyxl）
 python scripts/build_data.py
@@ -75,12 +76,11 @@ node scripts/check_ids.js     # 元素 id 一致性
 
 - 本工具基于 **2026 年**录取数据，仅供 **2027 届**考生了解院校专业层级与分数/位次量级，**不是** 2027 年预测。
 - 位次每年随考生人数、招生计划、选科政策变化，「冲稳保」仅为粗略参考；选科要求为 2026 年口径，2027 年以省考试院公布为准。
-- 大类包含专业已按"该校实际开设"筛减（软科收录∪投档直接∪查证），但仍可能遗漏软科未上榜的专业，以院校当年简章为准；软科未收录的院校（如军校/民办）回退目录全集并标注。
+- 大类包含专业已按"该校实际开设"筛减（软科收录∪投档直接∪查证），但仍可能遗漏软科未上榜的专业，以院校当年简章为准；软科未收录的院校（如军校/民办）回退目录全集并标注。**大类/试验班包含专业均属推断或人工查证口径，可能不够可靠，网页顶部有醒目提醒。**
 - 一切以山东省教育招生考试院及各院校官方公布信息为准，本工具不构成填报建议。
 
-## 部署（GitHub Pages）
+## 部署
 
-纯静态站点，部署方式任选：
-- **方式 A（推荐）**：仓库 Settings → Pages → Source 选择 `Deploy from a branch`，分支 `main`、目录 `/（root）`，保存后即可访问 `https://<用户名>.github.io/<仓库名>/`。
-- **方式 B**：启用 GitHub Actions（见 `docs/DEPLOY.md`，自动构建并发布）。
-- 详细步骤见 `docs/DEPLOY.md`。
+站点为纯静态，已上线于 **Cloudflare Pages**：https://sdgk.pages.dev
+
+更新数据后推送仓库即可（若使用 GitHub Actions 部署，见 `docs/DEPLOY.md`；直接推送 main 后手动在部署平台更新亦可）。
