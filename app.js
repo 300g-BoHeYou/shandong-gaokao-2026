@@ -453,7 +453,8 @@
       var band = bandOf(S.myRank, rk, S.c1, S.c2);
       var matched = matchedNamesInRow(r, S.intent);
       var isLei = !!LEI_NAMES[core];
-      var leiFallback = isLei && !r[9];   // 大类但构建期无该校数据 -> 回退目录全集
+      var leiFallback = isLei && !r[9];              // 大类但构建期无该校数据 -> 回退目录全集
+      var leiManual = isLei && r[9] && !TD_SCHOOL_RK[school];  // 软科未收录但有人工查证
       var isSybList = !!syb && syb.mode === "list";
       var keys = rowMajors(r);
 
@@ -506,7 +507,9 @@
       for (var nbI = 0; nbI < nb.length; nbI++) {
         badges += '<span class="badge note">' + esc(nb[nbI]) + "</span>";
       }
-      if (isLei) badges += '<span class="badge lei" title="所含专业已按该校实际开设情况筛减（软科收录/2026投档/查证口径），实际以院校当年招生简章为准">大类招生' + (leiFallback ? "·目录口径" : "") + "</span>";
+      if (isLei) badges += '<span class="badge lei" title="' + (leiManual
+        ? "所含专业来自院校官网2026年招生信息，人工查证整理"
+        : "所含专业已按该校实际开设情况筛减（软科收录/2026投档/查证口径），实际以院校当年招生简章为准") + '">大类招生' + (leiManual ? "·已查证" : "") + (leiFallback ? "·目录口径" : "") + "</span>";
       if (isSybList) badges += '<span class="badge syb" title="包含专业来自院校2026年招生信息，人工查证整理">试验班·已查证</span>';
       if (syb && syb.mode === "renxuan") badges += '<span class="badge syb" title="可任选该校开设的专业，方向限制：' + esc(syb.dir) + '">试验班·任选</span>';
       if (rkSchool && rkSchool !== school) badges += '<span class="badge rk" title="该校排名按校本部口径">排名按校本部「' + esc(rkSchool) + '」</span>';
@@ -533,10 +536,10 @@
         var others = entries.map(function (x) { return x.name; }).filter(function (n) { return !matched[n]; });
         warn = '<div class="warn">⚠ 该志愿类为「' + esc(core) + '」大类招生，除所选专业外还包含：'
           + esc(others.slice(0, 12).join("、")) + (others.length > 12 ? " 等共" + keys.length + "个专业" : "")
-          + "。所列专业已按该校实际开设情况筛减" + (leiFallback ? "（该校无软科/投档数据，为目录口径）" : "（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
+          + "。所列专业" + (leiManual ? "来自院校官网人工查证" : leiFallback ? "为目录口径" : "已按该校实际开设情况筛减（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
       } else if (isLei && keys.length > 1) {
         warn = '<div class="hint">该志愿类为「' + esc(core) + '」大类招生，含 ' + keys.length
-          + " 个专业，已按该校实际开设情况筛减" + (leiFallback ? "（目录口径）" : "（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
+          + " 个专业，" + (leiManual ? "来自院校官网人工查证" : leiFallback ? "为目录口径" : "已按该校实际开设情况筛减（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
       } else if (syb && syb.mode === "list") {
         if (keys.length > 1 && Object.keys(S.intent).length) {
           var others2 = entries.map(function (x) { return x.name; }).filter(function (n) { return !matched[n]; });

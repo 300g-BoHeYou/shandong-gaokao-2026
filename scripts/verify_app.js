@@ -225,10 +225,23 @@ app.TD.forEach((r) => {
 });
 ok(leiRows > 0, "有预计算大类行 " + leiRows);
 console.log("  筛减后大类行平均专业数:", (leiCnt / leiRows).toFixed(2));
-// 回退目录全集的行(该校无数据): 国防科大等
-const gkRow = app.TD.find((r) => r[1] === "国防科技大学" && r[2] === "电子信息类");
-ok(gkRow && gkRow[9] == null, "国防科大(软科未收录)回退目录全集");
-ok(app.rowMajors(gkRow).length >= 20, "回退行仍用目录全集, 专业数 " + app.rowMajors(gkRow).length);
+// 回退目录全集的行(该校无软科且无查证): 重庆外语外事学院 中国语言文学类
+const cqRow = app.TD.find((r) => r[1] === "重庆外语外事学院" && r[2] === "中国语言文学类");
+ok(cqRow && cqRow[9] == null, "重庆外语外事学院(未收录且未查证)回退目录全集");
+ok(app.rowMajors(cqRow).length >= 5, "回退行仍用目录全集, 专业数 " + app.rowMajors(cqRow).length);
+
+console.log("== 大类人工查证 (软科未收录院校) ==");
+// 国防科大 计算机类: 人工查证为 计科/软工/网络工程/信息安全
+const gkCs = app.TD.find((r) => r[1] === "国防科技大学" && r[2] === "计算机类");
+ok(gkCs && gkCs[9], "国防科大计算机类有查证数据");
+const gkNames = gkCs[9].map((k) => app.keyName(k));
+ok(JSON.stringify(gkNames) === JSON.stringify(["计算机科学与技术", "软件工程", "网络工程", "信息安全"]),
+  "国防科大计算机类=查证4专业, 实际 " + gkNames.join("、"));
+// 社科院 新闻传播学类: 新闻学/广播电视学
+const scRow = app.TD.find((r) => r[1] === "中国社会科学院大学" && r[2] === "新闻传播学类");
+ok(scRow && scRow[9] && scRow[9].length === 2, "社科院新闻传播学类=2专业");
+ok(app.rowMatchesIntent(scRow, { "新闻学": true }, false) === true, "新闻学命中社科院大类");
+ok(app.rowMatchesIntent(scRow, { "广告学": true }, false) === false, "广告学(社科院未开设)不命中");
 
 console.log("== 试验班统计(问题4) ==");
 const shiyan = app.TD.filter((r) => /试验班|实验班|试点班/.test(r[2]));

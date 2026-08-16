@@ -175,6 +175,15 @@ ok(document.getElementById("stats").innerHTML.indexOf("选科完全满足") < 0,
 app.S.pageSize = 80;
 
 console.log("== 试验班查证渲染 ==");
+// 国防科大 大类人工查证徽章
+app.S.intent = {};
+schoolInput.value = "国防科技大学";
+schoolInput.fire("input");
+ok(results.innerHTML.indexOf("大类招生·已查证") >= 0, "人工查证大类显示'大类招生·已查证'");
+ok(results.innerHTML.indexOf("来自院校官网人工查证") >= 0, "查证来源提示");
+ok(results.innerHTML.indexOf("计算机科学与技术") >= 0, "国防科大计算机类显示查证专业");
+schoolInput.value = "";
+schoolInput.fire("input");
 app.S.intent = {};
 schoolInput.value = "上海交通大学";
 schoolInput.fire("input");

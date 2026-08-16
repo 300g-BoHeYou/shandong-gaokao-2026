@@ -213,7 +213,15 @@ for _, r in df.iterrows():
         unmatched_schools.setdefault(school, 0)
         unmatched_schools[school] += 1
 
-# ---------------------------------------------------------------- 3b. 大类展开: 按该校实际开设专业筛减
+# ---------------------------------------------------------------- 3b. 大类展开: 人工查证优先, 否则按该校实际开设筛减
+# 人工查证(软科未收录院校): key="院校代码|志愿类全名|最低位次" -> {mode:'list',majors}
+lei_check = {}
+lei_json = ROOT / "scripts" / "lei_check.json"
+if lei_json.exists():
+    with open(lei_json, encoding="utf-8") as f:
+        lei_check = json.load(f)
+    print("大类人工查证条目:", len(lei_check))
+
 # 学校实际开设专业 = 软科收录 ∪ 投档表直接招生 ∪ 试验班查证 (统一归一到软科校名)
 school_open = {}   # 软科校名(或原始校名) -> set(专业名)
 for key, ranks in rk_major.items():
@@ -229,13 +237,25 @@ for row in td_rows:
     if row[8] and row[8].get("mode") == "list":  # 试验班查证
         school_open.setdefault(rk_name, set()).update(row[8]["majors"])
 
-# 大类行: 目录类下专业 ∩ 该校实际开设
+# 大类行: 查证优先 -> 目录类下专业 ∩ 该校实际开设
+lei_manual = 0
 lei_reduced = 0
 lei_empty = 0
 for row in td_rows:
     core = row[2]
     if core not in lei2major:
         continue
+    sc = row[0]
+    full = core + (f"({row[3]})" if row[3] else "")
+    lei_key = f"{sc}|{full}|{row[6]}"
+    lc = lei_check.get(lei_key)
+    if lc and lc.get("mode") == "list":
+        # 人工查证: 专业名 -> keys (不在软科的专业保留原名)
+        row[9] = [(name2keys[m][0] if m in name2keys else m) for m in lc["majors"]] or None
+        if row[9]:
+            lei_manual += 1
+        continue
+    # 自动筛减
     rk_name = canonical_school(row[1]) or row[1]
     opened = school_open.get(rk_name, set())
     kept = [k for k in lei2major[core] if (k.split(" ", 1)[1] if " " in k else k) in opened]
@@ -245,7 +265,7 @@ for row in td_rows:
             lei_reduced += 1
     else:
         lei_empty += 1  # 空交集: 回退目录全集(前端标注)
-print(f"\n大类行筛减: 减少 {lei_reduced} 行, 交集为空回退目录 {lei_empty} 行")
+print(f"\n大类行处理: 人工查证 {lei_manual} 行, 自动筛减减少 {lei_reduced} 行, 交集为空回退目录 {lei_empty} 行")
 
 print("投档行数:", len(td_rows))
 if truncated_rows:
