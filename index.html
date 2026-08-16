@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2026山东高考志愿参考 · 2027届参考版</title>
+<title>2026山东高考志愿参考</title>
 <style>
   :root{
     --c-main:#1d4ed8; --c-main-soft:#eff6ff; --c-line:#e5e7eb;
@@ -66,6 +66,20 @@
   .row.b-保{border-left-color:var(--c-bao);}
   .row.b-难{border-left-color:var(--c-nan);}
   .row-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .row-scores{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+  .score-box,.rank-box{display:inline-flex;align-items:baseline;gap:3px;
+    border-radius:10px;padding:3px 12px 5px;box-shadow:0 1px 2px rgba(0,0,0,.05);}
+  .score-box{background:linear-gradient(180deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;}
+  .rank-box{background:linear-gradient(180deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;}
+  .score-box b,.rank-box b{font-size:25px;font-weight:800;line-height:1.1;
+    font-variant-numeric:tabular-nums;letter-spacing:.5px;}
+  .score-box b{color:#1d4ed8;}
+  .rank-box b{color:#15803d;}
+  .score-box i,.rank-box i{font-style:normal;font-size:12px;color:#64748b;font-weight:600;}
+  @media (max-width:680px){
+    .score-box b,.rank-box b{font-size:20px;}
+    .row-scores{margin-left:0;}
+  }
   .band{font-weight:700;font-size:13px;border-radius:6px;padding:1px 8px;color:#fff;}
   .b-冲{background:var(--c-chong);} .b-稳{background:var(--c-wen);}
   .b-保{background:var(--c-bao);} .b-难{background:var(--c-nan);}
@@ -146,14 +160,14 @@
     <b>院校当年招生简章和官方招生计划</b>。
   </div>
 
-  <details class="panel guide" open>
+  <details class="panel guide" false>
     <summary>📖 使用说明与数据口径 ｜ 点击展开/收起</summary>
     <ul>
       <li><b>志愿类</b>：山东高考志愿的单位是「志愿类」＝ 一所高校的一个或多个专业，每位考生最多填报 96 个志愿类，<b>不是</b>其他省份的「专业组」。本页每一行就是一个志愿类。</li>
-      <li><b>三步使用</b>：① 输入意向专业，含该专业的大类招生也会被筛出，并会<b>提醒您该大类还包含其他专业</b>；② 选择<b>我的选科</b>（物理/化学/生物/政治/历史/地理，3+3 选 3 科），查看该组合可报考的志愿类，未选满的科目会标注"缺：××"；③ 输入您的预估位次查看「冲 / 稳 / 保」判断；④ 收藏对比、导出 CSV。</li>
+      <li><b>三步使用</b>：① 输入意向专业，含该专业的大类招生也会被筛出；② 选择<b>我的选科</b>，查看该组合可报考的志愿类；③ 输入您的预估位次查看「冲 / 稳 / 保」判断；④ 收藏对比、导出 CSV。</li>
       <li><b>包含专业</b>：志愿类为「××类」大类招生时，所含具体专业按教育部《普通高等学校本科专业目录（2026年）》定位范围，再按<b>该校实际开设情况筛减</b>（软科收录/2026投档/人工查证口径）；人工查证的标「已查证」，无法确定的标「目录口径」。⚠️ 以上均为推断口径，<b>实际以院校当年招生简章和计划为准</b>；试验班/特色班共 312 个志愿类，其中 249 个已查证、16 个标注「任选」、47 个待补。</li>
       <li><b>软科排名口径</b>：四种状态——<b>第X名</b>为软科2026上榜前50%；<b>未上榜</b>表示该专业软科发布排名但该校未进前50%，≠未开设；<b>特色专业</b>是开设院校&lt;4所的少设专业，软科仅发布开设名单、不计算排名；<b>未排名</b>是不在软科2026发布的838个专业内。威海/深圳/医学部等校区沿用<b>校本部</b>口径，有徽章标注；软科未收录的院校无排名。</li>
-      <li><b>官方参考</b>：<a href="https://www.shanghairanking.cn/rankings/bcmr/2026" target="_blank" rel="noopener">软科2026中国大学专业排名</a> ｜ <a href="https://www.shanghairanking.cn/methodology/bcmr/2026" target="_blank" rel="noopener">软科排名方法说明</a>。展开各志愿类的「排名明细与说明」，点击专业名可直接跳转软科官网查看该专业完整排名。</li>
+      <li><b>软科排名</b>：<a href="https://www.shanghairanking.cn/rankings/bcmr/2026" target="_blank" rel="noopener">软科2026中国大学专业排名</a> ｜ <a href="https://www.shanghairanking.cn/methodology/bcmr/2026" target="_blank" rel="noopener">软科排名方法说明</a>。展开各志愿类的「排名明细与说明」，点击专业名可直接跳转软科官网查看该专业完整排名。</li>
       <li><b>位次提醒</b>：2026 年位次不能直接等同 2027 年位次，考生人数、计划、选科政策均会变化，冲稳保仅为粗略参考，建议结合多年数据与位次差综合判断。</li>
       <li><b>选科提醒</b>：表中选科要求为 2026 年口径，2027 年要求以省考试院公布为准。</li>
       <li><b>打印</b>：浏览器 Ctrl+P 可直接打印当前筛选结果。</li>
@@ -172,7 +186,7 @@
       <button class="btn ghost" id="fenBtn2">换算分数</button>
       <div id="fenOut2" class="dim" style="margin-left:10px;"></div>
     </div>
-    <div class="rowgroup" style="color:#64748b;font-size:12px;">先用模拟分数换算位次，点「填入冲稳保位次」后到 ③ 查看冲稳保；只接受正整数。</div>
+    <div class="rowgroup" style="color:#64748b;font-size:12px;">先用模拟分数换算位次，点「填入冲稳保位次」后到 ③ 查看冲稳保。</div>
   </section>
 
   <section class="panel no-print">
@@ -210,12 +224,12 @@
   </section>
 
   <section class="panel no-print">
-    <h2>③ 我的位次 · 冲稳保</h2>
+    <h2>③ 我的位次</h2>
     <div class="rowgroup">
       <label>我的预估位次：<input type="number" class="num" id="myRank" placeholder="如 50000"></label>
       <label>冲/稳边界：<input type="range" id="c1" min="0.5" max="1" step="0.05" value="0.8"> <span id="c1v">0.80</span></label>
       <label>稳/保边界：<input type="range" id="c2" min="1" max="2" step="0.05" value="1.15"> <span id="c2v">1.15</span></label>
-      <span class="dim">位次越小越靠前。冲＝去年投档位次在我之前；稳＝略在我之后；保＝明显在我之后；差距大＝慎报。</span>
+      <span class="dim">冲:去年投档位次在我之前；稳:略在我之后；保:明显在我之后；差距大:慎报。</span>
     </div>
     <div class="rowgroup">
       <label>排序：<select id="sortSel">

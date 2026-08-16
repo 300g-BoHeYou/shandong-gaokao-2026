@@ -521,8 +521,6 @@
       }
 
       var metaLine = [];
-      metaLine.push("最低分 <b>" + (sc == null ? "—" : sc) + "</b>");
-      metaLine.push("最低位次 <b>" + (rk == null ? "—" : rk) + "</b>");
       metaLine.push("选科 " + esc(xk));
       if (S.myRank != null && rk != null) {
         var d = rk - S.myRank;
@@ -594,6 +592,10 @@
         + '<span class="school">' + esc(school) + "</span>"
         + '<span class="core">' + esc(core) + "</span>"
         + badges
+        + '<div class="row-scores">'
+        + '<span class="score-box" title="2026年投档最低分"><b>' + (sc == null ? "—" : sc) + "</b><i>分</i></span>"
+        + '<span class="rank-box" title="2026年投档最低位次"><b>' + (rk == null ? "—" : rk) + "</b><i>名</i></span>"
+        + "</div>"
         + "</div>"
         + '<div class="row-meta">' + metaLine.join(" · ") + "</div>"
         + '<div class="chips">' + chips + "</div>"

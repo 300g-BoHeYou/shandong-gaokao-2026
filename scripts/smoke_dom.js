@@ -70,6 +70,14 @@ ok(results.innerHTML.indexOf("<article") === 0, "结果区渲染出卡片");
 const rowCount = (results.innerHTML.match(/<article/g) || []).length;
 ok(rowCount === 80, "默认页 80 条, 实际 " + rowCount);
 ok(results.innerHTML.indexOf(">大类招生<") >= 0, "含大类招生徽章");
+// 分数/位次醒目数字块
+ok(results.innerHTML.indexOf("class=\"score-box\"") >= 0, "分数大数字块存在");
+ok(results.innerHTML.indexOf("class=\"rank-box\"") >= 0, "位次大数字块存在");
+const scBox = results.innerHTML.match(/score-box"[^>]*><b>(\d+)<\/b><i>分<\/i>/);
+const rkBox = results.innerHTML.match(/rank-box"[^>]*><b>(\d+)<\/b><i>名<\/i>/);
+ok(scBox && parseInt(scBox[1], 10) > 0, "分数块显示具体分数: " + (scBox ? scBox[1] : "?"));
+ok(rkBox && parseInt(rkBox[1], 10) > 0, "位次块显示具体位次: " + (rkBox ? rkBox[1] : "?"));
+ok(results.innerHTML.indexOf("最低位次 <b>") < 0, "分数位次不再以正文小字重复显示");
 ok(results.innerHTML.indexOf("未上榜") >= 0, "含未上榜标签");
 ok(results.innerHTML.indexOf("工科试验班") >= 0 || true, "正文渲染无异常");
 ok(results.innerHTML.indexOf("undefined") < 0, "无 undefined 泄漏");
