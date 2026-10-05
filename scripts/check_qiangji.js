@@ -80,12 +80,33 @@ ok(out.indexOf("清北模式") < 0 && out.indexOf("复交南模式") < 0, "不�
 ok(out.indexOf("待查证") >= 0, "未填字段显示'待查证'");
 ok(out.indexOf("无笔试") >= 0, "仅面试院校考查科目显示'无笔试'");
 ok(out.indexOf("class=\"rk") >= 0, "包含专业带软科排名标签");
-ok(out.indexOf("简章原名：") >= 0, "带方向括号的给出简章原名提示");
+ok(out.indexOf("class=\"dirc\"") >= 0, "方向备注以醒目徽章显示");
+ok(out.indexOf("简章原名：") < 0, "不再显示冗长的'简章原名'提示(仅保留括号内容)");
+ok(out.indexOf("refscore") >= 0 && out.indexOf("refrank") >= 0, "参考分显示为 分数（排名）");
 ok(out.indexOf("score-box") < 0, "不再展示院校级分数块");
+ok(out.indexOf("官方招生简章 ↗") >= 0, "院校卡片含官方招生简章链接");
+ok(out.indexOf("mp.weixin.qq.com") >= 0, "链接指向官方公众号简章");
+ok(out.indexOf("该校未收录软科") >= 0, "软科未收录院校显示'该校未收录软科'(而非'未排名')");
 ok(out.indexOf('class="majors"') >= 0, "专业类表格渲染");
 const stats = document.getElementById("stats").innerHTML;
 ok(stats.indexOf("39") >= 0 && stats.indexOf("11") >= 0 && stats.indexOf("28") >= 0 && stats.indexOf("16") >= 0,
   "统计条含 39/11/28/16");
+
+console.log("== 报名时间/官方链接(官方汇总) ==");
+const allSignup = qj.DATA.filter((s) => s.signup).length;
+ok(allSignup === 39, "39 校报名时间齐全, 实际 " + allSignup);
+ok(qj.DATA.every((s) => s.link), "39 校均有官方链接");
+ok(qj.DATA.find((s) => s.name === "北京大学").signup.indexOf("4月15日") >= 0, "北大报名时间来自官方汇总");
+
+console.log("== 第2条: 大类含该专业则填其分数(非专项最低分) ==");
+const xmu = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "数学类");
+ok(xmu.s === 648 && xmu.r === 5370, "厦大数学类=648分/5370名(排除马来西亚分校600分): " + xmu.s + "/" + xmu.r);
+const sjtu = qj.DATA.find((s) => s.name === "上海交通大学").majors.find((m) => m.cat === "数学与应用数学");
+ok(sjtu.s === 682 && sjtu.r === 451, "上交数学与应用数学=682分/451名(试验班查证含该专业): " + sjtu.s + "/" + sjtu.r);
+const ouc = qj.DATA.find((s) => s.name === "中国海洋大学").majors.find((m) => m.cat === "海洋科学");
+ok(ouc.s === 627 && ouc.r === 12910, "海大海洋科学=627分/12910名(排除专项625/中外合作597): " + ouc.s + "/" + ouc.r);
+const withRef = qj.DATA.reduce((n, s) => n + s.majors.filter((m) => m.r != null).length, 0);
+ok(withRef >= 150, "有分专业参考分的行数 " + withRef + " (≥150)");
 
 console.log("== 第4条规则: 专业名直接落入包含专业 ==");
 const chemRow = qj.DATA.find((s) => s.name === "清华大学").majors.find((m) => m.cat === "化学");
@@ -93,7 +114,7 @@ ok(chemRow.inc === "化学", "'化学'(具体专业) 直接预填为包含专业
 const chemLei = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "化学类");
 ok(chemLei.inc === "", "'化学类'(大类名) 保留待查证");
 const gzw = qj.DATA.find((s) => s.name === "中国人民大学").majors.find((m) => m.cat.indexOf("古文字学") >= 0);
-ok(gzw.inc === "汉语言文学" && gzw.raw.indexOf("古文字学") >= 0, "带括号方向: 去括号后预填+保留原名提示");
+ok(gzw.inc === "汉语言文学" && gzw.note.indexOf("古文字学") >= 0, "带括号方向: 去括号后预填+备注仅保留括号内容");
 const jlu = qj.DATA.find((s) => s.name === "吉林大学");
 ok(jlu.majors.length === 4, "吉林大学 4 个专业(官方简章), 实际 " + jlu.majors.length);
 ok(jlu.majors.map((m) => m.cat).join("、") === "数学与应用数学、物理学、化学、古文字学", "吉大专业与官方一致");

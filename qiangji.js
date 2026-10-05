@@ -27,8 +27,11 @@
     if (info.st === "special") {
       return '<span class="rk special" title="软科2026特色专业（开设院校<4所），只发布开设名单、不计算排名">特色专业</span>';
     }
+    if (info.st === "nosc") {
+      return '<span class="rk nosc" title="该校未收录于软科2026专业排名，无排名数据">该校未收录软科</span>';
+    }
     if (info.st === "notpub") {
-      return '<span class="rk notpub" title="不在软科2026发布的838个专业内, 无排名">未排名</span>';
+      return '<span class="rk notpub" title="该专业不在软科2026发布的838个专业内，无排名">未排名</span>';
     }
     return '<span class="rk" title="该专业软科2026发布排名，但该校未进前50%">未上榜</span>';
   }
@@ -52,7 +55,7 @@
     return true;
   }
 
-  // 包含专业单元格: 专业名 + 软科排名标签; 未填=待查证; 有简章原名则给提示
+  // 包含专业单元格: 专业名 + 软科排名标签 + 方向备注徽章
   function incCell(m) {
     var html = "";
     if (m.inc) {
@@ -65,10 +68,18 @@
     } else {
       html = todo();
     }
-    if (m.raw && m.raw !== m.inc) {
-      html += '<span class="rawhint">简章原名：' + esc(m.raw) + "（括号内为培养方向说明）</span>";
+    if (m.note) {
+      html += '<span class="dirc" title="简章中该专业类的括号说明（培养方向）">' + esc(m.note) + "</span>";
     }
     return html;
+  }
+
+  // 对应普通批参考: 分数（排名），并注明所参考的志愿类
+  function refCell(m) {
+    if (m.r == null) return '<span class="dim" title="该校普通批无同名专业及包含该专业的大类（多以试验班招生）">—</span>';
+    var t = m.ref ? "参考志愿类：" + m.ref : "";
+    return '<span class="refscore">' + m.s + ' 分</span><span class="refrank">（' + m.r + " 名）</span>"
+      + (t ? '<span class="refsrc">' + esc(t) + "</span>" : "");
   }
 
   function majorRows(s) {
@@ -79,14 +90,11 @@
     for (var i = 0; i < s.majors.length; i++) {
       var m = s.majors[i];
       if (S.mkw && (m.cat || "").indexOf(S.mkw) < 0 && (m.inc || "").indexOf(S.mkw) < 0) continue;
-      var ref = (m.r != null)
-        ? '<span class="ok">' + m.r + " 名</span>" + (m.s != null ? '<span class="dim">（' + m.s + " 分）</span>" : "")
-        : '<span class="dim" title="该校在山东普通批无同名志愿类（多以大类招生）">—</span>';
       html += "<tr>"
         + "<td>" + esc(m.cat) + "</td>"
         + "<td>" + incCell(m) + "</td>"
         + "<td>" + val(m.subj) + "</td>"
-        + "<td>" + ref + "</td>"
+        + "<td>" + refCell(m) + "</td>"
         + "</tr>";
     }
     return html || '<tr><td colspan="4" class="dim">无匹配专业类</td></tr>';
@@ -103,6 +111,7 @@
         + '<span class="sname">' + esc(s.name) + "</span>"
         + (s.mode ? '<span class="badge b-mode">' + esc(modeText) + "</span>" : "")
         + (s.form ? '<span class="badge b-form">' + esc(s.form) + "</span>" : "")
+        + (s.link ? '<a class="badge b-link" href="' + esc(s.link) + '" target="_blank" rel="noopener" title="打开该校官方发布的2026年强基计划招生简章">官方招生简章 ↗</a>' : "")
         + "</div>"
         + '<div class="meta">'
         + "<b>校考时间：</b>" + val(s.examTime)
@@ -113,8 +122,8 @@
         + (s.entryScore ? '<div class="meta"><b>入围成绩计算：</b>' + esc(s.entryScore) + "</div>" : "")
         + (s.signup ? '<div class="meta"><b>报名时间：</b>' + esc(s.signup) + "</div>" : "")
         + (s.note ? '<div class="meta"><b>2026 要点：</b>' + esc(s.note) + "</div>" : "")
-        + '<table class="majors"><thead><tr><th style="width:24%;">强基专业类</th><th style="width:38%;">包含专业（含软科2026排名）</th>'
-        + '<th style="width:20%;">考查科目</th><th style="width:18%;">对应普通批位次</th></tr></thead><tbody>'
+        + '<table class="majors"><thead><tr><th style="width:23%;">强基专业类</th><th style="width:37%;">包含专业（含软科2026排名）</th>'
+        + '<th style="width:18%;">考查科目</th><th style="width:22%;">对应普通批分数（排名）</th></tr></thead><tbody>'
         + majorRows(s)
         + "</tbody></table></article>";
     }

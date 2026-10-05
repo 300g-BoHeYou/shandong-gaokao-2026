@@ -79,7 +79,7 @@ def canonical_school(name):
 
 
 def rank_info(school, major_name):
-    """返回 {rk, st, cnt} — st: ranked/unranked/special/notpub"""
+    """返回 {rk, st, cnt} — st: ranked/unranked/special/notpub/nosc"""
     rk_school = canonical_school(school)
     keys = name2keys.get(major_name) or []
     if not keys:
@@ -88,9 +88,9 @@ def rank_info(school, major_name):
     if key in special_keys:
         in_list = bool(rk_school and rk_school in rk_major[key])
         return {"rk": None, "st": "special", "cnt": len(rk_major[key]), "inList": in_list}
-    if not rk_school:
-        return {"rk": None, "st": "notpub", "cnt": len(rk_major[key])}
     ranks = rk_major[key]
+    if not rk_school:
+        return {"rk": None, "st": "nosc", "cnt": len(ranks)}   # 该校未收录软科(≠专业未排名)
     if rk_school in ranks:
         return {"rk": ranks[rk_school], "st": "ranked", "cnt": len(ranks)}
     return {"rk": None, "st": "unranked", "cnt": len(ranks)}
@@ -121,48 +121,90 @@ def school_parts(s):
     return "", str(s).strip()
 
 
-school_majors = {}   # 校 -> {志愿类核心名: (分,位次)}
+# 人工查证的试验班包含专业(可作为“包含该专业”的依据)
+manual = {"试验班": {}}
+mc_json = ROOT / "scripts" / "manual_check.json"
+if mc_json.exists():
+    with open(mc_json, encoding="utf-8") as f:
+        manual = json.load(f)
+syb_map = manual.get("试验班", {})
+
+# 排除: 专项计划(已在类型列排除)、中外合作、分校/校区/马来西亚等异地校区、定向/预科/走读等特殊计划
+EXCLUDE_PAT = re.compile(r"分校|校区|马来西亚|中外合作|合作办学|定向|预科|走读|联合培养|专项")
+
+school_rows = {}   # 校 -> [(核心名, 分, 位次, 类型, 试验班查证专业, 全名)]
 for _, r in td.iterrows():
     _c, full = parse_name(r["专业代号及名称"])
-    core, _n = split_core_note(full)
-    _s, school = school_parts(r["院校代号及名称"])
+    core, note = split_core_note(full)
+    sc, school = school_parts(r["院校代号及名称"])
     typ = str(r["专项计划/中外合作"]).strip() if pd.notna(r["专项计划/中外合作"]) else "普通"
-    if typ != "普通":
-        continue
     try:
         score, rank = int(float(r["最低分"])), int(float(r["最低位次"]))
     except (TypeError, ValueError):
         continue
-    school_majors.setdefault(school, {}).setdefault(core, (score, rank))
+    key = f"{sc}|{full}|{rank}"
+    entry = syb_map.get(key) or {}
+    syb_majors = entry.get("majors", []) if entry.get("mode") == "list" else []
+    school_rows.setdefault(school, []).append((core, score, rank, typ, syb_majors, full))
 
-ALIAS = {"数学类": ["数学类", "数学与应用数学"], "物理学类": ["物理学类", "物理学"],
-         "化学类": ["化学类", "化学"], "生物科学类": ["生物科学类", "生物科学"],
-         "历史学类": ["历史学类", "历史学"], "哲学类": ["哲学类", "哲学"],
-         "力学类": ["力学类", "工程力学"], "核工程类": ["核工程类", "核工程与核技术"],
-         "航空航天类": ["航空航天类", "航空航天工程"],
-         "数学与应用数学": ["数学与应用数学", "数学类"], "应用物理学": ["应用物理学", "物理学"],
-         "应用化学": ["应用化学", "化学"], "理论与应用力学": ["理论与应用力学", "工程力学"],
-         "基础医学": ["基础医学", "临床医学类"], "基础医学（八年制）": ["基础医学", "临床医学类"],
-         "汉语言文学（古文字学方向）": ["汉语言文学", "中国语言文学类"],
-         "汉语言文学（古文字学）": ["汉语言文学"], "汉语言文学（古文字方向）": ["汉语言文学"],
-         "中国语言文学类（古文字学方向）": ["中国语言文学类", "汉语言文学"],
-         "中国少数民族语言文学（古文字学方向）": ["中国少数民族语言文学"],
-         "草业科学（草类植物生物育种）": ["草业科学"], "药学（生物医药）": ["药学"],
-         "测控技术与仪器（量子信息）": ["测控技术与仪器"],
-         "复合材料与工程（航天材料）": ["复合材料与工程"],
-         "材料科学与工程（航天材料）": ["材料科学与工程"]}
+# 大类名 -> 目录包含专业
+lei2majors = {}
+for cls in cat["tree"].values():
+    for lei, majors in cls.items():
+        lei2majors[lei] = [nm for _c, nm in majors]
+
+# 强基专业类名 -> 可能的“具体专业名”列表(用于匹配同名志愿类或包含该专业的大类)
+MAJOR_ALIAS = {
+    "数学类": ["数学与应用数学", "信息与计算科学"],
+    "物理学类": ["物理学", "应用物理学"],
+    "化学类": ["化学", "应用化学"],
+    "生物科学类": ["生物科学", "生物技术"],
+    "历史学类": ["历史学"],
+    "哲学类": ["哲学"],
+    "力学类": ["理论与应用力学", "工程力学"],
+    "核工程类": ["核工程与核技术", "工程物理"],
+    "航空航天类": ["航空航天工程"],
+    "中国语言文学类（古文字学方向）": ["汉语言文学"],
+    "中国语言文学类（古文字学）": ["汉语言文学"],
+    "汉语言文学（古文字学方向）": ["汉语言文学"],
+    "汉语言文学（古文字学）": ["汉语言文学"],
+    "汉语言文学（古文字方向）": ["汉语言文学"],
+    "中国少数民族语言文学（古文字学方向）": ["中国少数民族语言文学"],
+    "基础医学（八年制）": ["基础医学"],
+    "草业科学（草类植物生物育种）": ["草业科学"],
+    "药学（生物医药）": ["药学"],
+    "测控技术与仪器（量子信息）": ["测控技术与仪器"],
+    "复合材料与工程（航天材料）": ["复合材料与工程"],
+    "材料科学与工程（航天材料）": ["材料科学与工程"],
+}
 
 
-def match_major(school, cat):
-    ms = school_majors.get(school) or {}
-    for cand in ALIAS.get(cat, [cat]):
-        if cand in ms:
-            return ms[cand]
-    for cand in ALIAS.get(cat, [cat]):
-        for k, v in ms.items():
-            if cand and (cand in k or k in cand):
-                return v
-    return (None, None)
+def majors_of(cat):
+    return MAJOR_ALIAS.get(cat, [cat])
+
+
+def ref_best(school, cat):
+    """分专业普通批参考: 同名志愿类 / 目录包含该专业的大类 / 已查证含该专业的试验班。
+    仅取招生类型为“普通”(排除专项计划、中外合作办学)且非分校校区的志愿类,
+    并在候选中取最低分(避免创新班等特殊班型分数偏高)。
+    返回 (分, 位次, 采用的志愿类名)。"""
+    cands = []
+    for core, score, rank, typ, syb_majors, full in school_rows.get(school, []):
+        if typ != "普通":
+            continue
+        if EXCLUDE_PAT.search(full):
+            continue
+        hit = False
+        for mj in majors_of(cat):
+            if core == mj or (core in lei2majors and mj in lei2majors[core]) or mj in syb_majors:
+                hit = True
+                break
+        if hit:
+            cands.append((score, rank, core))
+    if not cands:
+        return (None, None, "")
+    score, rank, core = min(cands, key=lambda x: x[0])
+    return (score, rank, core)
 
 
 # 清华: 按文/理试验班标注
@@ -172,26 +214,24 @@ TSINGHUA_WEN = ["中国语言文学类（古文字学方向）", "历史学类",
 
 
 def tsinghua_ref(cat):
-    ms = school_majors.get("清华大学") or {}
-    if cat in TSINGHUA_LI:
-        for k in ("理科试验班(理科各专业)", "理科试验班类", "理科试验班"):
-            if k in ms:
-                return ms[k]
-    if cat in TSINGHUA_WEN:
-        for k in ("文科试验班类(文科各专业)", "文科试验班类"):
-            if k in ms:
-                return ms[k]
-    return (None, None)
+    for core, score, rank, typ, syb_majors, full in school_rows.get("清华大学", []):
+        if typ != "普通" or EXCLUDE_PAT.search(full):
+            continue
+        if cat in TSINGHUA_LI and core.startswith("理科试验班"):
+            return (score, rank, core)
+        if cat in TSINGHUA_WEN and core.startswith("文科试验班"):
+            return (score, rank, core)
+    return (None, None, "")
 
 
 def derive_included(cat):
-    """规则4: 具体专业→直接预填; 带括号→去括号后判断并返回提示; 大类→待查"""
+    """规则: 具体专业→直接预填; 带括号→去括号后判断, 括号内容作为备注; 大类→待查"""
     m = re.match(r"^(.*?)[（(](.*)[)）]$", cat)
     base = m.group(1).strip() if m else cat
-    raw_hint = cat if m else ""
+    note = m.group(2).strip() if m else ""
     if base in cat_names and base not in lei_names:
-        return [base], raw_hint
-    return [], ""
+        return [base], note
+    return [], note
 
 
 # ============================================================
@@ -370,6 +410,100 @@ SCHOOLS = [
 ]
 
 # ============================================================
+# 官方招生章程链接与报名时间
+# 来源: 江苏省教育考试院《2026年强基计划39校招生简章与报名时间汇总》
+#       (扬州市教育局转载, http://jyj.yangzhou.gov.cn/jygl/zsks/ptgxzsxx/art/2026/art_49248a8b67e543beba06ca45a947f976.html)
+# 链接指向各校官方微信公众号发布的招生简章; 未列出的备用官方入口为阳光高考强基专题
+# ============================================================
+CHSI_TOPIC = "https://gaokao.chsi.com.cn/gkzt/jcxkzs"
+SCHOOL_LINKS = {
+    "北京大学": "https://mp.weixin.qq.com/s?__biz=MzA3OTE0MjQzMw==&mid=2652034191&idx=1&sn=bb1331bbcd94c6fb515d71bf8515457e",
+    "中国人民大学": "https://mp.weixin.qq.com/s?__biz=MzA3ODU4MzU3OA==&mid=2652504227&idx=1&sn=18c8b4d0139a0d6819ac09df0cab1e9a",
+    "清华大学": "https://mp.weixin.qq.com/s?__biz=MzA4OTIyMzgxMw==&mid=2659401517&idx=1&sn=1a8939f9bb504acc6fe1f01e2a3079f8",
+    "北京航空航天大学": "https://mp.weixin.qq.com/s?__biz=MzA3NTY1MTUzOQ==&mid=2651488755&idx=1&sn=78e3071a1058ac4f8bb53a4a307c3309",
+    "北京理工大学": "https://mp.weixin.qq.com/s?__biz=MzUyMzYxNjE0Mg==&mid=2247653746&idx=1&sn=1b2c98c9a0fcdcd8ecdaea7c05639789",
+    "中国农业大学": "https://mp.weixin.qq.com/s?__biz=MzA3MzM3MTUxOQ==&mid=2651285573&idx=1&sn=2e5c8920c491e9931c953eec00de74c6",
+    "北京师范大学": "https://mp.weixin.qq.com/s?__biz=MjM5MTg4NjM2MQ==&mid=2658050606&idx=1&sn=95bf1324d037d15eddfcf05a359942d4",
+    "中央民族大学": "https://mp.weixin.qq.com/s?__biz=MzAxNDEwNzkzMg==&mid=2651840949&idx=1&sn=86136bde471f66366ca8b07d79930ac3",
+    "南开大学": "https://mp.weixin.qq.com/s?__biz=MjM5NzgwNDg0MQ==&mid=2650849867&idx=1&sn=4f30e34e45dd4b00753fb80124b7514b",
+    "天津大学": "https://mp.weixin.qq.com/s?__biz=MjM5NzkwNzU0Mg==&mid=2654829695&idx=1&sn=0e93fc1c07ad21f95ae3306d0794714d",
+    "大连理工大学": "https://mp.weixin.qq.com/s?__biz=MjM5MzIzODI2MA==&mid=2651909983&idx=1&sn=7200b71eb73ae90a0264ccb0b2378904",
+    "东北大学": "https://mp.weixin.qq.com/s?__biz=MzA4NzIwNjIzMg==&mid=2651112701&idx=1&sn=b81ca43ffb1ff28440d95189f8627e68",
+    "吉林大学": "https://mp.weixin.qq.com/s?__biz=MzUzODA1NjcyMA==&mid=2247577340&idx=1&sn=6c79ac646b148c11a0f12e7e5ef64d4f",
+    "哈尔滨工业大学": "https://mp.weixin.qq.com/s?__biz=MzI3NzU5NTEwNw==&mid=2247700610&idx=1&sn=2b59d9cacfebcc9036743a817cb5a998",
+    "复旦大学": "https://mp.weixin.qq.com/s?__biz=MjM5OTUwMzIwMQ==&mid=2651530990&idx=1&sn=3f3f32ee37f310c536ec9f5adfe4a272",
+    "同济大学": "https://mp.weixin.qq.com/s?__biz=MzAxNzMxNzgxMQ==&mid=2656916233&idx=1&sn=b8e35f7b61328488758a36f45f810cb9",
+    "上海交通大学": "https://mp.weixin.qq.com/s?__biz=MjM5MDIyMDQyMA==&mid=2650869498&idx=1&sn=3698662a6c0ed3146bfaab2994fe8d80",
+    "华东师范大学": "https://mp.weixin.qq.com/s?__biz=MjM5MzY4NTMwMQ==&mid=2651604391&idx=1&sn=57159e05cb6c611183f75fb69fc9de8d",
+    "南京大学": "https://mp.weixin.qq.com/s?__biz=MzAxODAzMjQ1NQ==&mid=2707754511&idx=1&sn=5ce19a08770ad4fd3da3d4400d2b0e5c",
+    "东南大学": "https://mp.weixin.qq.com/s?__biz=MjM5NjQxMDE2MQ==&mid=2651046482&idx=1&sn=38a75c7039f270c856c30140ba209e2b",
+    "浙江大学": "https://mp.weixin.qq.com/s?__biz=MjM5NDgxNTQwNQ==&mid=2651012201&idx=1&sn=6b3fda13c622514d801d73d475d7e9a9",
+    "中国科学技术大学": "https://mp.weixin.qq.com/s?__biz=MjM5NTY5ODYyMQ==&mid=2652071906&idx=1&sn=ef3a752c953c911aac1442203ab5c726",
+    "厦门大学": "https://mp.weixin.qq.com/s?__biz=MzA3OTM1MTIzNQ==&mid=2653260513&idx=1&sn=973f07612742b9bcbeebc727a775d1dc",
+    "山东大学": "https://mp.weixin.qq.com/s?__biz=MzA4MTA0NTAyNw==&mid=2652300490&idx=1&sn=503462a8bc01ffa97680bf7c421f62ff",
+    "中国海洋大学": "https://mp.weixin.qq.com/s?__biz=MjM5MjU2NDc0Mw==&mid=2651672109&idx=1&sn=6f96a006f49ea56db1565390c06f3b7a",
+    "武汉大学": "https://mp.weixin.qq.com/s?__biz=MzA5MjM3MzUxMA==&mid=2656212784&idx=1&sn=ca2d83b88e002f39029c8d9c7bafb755",
+    "华中科技大学": "https://mp.weixin.qq.com/s?__biz=MjM5MDAyMzM4MA==&mid=2650560908&idx=1&sn=2fd739c4893b4d80386bfad436425a38",
+    "湖南大学": "https://mp.weixin.qq.com/s?__biz=MzA3ODQ3MjIzOA==&mid=2651823753&idx=1&sn=58545e3f871c8e38c0af60b835e1e24e",
+    "中南大学": "https://mp.weixin.qq.com/s?__biz=MzA5NTI2MzExNA==&mid=2651242253&idx=1&sn=f938abb1099f1266580abe9b88140e30",
+    "中山大学": "https://mp.weixin.qq.com/s?__biz=MzA3MDc5NjAyOA==&mid=2651597758&idx=1&sn=fa451b02ac3de5d82fe62ecc7d6b672d",
+    "华南理工大学": "https://mp.weixin.qq.com/s?__biz=MzA5NDQ1NzE5Ng==&mid=2651568440&idx=1&sn=420a6750b04c4e41c8b5504ad542908b",
+    "四川大学": "https://mp.weixin.qq.com/s?__biz=MzA5Mzc2MDYxMw==&mid=2650175673&idx=1&sn=405ab9a27b4a1833b5ac8f06f0455c57",
+    "重庆大学": "https://mp.weixin.qq.com/s?__biz=MjM5MjA5MTQyMA==&mid=2651480156&idx=1&sn=02aed666cf288b4275e88c29fdcbf1d0",
+    "电子科技大学": "https://mp.weixin.qq.com/s?__biz=MjM5MzM5MTMwMQ==&mid=2651769680&idx=1&sn=f672b72f879a82491df87a3fba93e305",
+    "西安交通大学": "https://mp.weixin.qq.com/s?__biz=MjM5NzUxNjUyMQ==&mid=2650356875&idx=1&sn=89b41afe2cb0e47473c62c1e12689e4b",
+    "西北工业大学": "https://mp.weixin.qq.com/s?__biz=MzA4NDE1MjgwNw==&mid=2649839945&idx=1&sn=49a6eee542f22e00d3d574865204139a",
+    "西北农林科技大学": "https://mp.weixin.qq.com/s?__biz=MzA4MTE1MTkwNw==&mid=2651089853&idx=1&sn=7a3b96e7d715a4b5eee8c77a70213db4",
+    "兰州大学": "https://mp.weixin.qq.com/s?__biz=MzA4OTQxMzUyNA==&mid=2651016404&idx=1&sn=8e7c8b262f6ff80d2869d11893e8ebc5",
+    "国防科技大学": "https://mp.weixin.qq.com/s?__biz=MzAxNjYzNjkyNw==&mid=2654107743&idx=1&sn=2e8be4b6d2c80c1883bc8c12f3b07f23",
+}
+SCHOOL_SIGNUP = {
+    "北京大学": "4月15日至30日；破格资格申请4月15日至23日",
+    "中国人民大学": "第一类4月8日至30日；第二类4月8日至27日",
+    "清华大学": "4月10日至30日；破格资格申请4月10日至23日",
+    "北京航空航天大学": "4月13日至30日",
+    "北京理工大学": "4月15日至30日",
+    "中国农业大学": "4月7日至30日",
+    "北京师范大学": "4月10日至30日",
+    "中央民族大学": "4月10日至27日12:00",
+    "南开大学": "第一类4月7日14:00至30日17:00；第二类4月7日14:00至29日17:00",
+    "天津大学": "4月10日至30日",
+    "大连理工大学": "4月7日至30日",
+    "东北大学": "4月10日至30日",
+    "吉林大学": "4月14日至30日",
+    "哈尔滨工业大学": "第一类4月10日至30日；第二类4月10日至25日",
+    "复旦大学": "A类4月8日至30日；B类4月8日至26日",
+    "同济大学": "第一类4月9日至30日；第二类4月9日至26日",
+    "上海交通大学": "第一类截至4月30日24:00；第二类截至4月27日24:00",
+    "华东师范大学": "4月10日至30日15:00",
+    "南京大学": "第一类4月10日至30日；第二类4月10日至26日",
+    "东南大学": "4月8日至30日17:00",
+    "浙江大学": "第一类4月13日至30日17:00；第二类4月13日至26日17:00",
+    "中国科学技术大学": "第一类4月10日至30日；第二类4月10日至26日18:00",
+    "厦门大学": "第一类4月10日至30日；第二类4月10日至26日",
+    "山东大学": "4月10日至30日",
+    "中国海洋大学": "4月9日至30日",
+    "武汉大学": "4月10日12:00至30日12:00",
+    "华中科技大学": "4月13日9:00至30日12:00",
+    "湖南大学": "4月30日24:00前",
+    "中南大学": "4月10日至30日",
+    "中山大学": "4月10日至30日",
+    "华南理工大学": "4月9日至30日",
+    "四川大学": "第一类4月13日至30日；第二类4月13日至26日",
+    "重庆大学": "4月10日至30日",
+    "电子科技大学": "4月10日至30日",
+    "西安交通大学": "4月10日至30日",
+    "西北工业大学": "4月9日至30日",
+    "西北农林科技大学": "4月8日至30日",
+    "兰州大学": "4月10日至30日",
+    "国防科技大学": "4月9日至30日",
+}
+for _s in SCHOOLS:
+    _s["link"] = SCHOOL_LINKS.get(_s["name"], CHSI_TOPIC)
+    if SCHOOL_SIGNUP.get(_s["name"]):
+        _s["signup"] = SCHOOL_SIGNUP[_s["name"]]
+
+# ============================================================
 # 组装行
 # ============================================================
 rows = []
@@ -377,19 +511,19 @@ for s in SCHOOLS:
     no_exam = "仅面试" in (s.get("form") or "")
     if not s["majors"]:
         rows.append(dict(school=s["name"], cat="", inc="", incRk=[], subj="无笔试" if no_exam else "",
-                         score=None, rank=None, raw=""))
+                         score=None, rank=None, ref="", note=""))
         continue
     for cat, subj in s["majors"]:
-        inc_list, raw_hint = derive_included(cat)
+        inc_list, note = derive_included(cat)
         if s["name"] == "清华大学":
-            sc, rk = tsinghua_ref(cat)
+            sc, rk, ref = tsinghua_ref(cat)
         else:
-            sc, rk = match_major(s["name"], cat)
+            sc, rk, ref = ref_best(s["name"], cat)
         rows.append(dict(
             school=s["name"], cat=cat,
             inc="、".join(inc_list), incRk=[dict(n=m, **rank_info(s["name"], m)) for m in inc_list],
             subj=("无笔试" if no_exam else subj),
-            score=sc, rank=rk, raw=raw_hint,
+            score=sc, rank=rk, ref=ref, note=note,
         ))
 
 # ============================================================
@@ -408,15 +542,15 @@ for i, s in enumerate(SCHOOLS, 1):
 
 ws2 = wb.create_sheet("专业信息")
 h2 = ["序号", "院校名称", "强基专业类名称", "包含专业（顿号分隔）", "考查科目",
-      "对应普通批最低分", "对应普通批最低位次", "简章原名（含方向说明）", "备注"]
+      "对应普通批最低分", "对应普通批最低位次", "参考志愿类", "备注（括号内方向）"]
 ws2.append(h2)
 for i, r in enumerate(rows, 1):
     ws2.append([i, r["school"], r["cat"], r["inc"], r["subj"],
-                r["score"] if r["score"] else "", r["rank"] if r["rank"] else "", r["raw"], ""])
+                r["score"] if r["score"] else "", r["rank"] if r["rank"] else "", r["ref"], r["note"]])
 
 for ws, headers, widths in [
-    (ws1, h1, [5, 16, 9, 34, 14, 46, 26, 15, 34, 24, 60]),
-    (ws2, h2, [5, 16, 30, 34, 18, 15, 17, 30, 24]),
+    (ws1, h1, [5, 16, 9, 34, 14, 46, 26, 15, 34, 30, 60]),
+    (ws2, h2, [5, 16, 30, 34, 18, 15, 17, 26, 22]),
 ]:
     fill = PatternFill("solid", fgColor="1D4ED8")
     for c in range(1, len(headers) + 1):
@@ -442,15 +576,16 @@ for s in SCHOOLS:
     for cat, subj in s["majors"]:
         r = rows[ri]; ri += 1
         ms.append({"cat": r["cat"], "inc": r["inc"], "incRk": r["incRk"], "subj": r["subj"],
-                   "s": r["score"], "r": r["rank"], "raw": r["raw"]})
+                   "s": r["score"], "r": r["rank"], "ref": r["ref"], "note": r["note"]})
     if not s["majors"]:
         r = rows[ri]; ri += 1
-        ms.append({"cat": "", "inc": "", "incRk": [], "subj": r["subj"], "s": None, "r": None, "raw": ""})
+        ms.append({"cat": "", "inc": "", "incRk": [], "subj": r["subj"], "s": None, "r": None,
+                   "ref": "", "note": ""})
     out_schools.append({
         "name": s["name"], "mode": s.get("mode", ""), "examTime": s.get("examTime", ""),
         "ratio": s.get("ratio", ""), "entry": s.get("entry", ""), "entryScore": s.get("entryScore", ""),
         "form": s.get("form", ""), "brk": s.get("brk", ""), "signup": s.get("signup", ""),
-        "note": s.get("note", ""), "majors": ms,
+        "note": s.get("note", ""), "link": s.get("link", ""), "majors": ms,
     })
 
 with open(OUT_JS, "w", encoding="utf-8") as f:
