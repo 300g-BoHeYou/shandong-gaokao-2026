@@ -19,6 +19,13 @@ CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八
 ALT = {"中央民族大学": "fix_69437_600.html", "上海交通大学": "fix_38987_52.html",
        "四川大学": "fix_scu_jz.html", "兰州大学": "lzu_jz.html"}
 
+# 个别院校简章中考核时间的表述与自动规则不一致, 按简章原文指定
+TIME_OVERRIDE = {
+    "南京大学": "初试6月19日左右；复试6月21日左右",
+    "西安交通大学": "初试6月12日左右；复试6月18日左右",
+    "浙江大学": "考试确认5月31日-6月11日12:00；考核时间另行公告",
+}
+
 
 def to_text(html):
     h = re.sub(r"<script.*?</script>|<style.*?</style>|<!--.*?-->", " ", html, flags=re.S | re.I)
@@ -171,7 +178,7 @@ def main():
             "入围比例": ratio_of(name, t),
             "入围方式": entry_of(t),
             "入围成绩计算": calc_of(t),
-            "校考时间": win_of(name, t),
+            "校考时间": TIME_OVERRIDE.get(name) or win_of(name, t),
             "校考形式": form_of(t),
             "竞赛破格政策": brk_of(t),
             "报名时间": (CORPUS.get(name, {}).get("signup", "") or "").replace(" 至 ", "至"),
