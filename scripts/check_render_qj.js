@@ -16,7 +16,8 @@ global.document = {
   getElementById: (id) => (els[id] = els[id] || new E()),
   createElement: () => new E(), addEventListener() {}, body: new E(),
 };
-eval(fs.readFileSync("data_qiangji_new.js", "utf8"));
+const DATA_FILE = process.argv[2] || "data_qiangji.js";
+eval(fs.readFileSync(DATA_FILE, "utf8"));
 const qj = require(require("path").join(__dirname, "..", "qiangji.js"));
 const html = els.results.innerHTML;
 console.log("rowspan 次数:", (html.match(/rowspan=/g) || []).length);
