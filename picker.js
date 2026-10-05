@@ -24,6 +24,8 @@
   function create(opts) {
     var tree = opts.tree || [];
     var sel = opts.sel || (opts.sel = { mens: {}, leis: {}, majors: {} });
+    if (!sel.majors) sel.majors = {};
+    var MAJOR2MEN = {};   // 专业名 -> [门类, 专业类]
     var ids = opts.ids || {};
     var $ = function (id) { return id ? document.getElementById(id) : null; };
     var elToggle = $(ids.toggle), elPanel = $(ids.panel), elSearch = $(ids.search);
@@ -39,6 +41,7 @@
         l.majors.forEach(function (x) {
           LEI_MAJORS[l.lei].push(x.n);
           MEN_MAJORS[m.men].push(x.n);
+          MAJOR2MEN[x.n] = [m.men, l.lei];
         });
         LEI_CNT[l.lei] = l.majors.length;
       });
@@ -49,25 +52,42 @@
     var open = { men: {}, lei: {} };
     var treeRendered = false;   // 目录树较大, 首次展开面板时才渲染
 
-    function selectedCount() {
-      return Object.keys(sel.mens).length + Object.keys(sel.leis).length + Object.keys(sel.majors).length;
+    /* ---- 选择模型: 只维护"已选专业"集合, 专业类/门类状态由它推导 ----
+       stateOf(names): "all"(全选) / "some"(部分, 复选框半打钩) / "none" */
+    function stateOf(names) {
+      var hit = 0, i;
+      for (i = 0; i < names.length; i++) if (sel.majors[names[i]]) hit++;
+      if (!hit) return "none";
+      return hit === names.length ? "all" : "some";
     }
+    function setAll(names, on) {
+      for (var i = 0; i < names.length; i++) {
+        if (on) sel.majors[names[i]] = true; else delete sel.majors[names[i]];
+      }
+    }
+    // 该类/门类是否被"整类选择"覆盖(用于 chips 归并; 仅统计显式整选的层级)
+    function coveredBy(men, lei) {
+      if (men && stateOf(MEN_MAJORS[men]) === "all" && sel.mens[men]) return true;
+      return !!(lei && stateOf(LEI_MAJORS[lei]) === "all" && sel.leis[lei]);
+    }
+    function menOfLei(lei) {
+      var keys = Object.keys(MEN_LEIS);
+      for (var i = 0; i < keys.length; i++) if ((MEN_LEIS[keys[i]] || []).indexOf(lei) >= 0) return keys[i];
+      return "";
+    }
+
+    function selectedCount() { return Object.keys(sel.majors).length; }
 
     // 展开成具体专业集合(用于匹配与高亮)
     function expanded() {
       var out = {};
       Object.keys(sel.majors).forEach(function (n) { out[n] = true; });
-      Object.keys(sel.leis).forEach(function (lei) {
-        (LEI_MAJORS[lei] || []).forEach(function (n) { out[n] = true; });
-      });
-      Object.keys(sel.mens).forEach(function (men) {
-        (MEN_MAJORS[men] || []).forEach(function (n) { out[n] = true; });
-      });
       return out;
     }
 
     function syncCount() {
-      if (elCount) elCount.textContent = selectedCount() ? "已选 " + selectedCount() + " 项" : "";
+      var n = selectedCount();
+      if (elCount) elCount.textContent = n ? "已选 " + n + " 个专业" : "";
     }
 
     function notify() {
@@ -82,9 +102,11 @@
       var q = norm(elSearch ? elSearch.value : "");
       var html = "";
       tree.forEach(function (m) {
+        var menState = stateOf(MEN_MAJORS[m.men] || []);
         var menHit = !q || norm(m.men).indexOf(q) >= 0;
         var leisHtml = "";
         m.leis.forEach(function (l) {
+          var leiState = stateOf(LEI_MAJORS[l.lei] || []);
           var leiHit = menHit || norm(l.lei).indexOf(q) >= 0;
           var majorsHtml = "";
           l.majors.forEach(function (x) {
@@ -97,9 +119,11 @@
           if (!majorsHtml && q && !leiHit) return;
           leisHtml += '<div class="pk-lei">'
             + '<div class="pk-row pk-lei-row">'
-            + '<input type="checkbox" data-pk="lei" data-v="' + esc(l.lei) + '"' + (sel.leis[l.lei] ? " checked" : "") + ">"
+            + '<input type="checkbox" data-pk="lei" data-v="' + esc(l.lei) + '"'
+            + (leiState === "all" ? " checked" : "") + (leiState === "some" ? ' data-ind="1"' : "") + ">"
             + '<span class="pk-name" data-open="lei" data-v="' + esc(l.lei) + '">' + esc(l.lei)
-            + '<i class="pk-cnt">' + l.majors.length + "个专业</i></span>"
+            + '<i class="pk-cnt">' + l.majors.length + "个专业</i>"
+            + (leiState === "some" ? '<i class="pk-cnt pk-sel">已选该类部分专业</i>' : "") + "</span>"
             + '<button class="pk-arrow" data-open="lei" data-v="' + esc(l.lei) + '" title="展开/收起">'
             + (open.lei[l.lei] || q ? "▾" : "▸") + "</button>"
             + "</div>"
@@ -109,7 +133,8 @@
         if (!leisHtml && q && !menHit) return;
         html += '<div class="pk-men">'
           + '<div class="pk-row pk-men-row">'
-          + '<input type="checkbox" data-pk="men" data-v="' + esc(m.men) + '"' + (sel.mens[m.men] ? " checked" : "") + ">"
+          + '<input type="checkbox" data-pk="men" data-v="' + esc(m.men) + '"'
+          + (menState === "all" ? " checked" : "") + (menState === "some" ? ' data-ind="1"' : "") + ">"
           + '<span class="pk-name" data-open="men" data-v="' + esc(m.men) + '">' + esc(m.men)
           + '<i class="pk-cnt">' + MEN_CNT[m.men] + "个专业</i></span>"
           + '<button class="pk-arrow" data-open="men" data-v="' + esc(m.men) + '" title="展开/收起">'
@@ -119,6 +144,11 @@
           + "</div>";
       });
       elTree.innerHTML = html || '<div class="pk-empty">没有匹配的专业</div>';
+      // 部分选中 -> 复选框半打钩(浏览器生效; 测试环境用 data-ind 标记断言)
+      if (typeof elTree.querySelectorAll === "function") {
+        var cbs = elTree.querySelectorAll('input[data-ind="1"]');
+        for (var i = 0; i < cbs.length; i++) cbs[i].indeterminate = true;
+      }
     }
 
     function chip(label, kind, key, extra) {
@@ -133,13 +163,22 @@
     function renderChips() {
       if (!elChips) return;
       var html = "";
-      Object.keys(sel.mens).forEach(function (men) {
-        html += chip(men + "（整门类）", "men", men, MEN_CNT[men] + "专业");
+      // 整门类(显式勾选门类且其下专业已全选)
+      Object.keys(MEN_MAJORS).forEach(function (men) {
+        if (stateOf(MEN_MAJORS[men]) === "all" && sel.mens[men]) {
+          html += chip(men + "（整门类）", "men", men, MEN_CNT[men] + "专业");
+        }
       });
-      Object.keys(sel.leis).forEach(function (lei) {
-        html += chip(lei + "（整类）", "lei", lei, LEI_CNT[lei] + "专业");
+      // 整专业类(显式勾选专业类, 且其门类未整选)
+      Object.keys(LEI_MAJORS).forEach(function (lei) {
+        if (stateOf(LEI_MAJORS[lei]) === "all" && sel.leis[lei] && !coveredBy(menOfLei(lei), null)) {
+          html += chip(lei + "（整类）", "lei", lei, LEI_CNT[lei] + "专业");
+        }
       });
+      // 未并入整类/整门类的单个专业
       Object.keys(sel.majors).forEach(function (n) {
+        var mm = MAJOR2MEN[n] || ["", ""];
+        if (coveredBy(mm[0], mm[1])) return;
         html += chip(n, "major", n, "");
       });
       elChips.innerHTML = html || '<span class="pk-hint">尚未选择专业（可只选某个专业，也可整类/整门类选择）</span>';
@@ -166,9 +205,19 @@
         if (!cb || !cb.getAttribute) return;
         var kind = cb.getAttribute("data-pk"), v = cb.getAttribute("data-v");
         if (!kind) return;
-        if (kind === "men") { if (cb.checked) sel.mens[v] = true; else delete sel.mens[v]; }
-        else if (kind === "lei") { if (cb.checked) sel.leis[v] = true; else delete sel.leis[v]; }
-        else { if (cb.checked) sel.majors[v] = true; else delete sel.majors[v]; }
+        if (kind === "men") {
+          // 整门类: 未全选(含半选) -> 全选并记为整门类; 已全选 -> 全不选
+          var menAll = stateOf(MEN_MAJORS[v] || []) === "all";
+          setAll(MEN_MAJORS[v] || [], !menAll);
+          if (menAll) delete sel.mens[v]; else sel.mens[v] = true;
+        } else if (kind === "lei") {
+          var leiAll = stateOf(LEI_MAJORS[v] || []) === "all";
+          setAll(LEI_MAJORS[v] || [], !leiAll);
+          if (leiAll) delete sel.leis[v]; else sel.leis[v] = true;
+        } else {
+          if (cb.checked) sel.majors[v] = true; else delete sel.majors[v];
+        }
+        renderTree();
         notify();
       });
       elTree.addEventListener("click", function (e) {
@@ -192,8 +241,8 @@
         var rmk = t.getAttribute("data-rmk");
         if (rmk) {
           var v = t.getAttribute("data-v");
-          if (rmk === "men") delete sel.mens[v];
-          else if (rmk === "lei") delete sel.leis[v];
+          if (rmk === "men") { setAll(MEN_MAJORS[v] || [], false); delete sel.mens[v]; }
+          else if (rmk === "lei") { setAll(LEI_MAJORS[v] || [], false); delete sel.leis[v]; }
           else delete sel.majors[v];
           renderTree(); notify();
           return;
@@ -203,7 +252,7 @@
     }
     if (elClear) {
       elClear.addEventListener("click", function () {
-        sel.mens = {}; sel.leis = {}; sel.majors = {};
+        sel.majors = {}; sel.mens = {}; sel.leis = {};
         renderTree(); notify();
       });
     }

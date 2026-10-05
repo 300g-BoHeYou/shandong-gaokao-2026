@@ -545,22 +545,27 @@
       }
 
       var warn = "";
-      if (isLei && keys.length > 1 && Object.keys(S.intent).length) {
-        var others = entries.map(function (x) { return x.name; }).filter(function (n) { return !matched[n]; });
-        warn = '<div class="warn">⚠ 该志愿类为「' + esc(core) + '」大类招生，除所选专业外还包含：'
-          + esc(others.slice(0, 12).join("、")) + (others.length > 12 ? " 等共" + keys.length + "个专业" : "")
-          + "。所列专业" + (leiManual ? "来自院校官网人工查证" : leiFallback ? "为目录口径" : "已按该校实际开设情况筛减（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
-      } else if (isLei && keys.length > 1) {
-        warn = '<div class="hint">该志愿类为「' + esc(core) + '」大类招生，含 ' + keys.length
-          + " 个专业，" + (leiManual ? "来自院校官网人工查证" : leiFallback ? "为目录口径" : "已按该校实际开设情况筛减（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
+      var leiHint = '<div class="hint">该志愿类为「' + esc(core) + '」大类招生，含 ' + keys.length
+        + " 个专业，" + (leiManual ? "来自院校官网人工查证" : leiFallback ? "为目录口径" : "已按该校实际开设情况筛减（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
+      var sybHint = '<div class="hint">含专业来自院校2026年招生信息（人工查证），入学后以院校培养方案为准。</div>';
+      var intendOn = Object.keys(S.intent).length > 0;
+      var others = entries.filter(function (x) { return !x.hit; }).map(function (x) { return x.name; });
+      if (isLei && keys.length > 1) {
+        // 所选专业已覆盖该大类全部专业时, 不再给"大类招生"警示
+        if (intendOn && others.length) {
+          warn = '<div class="warn">⚠ 该志愿类为「' + esc(core) + '」大类招生，除所选专业外还包含：'
+            + esc(others.slice(0, 12).join("、")) + (others.length > 12 ? " 等共" + keys.length + "个专业" : "")
+            + "。所列专业" + (leiManual ? "来自院校官网人工查证" : leiFallback ? "为目录口径" : "已按该校实际开设情况筛减（软科收录/2026投档/查证口径）") + "，以院校当年招生简章为准</div>";
+        } else {
+          warn = leiHint;
+        }
       } else if (syb && syb.mode === "list") {
-        if (keys.length > 1 && Object.keys(S.intent).length) {
-          var others2 = entries.map(function (x) { return x.name; }).filter(function (n) { return !matched[n]; });
+        if (keys.length > 1 && intendOn && others.length) {
           warn = '<div class="warn">⚠ 该试验班除所选专业外还包含：'
-            + esc(others2.slice(0, 12).join("、")) + (others2.length > 12 ? " 等共" + keys.length + "个专业" : "")
+            + esc(others.slice(0, 12).join("、")) + (others.length > 12 ? " 等共" + keys.length + "个专业" : "")
             + "。含专业来自院校2026年招生信息，入学后以院校培养方案为准</div>";
         } else {
-          warn = '<div class="hint">含专业来自院校2026年招生信息（人工查证），入学后以院校培养方案为准。</div>';
+          warn = sybHint;
         }
       } else if (syb && syb.mode === "renxuan") {
         warn = '<div class="hint">可任选该校开设的专业，方向限制：' + esc(syb.dir) + "。具体以院校培养方案为准。</div>";
@@ -855,7 +860,7 @@
       $("exportBtn").addEventListener("click", exportCSV);
       $("resetBtn").addEventListener("click", function () {
         S.schoolKw = ""; S.textKw = ""; S.intent = {};
-        S.sel = { mens: {}, leis: {}, majors: {} };
+        S.sel.mens = {}; S.sel.leis = {}; S.sel.majors = {};   // 就地清空(选择器持有同一对象)
         S.subject = {};
         for (var j = 0; j < ALL_TYPES.length; j++) S.types[ALL_TYPES[j]] = true;
         S.scoreMin = S.scoreMax = S.rankMin = S.rankMax = null;

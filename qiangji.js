@@ -229,10 +229,10 @@
     kw.addEventListener("input", function () { S.kw = kw.value.trim(); render(); });
     document.getElementById("resetBtn").addEventListener("click", function () {
       S.mode = "全部"; S.form = "全部"; S.kw = "";
-      S.sel = { mens: {}, leis: {}, majors: {} };
+      S.sel.mens = {}; S.sel.leis = {}; S.sel.majors = {};   // 就地清空(选择器持有同一对象)
       SEL = {}; HAS_SEL = false;
       kw.value = "";
-      if (PICKER) { PICKER.sel.mens = {}; PICKER.sel.leis = {}; PICKER.sel.majors = {}; PICKER.render(); }
+      if (PICKER) PICKER.render();
       init(); render();
     });
 

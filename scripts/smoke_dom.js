@@ -92,6 +92,20 @@ ok((results.innerHTML.match(/<article/g) || []).length > 0, "意向专业筛选�
 ok(results.innerHTML.indexOf("⚠ 该志愿类为「计算机类」大类招生") >= 0, "大类招生提醒出现");
 ok(results.innerHTML.indexOf("chip hit") >= 0, "命中专业高亮 chip");
 
+// 所选专业覆盖该大类全部专业 -> 不再显示大类招生警示
+app.S.intent = { "软件工程": true, "计算机科学与技术": true };
+schoolInput.value = "清华大学";
+schoolInput.fire("input");
+ok(results.innerHTML.indexOf("⚠ 该志愿类为「计算机类」大类招生") < 0,
+  "覆盖大类全部专业时不显示大类招生警示");
+ok(results.innerHTML.indexOf("该志愿类为「计算机类」大类招生，含") >= 0, "仍保留中性说明(非警示)");
+// 只命中部分 -> 恢复警示
+app.S.intent = { "软件工程": true };
+schoolInput.fire("input");
+ok(results.innerHTML.indexOf("⚠ 该志愿类为「计算机类」大类招生") >= 0, "仅命中部分专业时仍显示警示");
+schoolInput.value = "";
+app.S.intent = {};
+
 console.log("== 三级目录选择器(一批次) ==");
 const treeEl = document.getElementById("pkTree");
 const chipsEl = document.getElementById("intentChips");
