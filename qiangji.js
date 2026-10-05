@@ -48,54 +48,63 @@
       var hit = false;
       for (var i = 0; i < s.majors.length; i++) {
         var m = s.majors[i];
-        if ((m.cat || "").indexOf(S.mkw) >= 0 || (m.inc || "").indexOf(S.mkw) >= 0) { hit = true; break; }
+        if ((m.cat || "").indexOf(S.mkw) >= 0) { hit = true; break; }
+        for (var j = 0; j < (m.items || []).length; j++) {
+          if ((m.items[j].n || "").indexOf(S.mkw) >= 0) { hit = true; break; }
+        }
+        if (hit) break;
       }
       if (!hit) return false;
     }
     return true;
   }
 
-  // 包含专业单元格: 专业名 + 软科排名标签 + 方向备注徽章
-  function incCell(m) {
-    var html = "";
-    if (m.inc) {
-      var parts = String(m.inc).split("、");
-      var rkMap = {};
-      (m.incRk || []).forEach(function (x) { rkMap[x.n] = x; });
-      html = parts.map(function (n) {
-        return esc(n) + rkBadge(rkMap[n]);
-      }).join("　");
-    } else {
-      html = todo();
-    }
-    if (m.note) {
-      html += '<span class="dirc" title="简章中该专业类的括号说明（培养方向）">' + esc(m.note) + "</span>";
-    }
+  // 包含专业单元格: 单个专业 + 软科排名标签 + 校验提示
+  function majorCell(it) {
+    var html = esc(it.n);
+    html += rkBadge({ st: it.st, rk: it.rk, cnt: it.cnt, inList: it.inList });
+    if (it.warn) html += '<span class="warnmark" title="' + esc(it.warn) + '">⚠ 待核</span>';
+    if (it.fix) html += '<span class="fixmark" title="' + esc(it.fix) + '">已修正名称</span>';
     return html;
   }
 
   // 对应普通批参考: 分数（排名），并注明所参考的志愿类
-  function refCell(m) {
-    if (m.r == null) return '<span class="dim" title="该校普通批无同名专业及包含该专业的大类（多以试验班招生）">—</span>';
-    var t = m.ref ? "参考志愿类：" + m.ref : "";
-    return '<span class="refscore">' + m.s + ' 分</span><span class="refrank">（' + m.r + " 名）</span>"
+  function refCell(it) {
+    if (it.r == null) {
+      return '<span class="dim" title="该校普通批无该专业及含该专业的大类（多以试验班招生）">—</span>';
+    }
+    var k = it.kind ? it.kind : (it.ref ? "参考" : "");
+    var t = it.ref ? (k + "：" + it.ref) : "";
+    return '<span class="refscore">' + it.s + ' 分</span><span class="refrank">（' + it.r + " 名）</span>"
       + (t ? '<span class="refsrc">' + esc(t) + "</span>" : "");
   }
 
   function majorRows(s) {
-    if (!s.majors.length || (!s.majors[0].cat && !s.majors[0].subj)) {
-      return '<tr><td colspan="4" class="dim">专业类待查证（官方简章专业表为图片，请在查证清单 Sheet2 中补充）</td></tr>';
+    if (!s.majors.length || (!s.majors[0].cat && !s.majors[0].items.length)) {
+      return '<tr><td colspan="4" class="dim">专业类待查证（请在查证清单 Sheet2 中补充）</td></tr>';
     }
     var html = "";
     for (var i = 0; i < s.majors.length; i++) {
-      var m = s.majors[i];
-      if (S.mkw && (m.cat || "").indexOf(S.mkw) < 0 && (m.inc || "").indexOf(S.mkw) < 0) continue;
-      html += "<tr>"
-        + "<td>" + esc(m.cat) + "</td>"
-        + "<td>" + incCell(m) + "</td>"
-        + "<td>" + val(m.subj) + "</td>"
-        + "<td>" + refCell(m) + "</td>"
-        + "</tr>";
+      var g = s.majors[i];
+      if (S.mkw) {
+        var hit = (g.cat || "").indexOf(S.mkw) >= 0;
+        for (var k = 0; k < g.items.length; k++) {
+          if ((g.items[k].n || "").indexOf(S.mkw) >= 0) hit = true;
+        }
+        if (!hit) continue;
+      }
+      var items = g.items.length ? g.items : [{ n: "", st: "notpub", rk: null, cnt: 0, inList: false, s: null, r: null, ref: "", kind: "", warn: "", fix: "" }];
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j];
+        if (S.mkw && (g.cat || "").indexOf(S.mkw) < 0 && (it.n || "").indexOf(S.mkw) < 0) continue;
+        var first = j === 0;
+        html += "<tr" + (first ? ' class="grp-start"' : "") + ">"
+          + "<td>" + (first ? esc(g.cat) + (g.note ? '<span class="dirc">' + esc(g.note) + "</span>" : "") : "") + "</td>"
+          + "<td>" + (it.n ? majorCell(it) : todo()) + "</td>"
+          + "<td>" + (first ? val(g.subj) : "") + "</td>"
+          + "<td>" + refCell(it) + "</td>"
+          + "</tr>";
+      }
     }
     return html || '<tr><td colspan="4" class="dim">无匹配专业类</td></tr>';
   }

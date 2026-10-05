@@ -7,6 +7,13 @@ scripts/.chrome-profile*/
 scripts/headless_*
 scripts/shiyanban_sources/
 
+# 强基抓取缓存(体积大, 可随时用 scripts/crawl_qiangji*.py 重新生成)
+qj_cache/*.html
+*.mhtml
+强基查证清单_官方核对.xlsx
+强基查证清单_split.xlsx
+data_qiangji_new.js
+
 # 系统
 .DS_Store
 Thumbs.db

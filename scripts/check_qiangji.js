@@ -66,13 +66,12 @@ const gk = QJ.schools.find((s) => s.name === "国防科技大学");
 ok(gk && gk.majors.length === 3, "国防科大 3 个专业类");
 
 console.log("== 普通批参考分(自动匹配) ==");
-const matched = QJ.schools.reduce((n, s) => n + s.majors.filter((m) => m.s != null).length, 0);
-ok(matched > 50, "自动匹配到分专业参考分的专业类 " + matched + " 条");
+const matched = QJ.schools.reduce((n, s) => n + s.majors.reduce((a, m) => a + m.items.filter((i) => i.s != null).length, 0), 0);
+ok(matched > 50, "自动匹配到分专业参考分的专业条数 " + matched);
 ok(qh.schoolScore === undefined, "已移除院校级分数(第3条要求)");
-// 找一个确实匹配到的样例
 let sample = null;
-QJ.schools.forEach((s) => s.majors.forEach((m) => { if (m.s != null && !sample) sample = { s: s.name, m: m }; }));
-ok(!!sample, "存在同名专业匹配样例: " + (sample ? sample.s + " " + sample.m.cat + " → " + sample.m.s + "分/" + sample.m.r + "名" : "-"));
+QJ.schools.forEach((s) => s.majors.forEach((m) => m.items.forEach((i) => { if (i.s != null && !sample) sample = { s: s.name, i: i }; })));
+ok(!!sample, "存在同名专业匹配样例: " + (sample ? sample.s + " " + sample.i.n + " → " + sample.i.s + "分/" + sample.i.r + "名" : "-"));
 
 console.log("== 渲染 ==");
 const out = document.getElementById("results").innerHTML;
@@ -103,22 +102,26 @@ ok(qj.DATA.find((s) => s.name === "北京大学").signup.indexOf("2026-04-15") >
 ok(qj.DATA.filter((x) => x.ratio).length === 39, "39 校入围比例齐全");
 
 console.log("== 第2条: 大类含该专业则填其分数(非专项最低分) ==");
-const xmu = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "数学类");
-ok(xmu.s === 648 && xmu.r === 5370, "厦大数学类=648分/5370名(排除马来西亚分校600分): " + xmu.s + "/" + xmu.r);
-const sjtu = qj.DATA.find((s) => s.name === "上海交通大学").majors.find((m) => m.cat === "数学与应用数学");
+const xmu = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "数学类").items.find((i) => i.n === "数学与应用数学");
+ok(xmu.s === 648 && xmu.r === 5370, "厦大数学类-数学与应用数学=648分/5370名(排除马来西亚分校600分): " + xmu.s + "/" + xmu.r);
+const sjtu = qj.DATA.find((s) => s.name === "上海交通大学").majors.find((m) => m.cat === "数学与应用数学").items[0];
 ok(sjtu.s === 682 && sjtu.r === 451, "上交数学与应用数学=682分/451名(试验班查证含该专业): " + sjtu.s + "/" + sjtu.r);
-const ouc = qj.DATA.find((s) => s.name === "中国海洋大学").majors.find((m) => m.cat === "海洋科学");
+const ouc = qj.DATA.find((s) => s.name === "中国海洋大学").majors.find((m) => m.cat === "海洋科学").items[0];
 ok(ouc.s === 627 && ouc.r === 12910, "海大海洋科学=627分/12910名(排除专项625/中外合作597): " + ouc.s + "/" + ouc.r);
-const withRef = qj.DATA.reduce((n, s) => n + s.majors.filter((m) => m.r != null).length, 0);
-ok(withRef >= 150, "有分专业参考分的行数 " + withRef + " (≥150)");
+const withRef = qj.DATA.reduce((n, s) => n + s.majors.reduce((a, m) => a + m.items.filter((i) => i.r != null).length, 0), 0);
+ok(withRef >= 150, "有分专业参考分的专业条数 " + withRef + " (≥150)");
+const totalItems = qj.DATA.reduce((n, s) => n + s.majors.reduce((a, m) => a + m.items.length, 0), 0);
+ok(totalItems > 300, "专业类已按专业拆分为独立条目: " + totalItems + " 条");
+const rankedItems = qj.DATA.reduce((n, s) => n + s.majors.reduce((a, m) => a + m.items.filter((i) => i.st === "ranked").length, 0), 0);
+ok(rankedItems > 250, "逐专业软科排名条数 " + rankedItems);
 
 console.log("== 第4条规则: 专业名直接落入包含专业 ==");
-const chemRow = qj.DATA.find((s) => s.name === "清华大学").majors.find((m) => m.cat === "化学");
-ok(chemRow.inc === "化学", "'化学'(具体专业) 直接预填为包含专业");
+const chemRow = qj.DATA.find((s) => s.name === "清华大学").majors.find((m) => m.cat === "化学").items[0];
+ok(chemRow.n === "化学", "'化学'(具体专业) 逐条列出");
 const chemLei = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "化学类");
-ok(chemLei.inc.length > 0, "'化学类'已填包含专业: " + chemLei.inc);
+ok(chemLei.items.length > 1, "'化学类'已拆分多个专业: " + chemLei.items.map((i) => i.n).join("/"));
 const gzw = qj.DATA.find((s) => s.name === "中国人民大学").majors.find((m) => m.cat.indexOf("古文字学") >= 0);
-ok(gzw.inc === "汉语言文学" && gzw.note.indexOf("古文字学") >= 0, "带括号方向: 去括号后预填+备注仅保留括号内容");
+ok(gzw.items[0].n === "汉语言文学" && gzw.note.indexOf("古文字学") >= 0, "带括号方向: 去括号后作为专业+备注仅保留括号内容");
 const jlu = qj.DATA.find((s) => s.name === "吉林大学");
 ok(jlu.majors.length === 4, "吉林大学 4 个专业(官方简章), 实际 " + jlu.majors.length);
 ok(jlu.majors.map((m) => m.cat).join("、") === "数学与应用数学、物理学、化学、古文字学", "吉大专业与官方一致");
@@ -128,9 +131,9 @@ ok(seu.ratio.indexOf("4倍") >= 0, "东南大学入围比例 4倍(官网)");
 
 console.log("== 第7条: 清华按文理试验班标注 ==");
 const tsinghua = qj.DATA.find((s) => s.name === "清华大学");
-const thMath = tsinghua.majors.find((m) => m.cat === "数学与应用数学");
+const thMath = tsinghua.majors.find((m) => m.cat === "数学与应用数学").items[0];
 ok(thMath.r != null && thMath.s != null, "清华数学与应用数学=理科试验班参考: " + (thMath.s + "分/" + thMath.r + "名"));
-const thWen = tsinghua.majors.find((m) => m.cat === "哲学类");
+const thWen = tsinghua.majors.find((m) => m.cat === "哲学类").items[0];
 ok(thWen.r != null && thWen.r > thMath.r, "清华文科类=文科试验班参考(位次更靠后): " + (thWen.s + "分/" + thWen.r + "名"));
 
 console.log("== 仅面试院校考查科目 ==");
