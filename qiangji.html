@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 强基计划参考 · 2027 届参考版</title>
+<style>
+  :root{
+    --c-main:#1d4ed8; --c-main-soft:#eff6ff; --c-line:#e5e7eb;
+    --c-bg:#f8fafc; --c-card:#fff; --c-qj:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+    background:var(--c-bg);color:#1f2937;font-size:14px;line-height:1.6;}
+  header{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;padding:14px 18px;}
+  header h1{margin:0;font-size:20px;}
+  header .sub{opacity:.88;font-size:12px;margin-top:2px;}
+  .tabbar{max-width:1180px;margin:10px auto 0;padding:0 14px;display:flex;gap:8px;flex-wrap:wrap;}
+  .tab{display:inline-block;padding:6px 16px;border-radius:8px 8px 0 0;background:#e2e8f0;color:#334155;
+    text-decoration:none;font-size:14px;font-weight:600;border:1px solid #cbd5e1;border-bottom:none;}
+  .tab.active{background:#fff;color:var(--c-main);}
+  .tab.disabled{opacity:.55;cursor:not-allowed;}
+  main{max-width:1180px;margin:0 auto;padding:0 14px 40px;}
+  .panel{background:var(--c-card);border:1px solid var(--c-line);border-radius:10px;
+    padding:12px 14px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .panel h2{margin:0 0 8px;font-size:15px;color:var(--c-qj);}
+  .rowgroup{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .rowgroup+.rowgroup{margin-top:8px;}
+  label{font-size:13px;color:#374151;white-space:nowrap;}
+  input[type=text],select{border:1px solid #cbd5e1;border-radius:6px;padding:5px 8px;font-size:13px;background:#fff;}
+  input:focus,select:focus{outline:2px solid #c4b5fd;border-color:var(--c-qj);}
+  .btn{border:1px solid var(--c-qj);background:var(--c-qj);color:#fff;border-radius:6px;
+    padding:6px 12px;font-size:13px;cursor:pointer;}
+  .btn.ghost{background:#fff;color:var(--c-qj);}
+  .chip{display:inline-block;border:1px solid #cbd5e1;background:#f8fafc;border-radius:999px;
+    padding:1px 10px;font-size:12px;cursor:pointer;line-height:1.9;white-space:nowrap;}
+  .chip.on{background:#f3e8ff;border-color:var(--c-qj);color:#6b21a8;font-weight:700;}
+  .notice{background:#fff7ed;border:2px solid #f97316;border-radius:10px;color:#7c2d12;
+    padding:10px 14px;margin:10px 0;font-size:13px;line-height:1.7;}
+  .notice b{color:#c2410c;}
+  .notice .tag{display:inline-block;background:#f97316;color:#fff;border-radius:6px;
+    padding:0 8px;font-size:12px;margin-right:6px;}
+  .two-mode{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px;}
+  .modebox{border:1px solid #ddd6fe;background:#faf5ff;border-radius:10px;padding:10px 12px;font-size:13px;}
+  .modebox h3{margin:0 0 6px;font-size:14px;color:#6d28d9;}
+  .modebox ul{margin:4px 0;padding-left:18px;}
+  .modebox li{margin:2px 0;}
+  .school{background:var(--c-card);border:1px solid var(--c-line);border-left:5px solid var(--c-qj);
+    border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .school-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .sname{font-weight:700;font-size:16px;color:#111827;}
+  .badge{border-radius:5px;padding:0 7px;font-size:11px;line-height:1.8;white-space:nowrap;}
+  .b-mode{background:#f3e8ff;color:#6b21a8;border:1px solid #ddd6fe;}
+  .b-form{background:#e0f2fe;color:#075985;border:1px solid #bae6fd;}
+  .scores{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+  .score-box,.rank-box{display:inline-flex;align-items:baseline;gap:3px;border-radius:10px;
+    padding:3px 12px 5px;box-shadow:0 1px 2px rgba(0,0,0,.05);}
+  .score-box{background:linear-gradient(180deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;}
+  .rank-box{background:linear-gradient(180deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;}
+  .score-box b,.rank-box b{font-size:22px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;}
+  .score-box b{color:#1d4ed8;} .rank-box b{color:#15803d;}
+  .score-box i,.rank-box i{font-style:normal;font-size:12px;color:#64748b;font-weight:600;}
+  .meta{font-size:13px;color:#4b5563;margin:6px 0;}
+  .meta b{color:#111827;}
+  .majors{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;}
+  .majors th,.majors td{border:1px solid #e5e7eb;padding:4px 8px;text-align:left;vertical-align:top;}
+  .majors th{background:#f5f3ff;color:#5b21b6;}
+  .majors tr:hover td{background:#faf5ff;}
+  .todo{color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:4px;
+    padding:0 5px;font-size:11px;white-space:nowrap;}
+  .dim{color:#9ca3af;}
+  .ok{color:#15803d;font-weight:600;}
+  .stats{font-size:13px;color:#374151;}
+  .stats b{color:var(--c-qj);}
+  .footer-note{max-width:1180px;margin:10px auto;padding:0 14px;font-size:12px;color:#9ca3af;}
+  .footer-note a{color:#6d28d9;}
+  @media (max-width:680px){
+    .score-box b,.rank-box b{font-size:19px;}
+    .scores{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>2026 强基计划参考 <span style="font-weight:400;font-size:14px;">供 2027 届考生参考</span></h1>
+  <div class="sub">39 所高校 · 出分前/出分后校考 · 入围规则 · 招生专业类与考查科目 · 分专业普通批位次参考</div>
+</header>
+
+<div class="tabbar">
+  <a class="tab" href="index.html">一批次（常规批）</a>
+  <a class="tab active" href="qiangji.html">强基计划</a>
+  <span class="tab disabled" title="后续加入">综合评价（敬请期待）</span>
+</div>
+
+<main>
+  <div class="notice">
+    <span class="tag">重要提醒</span><b>强基计划录取后即“锁档”：</b>被录取的考生不再参加后续各批次志愿录取；未被录取可正常参加。
+    <b>出分后校考的院校</b>先出高考成绩、按成绩确定入围名单，考生若成绩超预期可放弃校考、用裸分冲更好学校；
+    <b>出分前校考的院校</b>报名审核通过即可参加初试、以初试定复试资格，出分后直接折算录取，锁档性更强。
+    以下信息整理自各校 2026 年强基简章，<b>标注「待查证」的字段尚待核实，请以院校当年简章为准</b>。
+  </div>
+
+  <details class="panel" open>
+    <summary style="cursor:pointer;font-weight:600;color:var(--c-qj);">📌 两种校考时间安排的区别（点击展开/收起）</summary>
+    <div class="two-mode" style="margin-top:8px;">
+      <div class="modebox">
+        <h3>出分后校考 · 28 所</h3>
+        <ul>
+          <li>先出高考成绩，按高考成绩（部分校含单科加权）确定<b>入围名单</b>，入围者才参加校考</li>
+          <li>考生在出分后若成绩超预期，可<b>放弃校考</b>、用裸分冲更好学校，避免被锁档</li>
+          <li>入围方式：高考成绩入围 + 竞赛破格（2026 年多校取消或收紧）</li>
+          <li>适合：高考成绩稳定、希望保留“裸分冲刺”余地</li>
+        </ul>
+      </div>
+      <div class="modebox">
+        <h3>出分前校考 · 11 所</h3>
+        <ul>
+          <li>报名审核通过者<b>全部可参加初试笔试</b>，以初试成绩决定复试资格，<b>不以高考成绩为入围门槛</b></li>
+          <li>初试集中在高考后一周内（6/12-6/19），备考时间很短，笔试难度偏竞赛</li>
+          <li>出分后直接折算综合成绩录取，<b>锁档性强</b></li>
+          <li>适合：校测能力较强、竞赛基础较好，或高考分略低但希望争取机会</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+
+  <section class="panel">
+    <h2>筛选</h2>
+    <div class="rowgroup">
+      <label>校考时间模式：</label>
+      <span id="modeBox"></span>
+      <label>校考形式：</label>
+      <span id="formBox"></span>
+    </div>
+    <div class="rowgroup">
+      <label>院校：<input type="text" id="kw" placeholder="如 清华 / 复旦" style="width:150px;"></label>
+      <label>专业类：<input type="text" id="mkw" placeholder="如 数学 / 古文字 / 化学" style="width:170px;"></label>
+      <button class="btn ghost" id="resetBtn">重置</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>院校强基信息 <span id="stats" class="stats" style="font-weight:400;"></span></h2>
+    <div id="results"></div>
+  </section>
+</main>
+
+<footer class="footer-note">
+  免责声明：本页整理自各校 2026 年强基计划招生简章及公开报道，仅供 2027 届考生了解强基政策与专业设置，不构成报考建议；一切以院校当年官方简章为准。
+  <br>在线使用：<a href="https://sdgk.pages.dev" target="_blank" rel="noopener">sdgk.pages.dev</a>（Cloudflare Pages）｜ 数据有误或想贡献：<a href="https://github.com/300g-BoHeYou/shandong-gaokao-2026" target="_blank" rel="noopener">GitHub 仓库</a>
+</footer>
+
+<script src="data_qiangji.js"></script>
+<script src="qiangji.js"></script>
+</body>
+</html>
