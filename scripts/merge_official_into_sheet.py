@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "qj_cache"
 XLSX = ROOT / "强基查证清单.xlsx"
 
-FINAL = json.loads((CACHE / "final_fields.json").read_text(encoding="utf-8"))
+FINAL = json.loads((CACHE / "final_fields.json").read_text(encoding="utf-8")) if (CACHE / "final_fields.json").exists() else {}
 CORPUS = json.loads((CACHE / "corpus.json").read_text(encoding="utf-8"))
 CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
 ALT = {"中央民族大学": "fix_69437_600.html", "上海交通大学": "fix_38987_52.html",

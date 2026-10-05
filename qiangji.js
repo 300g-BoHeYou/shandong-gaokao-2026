@@ -8,7 +8,7 @@
   "use strict";
 
   var DATA = (window.QJ2026 && window.QJ2026.schools) || [];
-  var S = { mode: "全部", form: "全部", kw: "", mkw: "" };
+  var S = { mode: "全部", form: "全部", kw: "", major: "" };
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -44,13 +44,11 @@
       if (S.form === "笔试" && f.indexOf("笔试") < 0) return false;
     }
     if (S.kw && s.name.indexOf(S.kw) < 0) return false;
-    if (S.mkw) {
+    if (S.major) {
       var hit = false;
       for (var i = 0; i < s.majors.length; i++) {
-        var m = s.majors[i];
-        if ((m.cat || "").indexOf(S.mkw) >= 0) { hit = true; break; }
-        for (var j = 0; j < (m.items || []).length; j++) {
-          if ((m.items[j].n || "").indexOf(S.mkw) >= 0) { hit = true; break; }
+        for (var j = 0; j < (s.majors[i].items || []).length; j++) {
+          if (s.majors[i].items[j].n === S.major) { hit = true; break; }
         }
         if (hit) break;
       }
@@ -59,13 +57,9 @@
     return true;
   }
 
-  // 包含专业单元格: 单个专业 + 软科排名标签 + 校验提示
+  // 包含专业单元格: 单个专业 + 软科排名标签
   function majorCell(it) {
-    var html = esc(it.n);
-    html += rkBadge({ st: it.st, rk: it.rk, cnt: it.cnt, inList: it.inList });
-    if (it.warn) html += '<span class="warnmark" title="' + esc(it.warn) + '">⚠ 待核</span>';
-    if (it.fix) html += '<span class="fixmark" title="' + esc(it.fix) + '">已修正名称</span>';
-    return html;
+    return esc(it.n) + rkBadge({ st: it.st, rk: it.rk, cnt: it.cnt, inList: it.inList });
   }
 
   // 对应普通批参考: 分数（排名），并注明所参考的志愿类
@@ -80,33 +74,41 @@
   }
 
   function majorRows(s) {
-    if (!s.majors.length || (!s.majors[0].cat && !s.majors[0].items.length)) {
-      return '<tr><td colspan="4" class="dim">专业类待查证（请在查证清单 Sheet2 中补充）</td></tr>';
-    }
-    var html = "";
+    var groups = [];
     for (var i = 0; i < s.majors.length; i++) {
       var g = s.majors[i];
-      if (S.mkw) {
-        var hit = (g.cat || "").indexOf(S.mkw) >= 0;
-        for (var k = 0; k < g.items.length; k++) {
-          if ((g.items[k].n || "").indexOf(S.mkw) >= 0) hit = true;
-        }
-        if (!hit) continue;
+      var items = [];
+      for (var k = 0; k < g.items.length; k++) {
+        var it = g.items[k];
+        if (S.major && it.n !== S.major) continue;
+        items.push(it);
       }
-      var items = g.items.length ? g.items : [{ n: "", st: "notpub", rk: null, cnt: 0, inList: false, s: null, r: null, ref: "", kind: "", warn: "", fix: "" }];
-      for (var j = 0; j < items.length; j++) {
-        var it = items[j];
-        if (S.mkw && (g.cat || "").indexOf(S.mkw) < 0 && (it.n || "").indexOf(S.mkw) < 0) continue;
+      if (!items.length) continue;
+      groups.push({ g: g, items: items });
+    }
+    if (!groups.length) {
+      if (!s.majors.length) return '<tr><td colspan="4" class="dim">专业类待查证</td></tr>';
+      return '<tr><td colspan="4" class="dim">该校无此专业</td></tr>';
+    }
+    var html = "";
+    for (var gi = 0; gi < groups.length; gi++) {
+      var grp = groups[gi];
+      for (var j = 0; j < grp.items.length; j++) {
         var first = j === 0;
-        html += "<tr" + (first ? ' class="grp-start"' : "") + ">"
-          + "<td>" + (first ? esc(g.cat) + (g.note ? '<span class="dirc">' + esc(g.note) + "</span>" : "") : "") + "</td>"
-          + "<td>" + (it.n ? majorCell(it) : todo()) + "</td>"
-          + "<td>" + (first ? val(g.subj) : "") + "</td>"
-          + "<td>" + refCell(it) + "</td>"
-          + "</tr>";
+        var it2 = grp.items[j];
+        html += "<tr" + (first ? ' class="grp-start"' : "") + ">";
+        if (first) {
+          html += '<td rowspan="' + grp.items.length + '">' + esc(grp.g.cat)
+            + (grp.g.note ? '<span class="dirc">' + esc(grp.g.note) + "</span>" : "") + "</td>";
+        }
+        html += "<td>" + (it2.n ? majorCell(it2) : todo()) + "</td>";
+        if (first) {
+          html += '<td rowspan="' + grp.items.length + '">' + val(grp.g.subj) + "</td>";
+        }
+        html += "<td>" + refCell(it2) + "</td></tr>";
       }
     }
-    return html || '<tr><td colspan="4" class="dim">无匹配专业类</td></tr>';
+    return html;
   }
 
   function render() {
@@ -159,6 +161,34 @@
         + (f === "全部" ? "全部" : f === "仅面试" ? "仅面试（无笔试）" : "有笔试") + "</button>";
     }).join("");
 
+    // 专业下拉列表(全部强基专业)
+    var sel = document.getElementById("majorSel");
+    if (sel && !sel.getAttribute("data-built")) {
+      var names = {};
+      for (var i = 0; i < DATA.length; i++) {
+        for (var j = 0; j < DATA[i].majors.length; j++) {
+          for (var k = 0; k < DATA[i].majors[j].items.length; k++) {
+            var n = DATA[i].majors[j].items[k].n;
+            if (n) names[n] = 1;
+          }
+        }
+      }
+      var list = Object.keys(names).sort(function (a, b) { return a.localeCompare(b, "zh"); });
+      sel.innerHTML = '<option value="">全部专业</option>' + list.map(function (n) {
+        var cnt = 0;
+        for (var i2 = 0; i2 < DATA.length; i2++) {
+          for (var j2 = 0; j2 < DATA[i2].majors.length; j2++) {
+            for (var k2 = 0; k2 < DATA[i2].majors[j2].items.length; k2++) {
+              if (DATA[i2].majors[j2].items[k2].n === n) cnt++;
+            }
+          }
+        }
+        return '<option value="' + esc(n) + '">' + esc(n) + "（" + cnt + "）</option>";
+      }).join("");
+      sel.setAttribute("data-built", "1");
+    }
+    if (sel) sel.value = S.major;
+
     document.getElementById("modeBox").addEventListener("click", function (e) {
       var b = e.target.closest("[data-mode]");
       if (!b) return;
@@ -173,11 +203,13 @@
     });
     var kw = document.getElementById("kw");
     kw.addEventListener("input", function () { S.kw = kw.value.trim(); render(); });
-    var mkw = document.getElementById("mkw");
-    mkw.addEventListener("input", function () { S.mkw = mkw.value.trim(); render(); });
+    if (sel) {
+      sel.addEventListener("change", function () { S.major = sel.value; render(); });
+    }
     document.getElementById("resetBtn").addEventListener("click", function () {
-      S = { mode: "全部", form: "全部", kw: "", mkw: "" };
-      kw.value = ""; mkw.value = "";
+      S = { mode: "全部", form: "全部", kw: "", major: "" };
+      kw.value = "";
+      if (sel) sel.value = "";
       init(); render();
     });
 

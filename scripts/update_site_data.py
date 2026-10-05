@@ -43,6 +43,10 @@ for s in OLD["schools"]:
 s1 = pd.read_excel(XLSX, sheet_name="院校信息").fillna("")
 s2 = pd.read_excel(XLSX, sheet_name="专业信息").fillna("")
 SPLIT_MODE = "包含专业" in s2.columns
+# Excel 合并单元格: 非首行类名/科目/备注为空 -> 向下填充
+for _c in ("强基专业类名称", "考查科目", "备注", "备注（括号内方向）"):
+    if _c in s2.columns:
+        s2[_c] = s2[_c].replace("", pd.NA).ffill().fillna("")
 
 
 def clean(v):
@@ -78,7 +82,6 @@ def item_of(mr):
         "ref": clean(mr.get("参考志愿类", "")),
         "kind": clean(mr.get("参考口径", "")),
         "warn": clean(mr.get("校验", "")),
-        "fix": clean(mr.get("修正", "")),
     }
 
 

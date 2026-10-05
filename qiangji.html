@@ -72,9 +72,10 @@
   .meta{font-size:13px;color:#4b5563;margin:6px 0;}
   .meta b{color:#111827;}
   .majors{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;}
-  .majors th,.majors td{border:1px solid #e5e7eb;padding:4px 8px;text-align:left;vertical-align:top;}
+  .majors th,.majors td{border:1px solid #e5e7eb;padding:4px 8px;text-align:left;vertical-align:middle;}
   .majors th{background:#f5f3ff;color:#5b21b6;}
   .majors tr:hover td{background:#faf5ff;}
+  .majors tr.grp-start td{border-top:2px solid #ddd6fe;}
   .todo{color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:4px;
     padding:0 5px;font-size:11px;white-space:nowrap;}
   .rk{display:inline-block;border-radius:4px;padding:0 5px;font-size:11px;margin-left:4px;
@@ -149,7 +150,7 @@
     </div>
     <div class="rowgroup">
       <label>院校：<input type="text" id="kw" placeholder="如 清华 / 复旦" style="width:150px;"></label>
-      <label>专业类：<input type="text" id="mkw" placeholder="如 数学 / 古文字 / 化学" style="width:170px;"></label>
+      <label>专业：<select id="majorSel" style="min-width:210px;"><option value="">全部专业</option></select></label>
       <button class="btn ghost" id="resetBtn">重置</button>
     </div>
   </section>

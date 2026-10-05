@@ -90,7 +90,7 @@ ONE_OFF = ["probe_chsi.py", "probe_chsi_api.py", "probe_chsi_inline.py", "probe_
            "probe_fj_post.py", "probe_fj_url.py", "check_chsi_content.py", "check_jz_text.py",
            "check_time_text.py", "digest_jz.py", "extract_qj_fields.py", "extract_final.py",
            "build_corpus.py", "parse_guide_mhtml.py", "fix_missing_jz.py", "fix_lzu.py",
-           "fix_last3.py", "fix_scu.py", "scan_examtime.js",
+           "fix_last3.py", "fix_scu.py", "scan_examtime.js", "diag_ref_gap.py",
            "archive/diag_qj_ref.py", "archive/check_xmu_sjtu.py"]
 TO_DELETE += [ROOT / "scripts" / n for n in ONE_OFF]
 
