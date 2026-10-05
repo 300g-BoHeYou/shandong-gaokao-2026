@@ -111,7 +111,8 @@
         + '<span class="sname">' + esc(s.name) + "</span>"
         + (s.mode ? '<span class="badge b-mode">' + esc(modeText) + "</span>" : "")
         + (s.form ? '<span class="badge b-form">' + esc(s.form) + "</span>" : "")
-        + (s.link ? '<a class="badge b-link" href="' + esc(s.link) + '" target="_blank" rel="noopener" title="打开该校官方发布的2026年强基计划招生简章">官方招生简章 ↗</a>' : "")
+        + (s.link ? '<a class="badge b-link" href="' + esc(s.link) + '" target="_blank" rel="noopener" title="阳光高考·强基计划报名平台（官方）">官方简章（阳光高考） ↗</a>' : "")
+        + (s.jzLink ? '<a class="badge b-link2" href="' + esc(s.jzLink) + '" target="_blank" rel="noopener" title="学校本科招生网发布的简章原文">学校官网简章 ↗</a>' : "")
         + "</div>"
         + '<div class="meta">'
         + "<b>校考时间：</b>" + val(s.examTime)
@@ -120,6 +121,7 @@
         + "</div>"
         + '<div class="meta"><b>入围方式：</b>' + val(s.entry) + "</div>"
         + (s.entryScore ? '<div class="meta"><b>入围成绩计算：</b>' + esc(s.entryScore) + "</div>" : "")
+        + (s.brk ? '<div class="meta"><b>竞赛破格：</b>' + esc(s.brk) + "</div>" : "")
         + (s.signup ? '<div class="meta"><b>报名时间：</b>' + esc(s.signup) + "</div>" : "")
         + (s.note ? '<div class="meta"><b>2026 要点：</b>' + esc(s.note) + "</div>" : "")
         + '<table class="majors"><thead><tr><th style="width:23%;">强基专业类</th><th style="width:37%;">包含专业（含软科2026排名）</th>'

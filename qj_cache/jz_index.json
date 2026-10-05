@@ -1,0 +1,404 @@
+{
+ "北京大学": {
+  "code": "10001",
+  "fetched": [
+   {
+    "url": "https://bkzs.pku.edu.cn/tzgg/4dc8487f304e476786627574e8744c27.htm",
+    "len": 32438,
+    "note": "HTTP 42359B"
+   }
+  ]
+ },
+ "中国人民大学": {
+  "code": "10002",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA3ODU4MzU3OA==&mid=2652504227&idx=1&sn=18c8b4d0139a0d6819ac09df0cab1e9a",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "清华大学": {
+  "code": "10003",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA4OTIyMzgxMw==&mid=2659401517&idx=1&sn=1a8939f9bb504acc6fe1f01e2a3079f8",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "北京航空航天大学": {
+  "code": "10006",
+  "fetched": [
+   {
+    "url": "https://zs.buaa.edu.cn/tslx/qjjh.htm",
+    "len": 26642,
+    "note": "HTTP 28354B"
+   }
+  ]
+ },
+ "北京理工大学": {
+  "code": "10007",
+  "fetched": [
+   {
+    "url": "https://admission.bit.edu.cn/",
+    "len": 31548,
+    "note": "HTTP 34203B"
+   }
+  ]
+ },
+ "中国农业大学": {
+  "code": "10019",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA3MzM3MTUxOQ==&mid=2651285573&idx=1&sn=2e5c8920c491e9931c953eec00de74c6",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "北京师范大学": {
+  "code": "10027",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5MTg4NjM2MQ==&mid=2658050606&idx=1&sn=95bf1324d037d15eddfcf05a359942d4",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "中央民族大学": {
+  "code": "10052",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzAxNDEwNzkzMg==&mid=2651840949&idx=1&sn=86136bde471f66366ca8b07d79930ac3",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "南开大学": {
+  "code": "10055",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5NzgwNDg0MQ==&mid=2650849867&idx=1&sn=4f30e34e45dd4b00753fb80124b7514b",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "天津大学": {
+  "code": "10056",
+  "fetched": [
+   {
+    "url": "http://zs.tju.edu.cn/",
+    "len": 64807,
+    "note": "HTTP 72571B"
+   }
+  ]
+ },
+ "大连理工大学": {
+  "code": "10141",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5MzIzODI2MA==&mid=2651909983&idx=1&sn=7200b71eb73ae90a0264ccb0b2378904",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "东北大学": {
+  "code": "10145",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA4NzIwNjIzMg==&mid=2651112701&idx=1&sn=b81ca43ffb1ff28440d95189f8627e68",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "吉林大学": {
+  "code": "10183",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzUzODA1NjcyMA==&mid=2247577340&idx=1&sn=6c79ac646b148c11a0f12e7e5ef64d4f",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "哈尔滨工业大学": {
+  "code": "10213",
+  "fetched": [
+   {
+    "url": "https://zsb.hit.edu.cn/",
+    "len": 58226,
+    "note": "HTTP 62322B"
+   }
+  ]
+ },
+ "复旦大学": {
+  "code": "10246",
+  "fetched": [
+   {
+    "url": "https://ao.fudan.edu.cn/d5/02/c36330a775426/page.htm",
+    "len": 42154,
+    "note": "HTTP 50569B"
+   }
+  ]
+ },
+ "同济大学": {
+  "code": "10247",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzAxNzMxNzgxMQ==&mid=2656916233&idx=1&sn=b8e35f7b61328488758a36f45f810cb9",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "上海交通大学": {
+  "code": "10248",
+  "fetched": [
+   {
+    "url": "https://admissions.sjtu.edu.cn/newDetails?contentsID=3810000004182",
+    "len": 311031,
+    "note": "HTTP 311556B"
+   }
+  ]
+ },
+ "华东师范大学": {
+  "code": "10269",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5MzY4NTMwMQ==&mid=2651604391&idx=1&sn=57159e05cb6c611183f75fb69fc9de8d",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "南京大学": {
+  "code": "10284",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzAxODAzMjQ1NQ==&mid=2707754511&idx=1&sn=5ce19a08770ad4fd3da3d4400d2b0e5c",
+    "len": 17691,
+    "note": "HTTP 17759B"
+   }
+  ]
+ },
+ "东南大学": {
+  "code": "10286",
+  "fetched": [
+   {
+    "url": "https://zsb.seu.edu.cn/2026/0407/c23610a561016/page.htm",
+    "len": 36656,
+    "note": "HTTP 47021B"
+   }
+  ]
+ },
+ "浙江大学": {
+  "code": "10335",
+  "fetched": [
+   {
+    "url": "https://zdzsc.zju.edu.cn/2026/0412/c87333a3150289/page.htm",
+    "len": 62094,
+    "note": "HTTP 72527B"
+   }
+  ]
+ },
+ "中国科学技术大学": {
+  "code": "10358",
+  "fetched": [
+   {
+    "url": "https://zsb.ustc.edu.cn/2026/0410/c35547a726188/page.htm",
+    "len": 85184,
+    "note": "HTTP 96924B"
+   }
+  ]
+ },
+ "厦门大学": {
+  "code": "10384",
+  "fetched": [
+   {
+    "url": "https://zs.xmu.edu.cn/info/1172/35792.htm",
+    "len": 66237,
+    "note": "HTTP 80709B"
+   }
+  ]
+ },
+ "山东大学": {
+  "code": "10422",
+  "fetched": [
+   {
+    "url": "http://www.bkzs.sdu.edu.cn/info/1028/2583.htm",
+    "len": 36340,
+    "note": "HTTP 43864B"
+   }
+  ]
+ },
+ "中国海洋大学": {
+  "code": "10423",
+  "fetched": [
+   {
+    "url": "http://bkzs.ouc.edu.cn/2026/0407/c17836a524000/page.htm",
+    "len": 33849,
+    "note": "HTTP 42716B"
+   }
+  ]
+ },
+ "武汉大学": {
+  "code": "10486",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA5MjM3MzUxMA==&mid=2656212784&idx=1&sn=ca2d83b88e002f39029c8d9c7bafb755",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "华中科技大学": {
+  "code": "10487",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5MDAyMzM4MA==&mid=2650560908&idx=1&sn=2fd739c4893b4d80386bfad436425a38",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "湖南大学": {
+  "code": "10532",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA3ODQ3MjIzOA==&mid=2651823753&idx=1&sn=58545e3f871c8e38c0af60b835e1e24e",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "中南大学": {
+  "code": "10533",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA5NTI2MzExNA==&mid=2651242253&idx=1&sn=f938abb1099f1266580abe9b88140e30",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "中山大学": {
+  "code": "10558",
+  "fetched": [
+   {
+    "url": "https://admission.sysu.edu.cn/f/newsCenter/article/396d66629667441bbcb590354adca785",
+    "len": 84974,
+    "note": "HTTP 95038B"
+   }
+  ]
+ },
+ "华南理工大学": {
+  "code": "10561",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA5NDQ1NzE5Ng==&mid=2651568440&idx=1&sn=420a6750b04c4e41c8b5504ad542908b",
+    "len": 18122,
+    "note": "HTTP 18242B"
+   }
+  ]
+ },
+ "四川大学": {
+  "code": "10610",
+  "fetched": [
+   {
+    "url": "https://zs.scu.edu.cn/info/1091/3364.htm",
+    "error": "HTTP 412"
+   },
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA5Mzc2MDYxMw==&mid=2650175673&idx=1&sn=405ab9a27b4a1833b5ac8f06f0455c57",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "重庆大学": {
+  "code": "10611",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5MjA5MTQyMA==&mid=2651480156&idx=1&sn=02aed666cf288b4275e88c29fdcbf1d0",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "电子科技大学": {
+  "code": "10614",
+  "fetched": [
+   {
+    "url": "https://zs.uestc.edu.cn/view/2098.html",
+    "len": 85365,
+    "note": "HTTP 100783B"
+   }
+  ]
+ },
+ "西安交通大学": {
+  "code": "10698",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MjM5NzUxNjUyMQ==&mid=2650356875&idx=1&sn=89b41afe2cb0e47473c62c1e12689e4b",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "西北工业大学": {
+  "code": "10699",
+  "fetched": [
+   {
+    "url": "http://zsb.nwpu.edu.cn/",
+    "error": "HTTP 412"
+   },
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA4NDE1MjgwNw==&mid=2649839945&idx=1&sn=49a6eee542f22e00d3d574865204139a",
+    "len": 17693,
+    "note": "HTTP 17761B"
+   }
+  ]
+ },
+ "西北农林科技大学": {
+  "code": "10712",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA4MTE1MTkwNw==&mid=2651089853&idx=1&sn=7a3b96e7d715a4b5eee8c77a70213db4",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "兰州大学": {
+  "code": "10730",
+  "fetched": [
+   {
+    "url": "https://zsb.lzu.edu.cn/zhaoshengdongtai/tongzhigonggao/2026/0409/330046.html",
+    "error": "IncompleteRead"
+   },
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzA4OTQxMzUyNA==&mid=2651016404&idx=1&sn=8e7c8b262f6ff80d2869d11893e8ebc5",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ },
+ "国防科技大学": {
+  "code": "92002",
+  "fetched": [
+   {
+    "url": "https://mp.weixin.qq.com/s?__biz=MzAxNjYzNjkyNw==&mid=2654107743&idx=1&sn=2e8be4b6d2c80c1883bc8c12f3b07f23",
+    "len": 17692,
+    "note": "HTTP 17760B"
+   }
+  ]
+ }
+}

@@ -1,0 +1,793 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>上海交通大学2026年强基计划招生简章_CETV</title>
+<meta name="keywords" content="强基计划 招生简章 上海交通大学" />
+<meta name="description" content="" />
+<meta name="baidu-site-verification" content="bbkTsS37Wd" />
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<link href="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//css/main_tf2016.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//css/site.css"/>
+<link rel="stylesheet" href="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//css/index.css"/>
+<link rel="stylesheet" href="https://res.cetv.cn/assets/lib/dialog/style.css"/>
+<script type="text/javascript" src="https://res.cetv.cn/assets/js/jquery.js"></script>
+<style type="text/css" media="all">
+
+    .sharebox {margin:0;overflow: hidden;float:left;width:auto}
+    .sharebox .digg, .sharebox .share {display: block;width: 90px;height: 28px; margin-right: 10px;line-height: 26px;text-align: center;margin-top: 4px;}
+    .sharebox .digg{margin: 0 auto;border:1px solid #cdcdcd; color: #cdcdcd;border-radius: 50px;text-align: center}
+    .sharebox .digged{color: #5dc430;border-color: #5dc430;background: #E8FEDE;width: 90px;line-height: 26px;height: 26px;border-radius: 50px;text-align: center;display:block;margin: 0 auto;}
+</style>
+<script>
+    // 点赞
+    var digg = {
+        done : [],
+        init: function () {
+          var _digg = $("#support"),
+              contentid = $(".sharebox").attr("data-contentid");
+          $.get('/ajax/dynamic?id=' + contentid,function(res){
+            if(res){
+              _digg.html(_digg.html().replace(/点赞 \d+/, '点赞 ' + res.digg||'0'));
+            }
+          });
+        },
+        set: function(contentid, obj){
+            var t = this;
+            if(t.done[contentid]) {
+                $('#'+obj).attr("class","digged");
+                return ;
+            }
+            var aid,sid;
+            aid = shareVariable.aid;
+            sid = shareVariable.sid;
+            suffix = shareVariable.suffix;
+            $.getJSON('/index/ajax/digg?action=like&sid='+sid+'&aid='+aid+'&contentid='+contentid+'&callback=?', function(response){
+                if(response.data > 0) {
+                    t.done[contentid] = true;
+                    $('#'+obj).attr("class","digged");
+                    $('#'+obj).html($('#'+obj).html().replace(/点赞 \d+/, '已赞 ' + response.data));
+                    $(document.body).append('<img src="'+TJ+'?action=like&sid='+sid+'&aid='+aid+'&url='+location.href+'&cid=' + contentid + '" style="display:none" />')
+                } else {
+                    $('#'+obj).attr("class","digg");
+                    return ;
+                }
+            });
+        }
+    }
+    $(function(){
+      // digg.init();
+    })
+</script>
+</head>
+ <script>
+    var isPC = function (){
+        var userAgentInfo = navigator.userAgent.toLowerCase();
+        var Agents = new Array("android", "iphone", "symbianOS", "windows phone", "ipad", "ipod");
+        var flag = true;
+        for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
+        }
+        return flag;
+    }
+    //var pcUlr = "http://www.centv.cn";
+    //var mobleUlr = "http://m.cetv.cn";
+
+// 强制替换成 https
+var pcUlr = "http://www.centv.cn".replace(/^http:/i, "https:");
+var mobleUlr = "http://m.cetv.cn".replace(/^http:/i, "https:");
+
+    if(isPC()&&window.location.href.indexOf(mobleUlr)!=-1){
+        window.location.href = pcUlr+GetUrlRelativePath()
+    }else if(!isPC()&&(window.location.href.indexOf(pcUlr)!=-1 ||  window.location.href.indexOf('http://www.centv.net.cn/')!=-1 )){
+        window.location.href = mobleUlr+GetUrlRelativePath()
+    }
+    function GetUrlRelativePath(){
+        var url = document.location.toString();
+        var arrUrl = url.split("//");
+        var start = arrUrl[1].indexOf("/");
+        var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+        if(relUrl.indexOf("?") != -1){
+            relUrl = relUrl.split("?")[0];
+        }
+        return relUrl;
+    }
+</script>
+<body id="page_detail">
+<div id="wrapper">
+	<!-- 头部 -->
+    <div id="header" >
+	<div class="top-bar">
+		<h1 id="logo" style="display:block;"><a href="/" title="CETV" class="ie6_png32">
+                        <!--<img src="https://res.cetv.cn/a/10001/201702/43791d360be5846f2ccd97386229640f.png?20171115000043" />-->
+                    </a></h1>
+		<div>
+		<ul id="member-login" class="login" style="display: block;">
+            <li>
+    <a href="javascript:;" class="login-btn">登录</a>
+
+    <!-- 登录框 -->
+    <div class="login-box" id="login-box">
+        <h3 class="title">
+            <span class="icon">
+                <img src="https://res.cetv.cn/a/10001/201807/eddc6fbca4404daf0d68f3d3e16d676d.png" alt="">
+            </span>
+            登录CETV账号
+            <button class="close" id="close-login-dialog">×</button>
+        </h3>
+    
+        <!-- 主体内容 -->
+        <div class="hole-box">
+            <!-- 加载框 -->
+            <div class="login-loading" id="login-loading">
+                <img src="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//css/images/loading.gif" class="login-loading-image">
+            </div>
+    
+            <!-- 登录框 -->
+            <div class="login-box-ipt-area" id="login-box-ipt" style="display: none;">
+                <div class="form-area">
+                    <div class="h20"></div>
+                    <div class="form-row ipt-area">
+                        <label for="account" class="read-only">邮箱/手机号</label>
+                        <span class="icon icon-account"></span>
+                        <input type="text" class="ipt-txt account" id="account" autocomplete="off" placeholder="邮箱/手机号" />
+                    </div>
+                    <div class="h20"></div>
+                    <div class="form-row ipt-area">
+                        <label for="password" class="read-only">密码</label>
+                        <span class="icon icon-password"></span>
+                        <input type="password" class="ipt-txt password" id="password" autocomplete="off" placeholder="密码"/>
+                    </div>
+                    <div class="h20"></div>
+                    <div class="form-row ipt-area" id="captcha-box">
+                        <label for="password" class="read-only">验证码</label>
+                        <span class="icon icon-password"></span>
+                        <input type="text" class="ipt-txt captcha" id="captcha" autocomplete="off" placeholder="验证码"/>
+                        <span class="captcha-result" id="captcha-result"></span>
+                        <img src="/index/login/captcha" class="captcha-image" id="captcha-image" alt="">
+                    </div>
+                    <div class="h20" id="captcha-box-hr"></div>
+                    <div class="chk-area">
+                        <label class="remember-area elem-text">
+                            <input type="checkbox" id="remember" class="ipt-chk" />
+                            下次自动登录
+                        </label>
+                        <a href="/index/login/password" class="elem-text">忘记密码？</a>
+                    </div>
+                    <div class="h20"></div>
+                    <div class="btn-area">
+                        <p class="login-submit submit" id="submit">登录</p>
+                        <p class="login-submit loading" id="loading"><i class="fa fa-spinner fa-spin"></i></p>
+                    </div>
+                    <div class="h20"></div>
+                    <div class="txt-area">
+                        <p class="elem-text regist">还没账号？<a href="/index/login/regist">立即注册</a></p>
+                    </div>
+                </div>
+                <!--无外网则隐藏-云设置可设置-->
+                <div class="social-login">
+                    <span class="text-title">其它登录方式</span>
+                    <div class="social-btns">
+                        <a href="/index/login/qq" class="icon icon-qq">QQ登录</a>
+                        <a href="/index/login/sina" class="icon icon-sina">新浪登录</a>
+                        <a href="/index/login/wechat" class="icon icon-wechat">微信登录</a>
+                    </div>
+                </div>
+                            </div>
+    
+            <!-- 快速登录 -->
+            <div class="login-box-quick-area" id="login-quick-box" style="display: none;">
+                <div class="avatar">
+                    <img src="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//images/default.png" id="quick-image" alt="">
+                </div>
+                <p class="user-account" id="quick-nickname"></p>
+                <p class="desc">点击头像快速登录</p>
+                <div class="switch-btn">
+                    <a href="javascript:;" id="switch-account">切换账号</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//js/ie-placeholder.min.js"></script>
+    <script type="text/javascript" src="https://res.cetv.cn/assets/lib/dialog/dialog.js"></script>
+    <script type="text/javascript" src="https://res.cetv.cn/assets/lib/dialog/dialog-modal.js"></script>
+    <script type="text/javascript" src="https://app.cetv.cn/assets/member/oauth.js"></script>
+    <script>
+       //var isLogined = false,
+       var isLogined,
+        oauthConfig = {
+            'mode' : 'public',
+            'appUrl' : 'https://app.cetv.cn', // APP站点的URL
+            'noticeUrl' : 'http://www.centv.cn/index/login/notice', // 登录成功后，通知本站点登录的URL
+            'siteid' : '10001'
+        },
+         key = "82931fdecb560a74",  // 密码加密的公钥
+         iv = "82931fdecb560a74"; // 密码加密的公钥偏移量
+    </script>
+    <script src="//res.cetv.cn/assets/js/aes.js"></script>
+    <script type="text/javascript" src="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//js/member.js"></script>
+
+</li>
+<li><a href="/index/login/regist">注册</a></li>
+<li><a href="https://a.app.qq.com/o/simple.jsp?pkgname=cn.cetv.zgjy&fromcase=40003" target="_blank"><i class="icon-iphone"></i>下载</a></li>        </ul>
+        <div id="member-user" class="user" style="display: none;">
+                    </div>
+       
+        </div>
+         <div class="search-box" data-id="" style="display:block;">
+            <form action="/s" name="search" method="get">
+                                <!--<input type="hidden" name="alias" id="alias" value="' . $alias . '"/>-->
+                                <input type="text" name="wd" id="wd" value="" autocomplete="on" placeholder="请输入关键字" class="search-inp"/>
+                <input type="submit" id="search-btn" class="search-btn" value=""  />
+            </form>
+        </div>
+	</div>
+	<div class="nav-bar" data-id="">
+		<div class="nav">
+		    <ul>
+            <li>
+            <a class="pv-nav-stat" data-cid="1" data-type="template" href="http://www.centv.cn"  class="page_">首页</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="34" data-type="list" href="http://www.centv.cn/xinwen/index.html"  class="page_xinwen">新闻</a>
+        
+                        <div class="nav-bar-child">
+    			<div class="nav">
+    				<ul>
+                                        <li><a class="pv-nav-stat" data-cid="114" data-type="list" href="http://www.centv.cn/yaowen114/index.html" >要闻资讯</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="120" data-type="list" href="http://www.centv.cn/shendu120/index.html" >热点聚焦</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="40" data-type="template" href="http://www.centv.cn/pinglun/index.html" >教育热评</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="123" data-type="list" href="http://www.centv.cn/difang123/index.html" >教育综合</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="46" data-type="list" href="http://www.centv.cn/zgjybd/index.html" >全国教育新闻联播</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="48" data-type="list" href="http://www.centv.cn/esj/index.html" >e视界</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="50" data-type="list" href="http://www.centv.cn/caj/index.html" >长安街</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="52" data-type="list" href="http://www.centv.cn/jiaoyuxinwenzhibojian/index.html" >12点教育新闻直播间</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="628" data-type="list" href="http://www.centv.cn/15djyxwzbj/index.html" >15点教育新闻直播间</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="629" data-type="list" href="http://www.centv.cn/17djyxwzbj/index.html" >17点教育新闻直播间</a></li>
+                                        <li><a class="pv-nav-stat" data-cid="929" data-type="list" href="http://www.centv.cn/etzx/index.html" >e体资讯</a></li>
+                        				</ul>
+    			</div>
+    		</div>
+    				</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="54" data-type="list" href="http://www.centv.cn/cetv1/index.html"  class="page_cetv1">CETV1</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="84" data-type="template" href="http://www.centv.cn/cetv2/index.html"  class="page_cetv2">CETV2</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="58" data-type="list" href="http://www.centv.cn/cetv3/index.html"  class="page_cetv3">CETV3</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="60" data-type="list" href="http://www.centv.cn/cetv4/index.html"  class="page_cetv4">CETV4</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="62" data-type="list" href="http://www.centv.cn/zqjy/index.html"  class="page_zqjy">CETV早期教育</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="64" data-type="link" href="http://www.centv.cn/ztgd" target="_blank" class="page_wenti">专题</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="675" data-type="link" href="http://www.centv.cn/zgjybd/index.html" target="_blank" class="page_qgjyxwlb">全国教育新闻联播</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="680" data-type="link" href="http://www.centv.cn/jiaoyuxinwenzhibojian/index.html" target="_blank" class="page_zbzr@n">教育新闻直播间</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="690" data-type="link" href="http://www.centv.cn/esj" target="_blank" class="page_zgm">e视界</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="676" data-type="link" href="http://www.centv.cn/caj/index.html" target="_blank" class="page_caj676">长安街</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="930" data-type="link" href="http://www.centv.cn/etzx/index.html" target="_blank" class="page_etzx930">e体资讯</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="683" data-type="link" href="http://www.centv.cn/z/388787/" target="_blank" class="page_tbkc">育见</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="677" data-type="link" href="https://www.centv.cn/z/532102/" target="_blank" class="page_tpgj">大视节</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="66" data-type="link" href="https://www.centv.cn/2026gkgzcs" target="_blank" class="page_shuhua">高招升学</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="681" data-type="link" href="http://www.centv.cn/z/383197/" target="_blank" class="page_xmtzy681">职教中国</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="70" data-type="link" href="http://www.centv.cn/z/434660/" target="_blank" class="page_guoxue">青少年足球</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="78" data-type="link" href="http://www.centv.cn/z/480610/" target="_blank" class="page_vrvr">一堂好戏</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="68" data-type="link" href="https://www.centv.cn/z/555031/" target="_blank" class="page_jiankang">家庭教育</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="687" data-type="link" href="http://www.centv.cn/z/323359/" target="_blank" class="page_qcgh">青春歌会</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="792" data-type="link" href="http://www.centv.cn/z/371380/" target="_blank" class="page_qcxly">青春训练营</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="679" data-type="link" href="http://www.centv.cn/z/352541/" target="_blank" class="page_yzwn">一职为你</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="1274" data-type="link" href="http://www.centv.cn/z/457796/" target="_blank" class="page_jycmyj1274">教育传媒研究</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="74" data-type="link" href="http://www.centv.cn/z/316976/" target="_blank" class="page_xiehui">中国教育电视协会</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="565" data-type="link" href="http://www.cetv.cn" target="_blank" class="page_gycetv">关于CETV</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="1298" data-type="link" href="http://www.cetv.cn/channels/zcrjs.html" target="_blank" class="page_ctevzcr">CETV主持人</a>
+        
+            		</li>
+            <li>
+            <a class="pv-nav-stat" data-cid="76" data-type="link" href="http://www.centv.cn/p/325000.html" target="_blank" class="page_qingshao">联系我们</a>
+        
+            		</li>
+    </ul>
+
+		</div>
+	</div>
+    <input type="hidden" name="alias" value = "menu" id="alias"/>
+</div><script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    $(function(){
+           if(/MicroMessenger/i.test(navigator.userAgent)){
+        $.get("/ajax/wechatShare?id=587802&url=" + encodeURIComponent(window.location.href.split('#')[0]), function(result){
+            if(result['state']){
+                var wechatData = result['data'];
+                console.log(wechatData,result)
+                var imgUrl =wechatData.shareimage || "https://res.cetv.cn/assets/images/nopic.jpg" || "";
+                console.log(imgUrl)
+                console.log('完整的 PHP content 对象:', {"id":"587802","appid":"1","topicid":"0","galleryid":"0","channel_pc":"1","channel_wap":"1","channel_phone":"1","channel_pad":"0","title":"\u4e0a\u6d77\u4ea4\u901a\u5927\u5b662026\u5e74\u5f3a\u57fa\u8ba1\u5212\u62db\u751f\u7b80\u7ae0","editor":"\u5b9e\u4e60\u751f","has_thumb":"0","created":"2026-04-22 15:06:11","createdby":"10404","createdip":"111.203.217.200","published":"2026-04-22 15:06:11","publishedby":"10404","modified":"0000-00-00 00:00:00","modifiedby":"0","up_line_time":"0","down_line_time":"0","digg":0,"pv":344,"virtual_pv":"0","comments":"0","shares":0,"recommend":"0","audit_step":"0","importance":"0","status":"6","enableaudit":"1","enablecopyright":"0","locktime":"0","locker":"0","sort":"0","watermark":"0","is_auto_published":"0","origin":"0","syscomments":"0","is_fee":"0","virtual_digg":"0","click_pv":0,"sync_icms":"1","content":"<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e3a\u5168\u9762\u843d\u5b9e\u5168\u56fd\u6559\u80b2\u5927\u4f1a\u7cbe\u795e\uff0c\u6df1\u5165\u8d2f\u5f7b\u300a\u56fd\u52a1\u9662\u5173\u4e8e\u6df1\u5316\u8003\u8bd5\u62db\u751f\u5236\u5ea6\u6539\u9769\u7684\u5b9e\u65bd\u610f\u89c1\u300b\uff08\u56fd\u53d1\u30142014\u301535\u53f7\uff09\u3001\u300a\u6559\u80b2\u90e8\u5173\u4e8e\u5728\u90e8\u5206\u9ad8\u6821\u5f00\u5c55\u57fa\u7840\u5b66\u79d1\u62db\u751f\u6539\u9769\u8bd5\u70b9\u5de5\u4f5c\u7684\u610f\u89c1\u300b\uff08\u6559\u5b66\u30142020\u30151\u53f7\uff09\u7b49\u6587\u4ef6\u8981\u6c42\uff0c\u670d\u52a1\u56fd\u5bb6\u91cd\u5927\u6218\u7565\u9700\u6c42\uff0c\u52a0\u5f3a\u57fa\u7840\u5b66\u79d1\u62d4\u5c16\u521b\u65b0\u4eba\u624d\u9009\u62d4\u57f9\u517b\uff0c\u7ecf\u6279\u51c6\u6211\u68212026\u5e74\u7ee7\u7eed\u5f00\u5c55\u57fa\u7840\u5b66\u79d1\u62db\u751f\u6539\u9769\u8bd5\u70b9\uff08\u4ee5\u4e0b\u7b80\u79f0\u201c\u5f3a\u57fa\u8ba1\u5212\u201d\uff09\uff0c\u63a2\u7d22\u591a\u7ef4\u5ea6\u8003\u6838\u8bc4\u4ef7\u6a21\u5f0f\uff0c\u65e8\u5728\u4e3a\u56fd\u5bb6\u91cd\u5927\u6218\u7565\u9886\u57df\u8f93\u9001\u540e\u5907\u4eba\u624d\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e00\u3001\u62db\u751f\u5bf9\u8c61\u53ca\u62a5\u540d\u6761\u4ef6<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5404\u7701\uff08\u533a\u3001\u5e02\uff09\u7b26\u54082026\u5e74\u5168\u56fd\u666e\u901a\u9ad8\u7b49\u5b66\u6821\u62db\u751f\u5168\u56fd\u7edf\u4e00\u8003\u8bd5\u62a5\u540d\u6761\u4ef6\uff0c\u6709\u5fd7\u4e8e\u670d\u52a1\u56fd\u5bb6\u91cd\u5927\u6218\u7565\u9700\u6c42\u7684\u5b66\u751f\u3002\u7533\u8bf7\u62a5\u540d\u8003\u751f\u5206\u4e3a\u4ee5\u4e0b\u4e24\u7c7b\uff1a<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u7b2c\u4e00\u7c7b\uff1a\u7efc\u5408\u7d20\u8d28\u4f18\u79c0\u3001\u6210\u7ee9\u4f18\u5f02\u7684\u8003\u751f\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u7b2c\u4e8c\u7c7b\uff1a\u57fa\u7840\u5b66\u79d1\u62d4\u5c16\uff0c\u5728\u9ad8\u4e2d\u9636\u6bb5\u83b7\u5f97\u5168\u56fd\u4e2d\u5b66\u751f\u5965\u6797\u5339\u514b\u7ade\u8d5b\uff08\u6570\u5b66\u3001\u7269\u7406\u3001\u5316\u5b66\u3001\u751f\u7269\u3001\u4fe1\u606f\u5b66\uff09\u5168\u56fd\u51b3\u8d5b\u4e8c\u7b49\u5956\u53ca\u4ee5\u4e0a\u7684\u8003\u751f\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e8c\u3001\u62db\u751f\u4e13\u4e1a\u53ca\u62db\u751f\u8ba1\u5212<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u6211\u68212026\u5e74\u5f3a\u57fa\u8ba1\u5212\u5404\u7701\uff08\u533a\u3001\u5e02\uff09\u62db\u751f\u8ba1\u5212\u6570\u4ee5\u62a5\u540d\u7cfb\u7edf\u516c\u5e03\u4e3a\u51c6\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u6211\u68212010\u5e74\u6210\u7acb\u4e86\u201c\u81f4\u8fdc\u5b66\u9662\u201d\uff0c\u540c\u5e74\u4ee5\u5176\u4e3a\u4f9d\u6258\u7684\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u201c\u57fa\u7840\u5b66\u79d1\u62d4\u5c16\u5b66\u751f\u57f9\u517b\u8bd5\u9a8c\u8ba1\u5212\u201d\u88ab\u6b63\u5f0f\u7eb3\u5165\u56fd\u5bb6\u6559\u80b2\u4f53\u5236\u6539\u9769\u8bd5\u70b9\u9879\u76ee\u30022014\u5e74\u5f00\u59cb\u5b9e\u65bd\u81f4\u8fdc\u5de5\u79d1\u8363\u8a89\u8ba1\u5212\uff0c2015\u5e74\u5f00\u59cb\u5b9e\u65bd\u81f4\u8fdc\u533b\u79d1\u8363\u8a89\u8ba1\u5212\u30022018\u5e74\uff0c\u5728\u6559\u80b2\u90e8\u201c\u57fa\u7840\u5b66\u79d1\u62d4\u5c16\u5b66\u751f\u57f9\u517b\u8ba1\u5212\u201d\u5b9e\u65bd\u5341\u5e74\u603b\u7ed3\u8bc4\u4ef7\u4e2d\uff0c\u5b66\u9662\u4ee3\u8868\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u83b7\u7ebf\u4e0a\u7ebf\u4e0b\u5168\u4f18\u8bc4\u4ef7\uff0c\u5f97\u5230\u6559\u80b2\u90e8\u4e0e\u8bc4\u5ba1\u4e13\u5bb6\u4eec\u7684\u9ad8\u5ea6\u80af\u5b9a\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u7ed3\u5408\u6587\u4ef6\u7cbe\u795e\uff0c\u6b64\u6b21\u6211\u6821\u6570\u5b66\u4e0e\u5e94\u7528\u6570\u5b66\u3001\u7269\u7406\u5b66\u3001\u5316\u5b66\u3001\u751f\u7269\u79d1\u5b66\u3001\u751f\u7269\u533b\u5b66\u79d1\u5b66\u3001\u5de5\u7a0b\u529b\u5b66\u3001\u8239\u8236\u4e0e\u6d77\u6d0b\u5de5\u7a0b\u3001\u751f\u7269\u533b\u5b66\u5de5\u7a0b\u3001\u6750\u6599\u79d1\u5b66\u4e0e\u5de5\u7a0b\u7b49\u4e5d\u4e2a\u4e13\u4e1a\u5f00\u5c55\u201c\u5f3a\u57fa\u8ba1\u5212\u201d\u62db\u751f\uff0c\u540c\u65f6\u5b9a\u5236\u5177\u6709\u7279\u8272\u7684\u57f9\u517b\u65b9\u6848\uff0c\u5b66\u751f\u4e0e\u76f8\u5173\u4e13\u4e1a\u5bfc\u5e08\u53cc\u5411\u9009\u62e9\u540e\u8fdb\u884c\u672c\u535a\u8854\u63a5\u57f9\u517b\uff0c\u4e3a\u670d\u52a1\u56fd\u5bb6\u91cd\u5927\u6218\u7565\u9700\u6c42\u57f9\u517b\u62d4\u5c16\u521b\u65b0\u4eba\u624d\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u62db\u751f\u4e13\u4e1a\u3001\u79d1\u7c7b\u548c\u9009\u8003\u8981\u6c42\u89c1\u4e0b\u8868\uff1a<\/p>\n<p style=\"text-align:center\"><img src=\"https:\/\/res.cetv.cn\/a\/10001\/202604\/14f1c3a044a63aad72927ac90b8e82f3.png\" data-mce-src=\"https:\/\/res.cetv.cn\/a\/10001\/202604\/14f1c3a044a63aad72927ac90b8e82f3.png\" data-origin-src=\"https:\/\/res.cetv.cn\/a\/10001\/202604\/14f1c3a044a63aad72927ac90b8e82f3.png\" data-mce-attachid=\"645656\" data-mce-alias=\"2293461890.png\"><\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u8003\u751f\u4ec5\u53ef\u9009\u62e9\u4e00\u4e2a\u4e13\u4e1a\u7ec4\u522b\u8fdb\u884c\u62a5\u8003\uff0c\u7ec4\u5185\u53ef\u62a5\u8003\u591a\u4e2a\u4e13\u4e1a\uff0c\u5404\u4e13\u4e1a\u7ec4\u522b\u5355\u5217\u8ba1\u5212\uff0c\u5355\u72ec\u6392\u961f\u5165\u56f4\u53ca\u5f55\u53d6\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e09\u3001\u62a5\u540d\u65b9\u5f0f\u4e0e\u9009\u62d4\u7a0b\u5e8f<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e00\uff09\u62a5\u540d\u65f6\u95f4\u548c\u529e\u6cd5<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5373\u65e5\u8d77\u81f34\u670830\u65e524\u65f6\u524d\uff0c\u8003\u751f\u53ef\u767b\u5f55\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u5f3a\u57fa\u8ba1\u5212\u62a5\u540d\u5e73\u53f0\uff08https:\/\/bm.chsi.com.cn\/jcxkzs\/sch\/10248\uff09\uff0c\u6309\u8981\u6c42\u51c6\u786e\u3001\u5b8c\u6574\u5730\u5b8c\u6210\u7f51\u4e0a\u62a5\u540d\u3002\u62a5\u8003\u6211\u6821\u5f3a\u57fa\u8ba1\u5212\u7684\u8003\u751f\u4e0d\u80fd\u517c\u62a5\u5176\u4ed6\u9ad8\u6821\u5f3a\u57fa\u8ba1\u5212\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u7b2c\u4e8c\u7c7b\u8003\u751f\u53ef\u4e8e\u5373\u65e5\u8d77\u81f34\u670827\u65e524\u65f6\u524d\uff0c\u767b\u5f55\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u5f3a\u57fa\u8ba1\u5212\u62a5\u540d\u5e73\u53f0\uff08https:\/\/bm.chsi.com.cn\/jcxkzs\/sch\/10248\uff09\u6309\u7167\u7cfb\u7edf\u63d0\u793a\u5b8c\u6210\u62a5\u540d\u3002\u6211\u6821\u5c06\u4f9d\u636e\u5404\u5b66\u79d1\u5168\u56fd\u51b3\u8d5b\u7ade\u8d5b\u6210\u7ee9\u6392\u5e8f\u5bf9\u7b2c\u4e8c\u7c7b\u8003\u751f\u8fdb\u884c\u5ba1\u6838\uff0c\u5ba1\u6838\u7ed3\u679c\u9884\u8ba1\u4e8e4\u670828\u65e5\u5728\u62a5\u540d\u7cfb\u7edf\u4e2d\u516c\u5e03\u3002\u83b7\u5f97\u7834\u683c\u5165\u56f4\u8d44\u683c\u8005\u5c06\u4ee5\u7b2c\u4e8c\u7c7b\u8003\u751f\u8eab\u4efd\u53c2\u4e0e\u540e\u7eed\u9009\u62d4\u6d41\u7a0b\uff0c\u672a\u83b7\u5f97\u7834\u683c\u5165\u56f4\u8d44\u683c\u8005\u5c06\u4ee5\u7b2c\u4e00\u7c7b\u8003\u751f\u8eab\u4efd\u53c2\u4e0e\u540e\u7eed\u9009\u62d4\u6d41\u7a0b\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e8c\uff09\u8003\u751f\u53c2\u52a0\u7edf\u4e00\u9ad8\u8003<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e09\uff09\u9ad8\u6821\u8003\u6838\u53ca\u5fd7\u613f\u786e\u8ba4<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">1. \u7b14\u8bd5<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u6240\u6709\u6309\u8981\u6c42\u5b8c\u6210\u62a5\u540d\u7684\u7b2c\u4e00\u7c7b\u8003\u751f\u53ef\u53c2\u52a0\u6211\u6821\u7ec4\u7ec7\u7684\u7b14\u8bd5\uff08\u9ad8\u8003\u540e\u4e00\u5468\u5185\uff09\uff0c\u5177\u4f53\u65f6\u95f4\u5b89\u6392\u8be6\u89c1\u51c6\u8003\u8bc1\u3002\u62a5\u8003\u2160\u6216\u2161\u7ec4\u7684\u7b14\u8bd5\u79d1\u76ee\u4e3a\u201c\u6570\u5b66\u3001\u7269\u7406\u201d\uff0c\u62a5\u8003\u2162\u7ec4\u7684\u7b14\u8bd5\u79d1\u76ee\u4e3a\u201c\u6570\u5b66\u3001\u5316\u5b66\u201d\u3002\u6211\u6821\u5c06\u6839\u636e\u7b14\u8bd5\u6210\u7ee9\uff0c\u6309\u7167\u4e0d\u8d85\u8fc7\u5404\u7701\uff08\u533a\u3001\u5e02\uff09\u5404\u4e13\u4e1a\u7ec4\u522b\u62db\u751f\u8ba1\u52124\u500d\u7684\u6bd4\u4f8b\uff0c\u5206\u522b\u786e\u5b9a\u5404\u7701\uff08\u533a\u3001\u5e02\uff09\u5404\u4e13\u4e1a\u7ec4\u522b\u7b14\u8bd5\u901a\u8fc7\u7684\u8003\u751f\u540d\u5355\uff0c\u672b\u4f4d\u540c\u5206\u8003\u751f\u5747\u4e88\u4ee5\u5165\u56f4\u3002\u672a\u901a\u8fc7\u7b14\u8bd5\u7684\u8003\u751f\u4e0d\u53c2\u4e0e\u540e\u7eed\u73af\u8282\u53ca\u5f55\u53d6\u6210\u7ee9\u6392\u5e8f\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">2. \u5fd7\u613f\u786e\u8ba4<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5165\u56f4\u9762\u8bd5\u7684\u8003\u751f\uff08\u542b\u7b14\u8bd5\u901a\u8fc7\u548c\u7834\u683c\u5165\u56f4\uff09\u987b\u5728\u62a5\u540d\u7cfb\u7edf\u5185\u8fdb\u884c\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u5f3a\u57fa\u8ba1\u5212\u5fd7\u613f\u786e\u8ba4\uff0c\u7b7e\u8ba2\u5e76\u4e0a\u4f20\u627f\u8bfa\u4e66\u3002\u672a\u8fdb\u884c\u5fd7\u613f\u786e\u8ba4\u7684\u8003\u751f\u5c06\u89c6\u4e3a\u653e\u5f03\u5f3a\u57fa\u8ba1\u5212\u9009\u62d4\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">3. \u7efc\u5408\u9762\u8bd5\u548c\u4f53\u80b2\u6d4b\u8bd5<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5728\u9ad8\u8003\u6210\u7ee9\u516c\u5e03\u524d\uff0c\u5bf9\u7b14\u8bd5\u901a\u8fc7\u4e14\u5b8c\u6210\u5f3a\u57fa\u8ba1\u5212\u5fd7\u613f\u786e\u8ba4\u7684\u7b2c\u4e00\u7c7b\u8003\u751f\u8fdb\u884c\u7efc\u5408\u9762\u8bd5\u548c\u4f53\u80b2\u6d4b\u8bd5\u3002\u5177\u4f53\u5b89\u6392\u8be6\u89c1\u51c6\u8003\u8bc1\u3002\u7efc\u5408\u9762\u8bd5\u5305\u542b\u79d1\u7814\u6f5c\u8d28\u53ca\u521b\u65b0\u7d20\u517b\u8bc4\u4f30\uff0c\u4e3b\u8981\u8003\u5bdf\u8003\u751f\u5206\u6790\u95ee\u9898\u3001\u89e3\u51b3\u95ee\u9898\u7684\u80fd\u529b\uff0c\u8868\u8fbe\u80fd\u529b\u548c\u521b\u65b0\u601d\u7ef4\u7b49\u3002\u8003\u751f\u7efc\u5408\u7d20\u8d28\u6863\u6848\u5c06\u63d0\u4f9b\u7ed9\u9762\u8bd5\u4e13\u5bb6\uff0c\u4f5c\u4e3a\u9762\u8bd5\u8bc4\u5206\u7684\u91cd\u8981\u53c2\u8003\u3002\u9762\u8bd5\u91c7\u53d6\u4e13\u5bb6\u3001\u8003\u751f\u3001\u8003\u573a\u201c\u4e09\u968f\u673a\u201d\u62bd\u7b7e\u7684\u65b9\u5f0f\uff0c\u5168\u7a0b\u5f55\u97f3\u5f55\u50cf\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4f53\u80b2\u6d4b\u8bd5\u9879\u76ee\u5305\u62ec\u8eab\u9ad8\u4f53\u91cd\uff08BMI\uff09\u3001\u5750\u4f4d\u4f53\u524d\u5c48\u3001\u7acb\u5b9a\u8df3\u8fdc\u30011\u5206\u949f\u8df3\u7ef3\uff0c\u4f53\u80b2\u6d4b\u8bd5\u6210\u7ee9\u4f5c\u4e3a\u7efc\u5408\u6210\u7ee9\u540c\u5206\u6392\u5e8f\u7684\u4f9d\u636e\uff0c\u4f53\u80b2\u6d4b\u8bd5\u65e0\u6545\u7f3a\u5e2d\u7684\u8003\u751f\u53d6\u6d88\u5f55\u53d6\u8d44\u683c\u3002\u8003\u751f\u56e0\u8eab\u4f53\u539f\u56e0\uff08\u542b\u6b8b\u75be\u6216\u91cd\u75be\u8003\u751f\uff09\u4e0d\u80fd\u53c2\u52a0\u4f53\u80b2\u6d4b\u8bd5\u7684\uff0c\u7ecf\u7533\u8bf7\u53ca\u5ba1\u6838\u901a\u8fc7\u540e\u53ef\u514d\u4e88\u53c2\u52a0\u4f53\u80b2\u6d4b\u8bd5\uff0c\u4f53\u80b2\u6d4b\u8bd5\u6210\u7ee9\u8ba1\u4e3a60\u5206\u3002\u5177\u4f53\u6d4b\u8bd5\u65b9\u6848\u8be6\u89c1\u300a\u4f53\u80b2\u6d4b\u8bd5\u65b9\u6848\u300b\uff08\u9644\u4ef61\uff09\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u83b7\u5f97\u7834\u683c\u5165\u56f4\u8d44\u683c\u7684\u7b2c\u4e8c\u7c7b\u8003\u751f\u65e0\u9700\u53c2\u52a0\u7b14\u8bd5\uff0c\u4e0e\u7b2c\u4e00\u7c7b\u8003\u751f\u7edf\u4e00\u53c2\u52a0\u540e\u7eed\u9762\u8bd5\u548c\u4f53\u80b2\u6d4b\u8bd5\uff0c\u4f7f\u7528\u9762\u8bd5\u6210\u7ee9\u4f5c\u4e3a\u9ad8\u6821\u8003\u6838\u6210\u7ee9\u3002\u4f53\u80b2\u6d4b\u8bd5\u8981\u6c42\u76f8\u540c\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5982\u9047\u4e0d\u53ef\u6297\u529b\u56e0\u7d20\uff0c\u62db\u751f\u6d41\u7a0b\u6240\u4f5c\u8c03\u6574\uff0c\u5c06\u53e6\u884c\u901a\u77e5\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u56db\uff09\u5f55\u53d6\u529e\u6cd5<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">1. \u7efc\u5408\u6210\u7ee9\u8ba1\u7b97\u529e\u6cd5<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u7efc\u5408\u6210\u7ee9\uff08\u6ee1\u52061000\u5206\uff09=\u9ad8\u8003\u6210\u7ee9\/\u9ad8\u8003\u6210\u7ee9\u6ee1\u5206*850\uff08\u56db\u820d\u4e94\u5165\u53d62\u4f4d\u5c0f\u6570\uff09+ \u9ad8\u6821\u8003\u6838\u6210\u7ee9\uff08\u56db\u820d\u4e94\u5165\u53d62\u4f4d\u5c0f\u6570\uff09\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u9ad8\u6821\u8003\u6838\u6210\u7ee9\u6ee1\u5206150\u5206\u3002\u7b2c\u4e00\u7c7b\u8003\u751f\u7b14\u8bd5\u6210\u7ee9\u5360100\u5206\uff0c\u7efc\u5408\u9762\u8bd5\u6210\u7ee9\u536050\u5206\u3002 \u7834\u683c\u5165\u56f4\u7684\u7b2c\u4e8c\u7c7b\u8003\u751f\u9762\u8bd5\u6210\u7ee9\uff08\u6298\u7b97\u4e3a\u6ee1\u5206150\u5206\uff09\u5373\u4e3a\u9ad8\u6821\u8003\u6838\u6210\u7ee9\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u9ad8\u8003\u6210\u7ee9\u4e0d\u542b\u4efb\u4f55\u653f\u7b56\u52a0\u5206\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">2. \u786e\u5b9a\u5f55\u53d6\u540d\u5355<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u9ad8\u8003\u6210\u7ee9\u51fa\u5206\u540e\uff0c\u5bf9\u4e8e\u7b2c\u4e00\u7c7b\u8003\u751f\uff0c\u4f9d\u636e\u5404\u7701\uff08\u533a\u3001\u5e02\uff09\u5404\u4e13\u4e1a\u7ec4\u522b\u5f3a\u57fa\u8ba1\u5212\u6570\u6309\u7efc\u5408\u6210\u7ee9\u7531\u9ad8\u5230\u4f4e\u786e\u5b9a\u5f3a\u57fa\u8ba1\u5212\u62df\u8ba4\u5b9a\u540d\u5355\u3002\u82e5\u8003\u751f\u7efc\u5408\u6210\u7ee9\u76f8\u540c\u65f6\uff0c\u518d\u4f9d\u6b21\u4ee5\u9ad8\u8003\u6210\u7ee9\uff08\u4e0d\u542b\u4efb\u4f55\u653f\u7b56\u52a0\u5206\uff09\u3001\u9ad8\u8003\u6570\u5b66\u6210\u7ee9\u3001\u9ad8\u8003\u5916\u8bed\u6210\u7ee9\u3001\u9ad8\u8003\u8bed\u6587\u6210\u7ee9\u3001\u4f53\u80b2\u6d4b\u8bd5\u6210\u7ee9\u6392\u5e8f\u3002\u5f55\u53d6\u4e13\u4e1a\u91c7\u7528\u201c\u4e13\u4e1a\u5fd7\u613f\u5e73\u884c\u201d\uff0c\u5206\u6570\u4f18\u5148\u539f\u5219\uff0c\u4e0d\u8bbe\u7ea7\u5dee\u5206\u3002\u5bf9\u8fbe\u5230\u7efc\u5408\u6210\u7ee9\u6700\u4f4e\u5f55\u53d6\u5206\u6570\u7ebf\uff0c\u4f46\u672a\u8fbe\u5230\u6240\u586b\u62a5\u4e13\u4e1a\u5206\u6570\u8981\u6c42\u3001\u4e14\u613f\u610f\u670d\u4ece\u4e13\u4e1a\u8c03\u5242\u7684\u8003\u751f\uff0c\u5728\u6240\u62a5\u8003\u4e13\u4e1a\u7ec4\u522b\u5185\u8fdb\u884c\u8c03\u5242\u5f55\u53d6\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5bf9\u4e8e\u7834\u683c\u5165\u56f4\u7684\u7b2c\u4e8c\u7c7b\u8003\u751f\uff0c\u7efc\u5408\u6210\u7ee9\u8fbe\u5230\u672c\u7701\uff08\u533a\u3001\u5e02\uff09\u7b2c\u4e00\u7c7b\u8003\u751f\u6700\u4f4e\u5f55\u53d6\u5206\u6570\u7ebf\u7684\uff0c\u4e88\u4ee5\u5f55\u53d6\uff0c\u5176\u5f55\u53d6\u4e13\u4e1a\u53c2\u8003\u7efc\u5408\u9762\u8bd5\u6210\u7ee9\u3002\u8be5\u7c7b\u8003\u751f\u4e0d\u5360\u7528\u672c\u7701\uff08\u533a\u3001\u5e02\uff09\u7b2c\u4e00\u7c7b\u8003\u751f\u8ba1\u5212\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u62df\u5f55\u53d6\u7684\u4e24\u7c7b\u8003\u751f\u9ad8\u8003\u6210\u7ee9\u603b\u5206\u4e0d\u5f97\u4f4e\u4e8e\u6240\u5728\u7701\uff08\u533a\u3001\u5e02\uff09\u672c\u79d1\u4e00\u6279\u5f55\u53d6\u6700\u4f4e\u63a7\u5236\u5206\u6570\u7ebf\uff08\u5408\u5e76\u5f55\u53d6\u6279\u6b21\u7701\uff08\u533a\u3001\u5e02\uff09\u4e3a\u5355\u72ec\u5212\u5b9a\u7684\u76f8\u5e94\u5206\u6570\u7ebf\uff09\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5f3a\u57fa\u8ba1\u5212\u9884\u5f55\u53d6\u540d\u5355\u7ecf\u5b66\u6821\u62db\u751f\u59d4\u5458\u4f1a\u5ba1\u5b9a\u540e\uff0c\u62a5\u5404\u7701\u7ea7\u62db\u8003\u673a\u6784\u5ba1\u6838\u5e76\u529e\u7406\u5f55\u53d6\u624b\u7eed\u3002\u88ab\u5f55\u53d6\u7684\u8003\u751f\u4e0d\u518d\u53c2\u52a0\u672c\u7701\uff08\u533a\u3001\u5e02\uff09\u540e\u7eed\u9ad8\u8003\u5fd7\u613f\u5f55\u53d6\uff1b\u672a\u88ab\u5f55\u53d6\u7684\u8003\u751f\u53ef\u6b63\u5e38\u53c2\u52a0\u540e\u7eed\u5404\u6279\u6b21\u9ad8\u8003\u5fd7\u613f\u5f55\u53d6\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u56db\u3001\u672c\u7814\u8f6c\u6bb5\u65b9\u6848<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u6211\u6821\u5bf9\u7b26\u5408\u57f9\u517b\u8981\u6c42\u7684\u5f3a\u57fa\u8ba1\u5212\u5b66\u751f\u5b9e\u884c\u672c\u535a\u8854\u63a5\u57f9\u517b\u3002\u8fdb\u5165\u7814\u7a76\u751f\u9636\u6bb5\u540e\uff0c\u5b66\u751f\u4e3b\u8981\u5728\u5f3a\u57fa\u8ba1\u5212\u6240\u5728\u57fa\u7840\u5b66\u79d1\u4e13\u4e1a\u8fdb\u884c\u57f9\u517b\uff0c\u90e8\u5206\u5b66\u751f\u4e5f\u53ef\u6839\u636e\u57f9\u517b\u65b9\u6848\u5728\u9ad8\u7aef\u82af\u7247\u4e0e\u8f6f\u4ef6\u3001\u667a\u80fd\u79d1\u6280\u3001\u65b0\u6750\u6599\u3001\u5148\u8fdb\u5236\u9020\u548c\u56fd\u5bb6\u5b89\u5168\u7b49\u5173\u952e\u9886\u57df\u8fdb\u884c\u5b66\u79d1\u4ea4\u53c9\u57f9\u517b\u3002\u672c\u535a\u8854\u63a5\u4e13\u4e1a\u8303\u56f4\u89c1\u5404\u5f3a\u57fa\u8ba1\u5212\u62db\u751f\u4e13\u4e1a\u57f9\u517b\u65b9\u6848\uff0c\u5177\u4f53\u4e13\u4e1a\u62db\u751f\u540d\u989d\u4ee5\u5f53\u5e74\u5ea6\u5b66\u6821\u516c\u5e03\u7684\u5de5\u4f5c\u65b9\u6848\u4e3a\u51c6\u3002\u5f3a\u57fa\u8ba1\u5212\u5b66\u751f\u8f6c\u6bb5\u6210\u529f\u987b\u7b26\u5408\u6211\u6821\u5f53\u5e74\u5ea6\u514d\u8bd5\u653b\u8bfb\u7814\u7a76\u751f\u8981\u6c42\u4e14\u843d\u5b9e\u76f4\u535a\u53bb\u5411\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e94\u3001\u57f9\u517b\u7279\u8272<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e00\u652f\u6491\uff1a\u4ee5\u81f4\u8fdc\u5b66\u9662\u6db5\u76d6\u6570\u3001\u7406\u3001\u5316\u3001\u751f\u3001\u8ba1\u7b97\u673a\u3001\u533b\u5b66\u7b49\u57fa\u7840\u5b66\u79d1\u7684\u62d4\u5c16\u57f9\u517b\u57fa\u5730\u4e3a\u652f\u6491\uff0c\u5145\u5206\u53d1\u6325\u5341\u4f59\u5e74\u62d4\u5c16\u4eba\u624d\u57f9\u517b\u7684\u7ecf\u9a8c\uff0c\u7ed3\u5408\u5404\u9662\u7cfb\u7279\u8272\uff0c\u4e3a\u5b66\u751f\u63d0\u4f9b\u6700\u575a\u5b9e\u7684\u57fa\u7840\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u53cc\u534f\u540c\uff1a\u6784\u5efa\u6821\u9662\u53cc\u534f\u540c\u7684\u4eba\u624d\u57f9\u517b\u8d28\u63a7\u4f53\u7cfb\uff0c\u901a\u8fc7\u9662\u7cfb\u7684\u6301\u7eed\u8ddf\u8e2a\u53ca\u5b66\u6821\u7684\u5b9a\u671f\u8c03\u7814\uff0c\u5efa\u7acb\u5b66\u751f\u6210\u957f\u6863\u6848\uff0c\u4e3a\u5b66\u751f\u6210\u957f\u4fdd\u9a7e\u62a4\u822a\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e09\u878d\u5408\uff1a\u4e13\u4e1a\u878d\u5408\uff0c\u901a\u8fc7\u4ea4\u53c9\u8bfe\u7a0b\u6a21\u5757\u3001\u8f85\u4fee\u4e13\u4e1a\u3001\u672c\u79d1\u751f\u7814\u7a76\u8ba1\u5212\uff08PRP\uff09\u7b49\u6253\u5f00\u4e13\u4e1a\u8fb9\u754c\uff0c\u7814\u7a76\u751f\u9636\u6bb5\u66f4\u662f\u56f4\u7ed5\u56fd\u5bb6\u91cd\u70b9\u9886\u57df\u7ed9\u4e88\u5b66\u751f\u66f4\u591a\u7684\u4e13\u4e1a\u9009\u62e9\uff0c\u65e2\u53ef\u4ee5\u7ee7\u7eed\u5728\u539f\u5b66\u79d1\u6df1\u9020\uff0c\u4e5f\u53ef\u4ee5\u9009\u62e9\u8fdb\u5165\u56fd\u5bb6\u91cd\u5927\u6218\u7565\u9700\u6c42\u5173\u952e\u9886\u57df\u76f8\u5173\u5de5\u79d1\u5b66\u79d1\u8fdb\u884c\u4ea4\u53c9\u57f9\u517b\u3002\u6253\u9020\u672c\u535a\u8854\u63a5\u57f9\u517b\u6a21\u5f0f\uff0c\u9f13\u52b1\u4f18\u79c0\u672c\u79d1\u751f\u63d0\u524d\u4fee\u8bfb\u7814\u7a76\u751f\u8bfe\u7a0b\u3002\u79d1\u6559\u878d\u5408\uff0c\u6ce8\u91cd\u79d1\u7814\u8bad\u7ec3\uff0c\u9f13\u52b1\u56fd\u5bb6\u91cd\u70b9\u5b9e\u9a8c\u5ba4\u7b49\u524d\u6cbf\u7814\u7a76\u4e2d\u5fc3\u4e3a\u672c\u79d1\u751f\u63d0\u4f9b\u79d1\u7814\u5e73\u53f0\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u56db\u6a21\u5f0f\uff1a\u5bfc\u5e08\u5236\uff0c\u4e3a\u5b66\u751f\u914d\u5907\u9ad8\u5c42\u6b21\u4eba\u624d\u4f5c\u4e3a\u5bfc\u5e08\u6216\u73ed\u4e3b\u4efb\uff0c\u5728\u5b66\u4e1a\u3001\u7814\u7a76\u3001\u5c31\u4e1a\u7b49\u65b9\u9762\u7ed9\u4e88\u5168\u65b9\u4f4d\u7684\u5f15\u9886\u4e0e\u6307\u5bfc\uff1b\u5956\u52a9\u5236\uff0c\u63d0\u4f9b\u4e30\u5bcc\u591a\u6837\u7684\u5956\u52a9\u5b66\u91d1\u6fc0\u52b1\uff0c\u4e3a\u5b66\u751f\u7684\u5b66\u4e60\u751f\u6d3b\u3001\u5b66\u672f\u4ea4\u6d41\u7b49\u63d0\u4f9b\u5145\u8db3\u7684\u4fdd\u969c\uff1b\u52a8\u6001\u5316\uff0c\u5b9e\u884c\u9636\u6bb5\u6027\u8003\u6838\u548c\u5206\u6d41\u673a\u5236\uff0c\u638c\u63e1\u5b66\u751f\u52a8\u6001\u7ed9\u4e88\u6700\u5408\u9002\u7684\u57f9\u517b\u65b9\u5f0f\uff1b\u4e2a\u6027\u5316\uff0c\u4e3a\u5b66\u751f\u6253\u9020\u591a\u5143\u5316\u6210\u624d\u8def\u5f84\uff0c\u9f13\u52b1\u9662\u7cfb\u5b9e\u884c\u201c\u4e00\u4eba\u4e00\u6848\u201d\u7684\u4e2a\u6027\u5316\u57f9\u517b\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e94\u80b2\u4eba\uff1a\u4ee5\u4ef7\u503c\u5f15\u9886\u3001\u77e5\u8bc6\u63a2\u7a76\u3001\u80fd\u529b\u5efa\u8bbe\u3001\u4eba\u683c\u517b\u6210\u7684\u57f9\u517b\u7406\u5ff5\u4e3a\u7275\u5f15\uff0c\u5c06\u601d\u653f\u4e0e\u57f9\u517b\u76f8\u7ed3\u5408\uff0c\u5c06\u7406\u8bba\u4e0e\u5b9e\u8df5\u76f8\u7ed3\u5408\uff0c\u5c06\u4e2a\u6027\u5316\u4e0e\u5747\u8861\u5316\u76f8\u7ed3\u5408\uff0c\u575a\u6301\u5fb7\u80b2\u4e3a\u5148\u3001\u80fd\u529b\u4e3a\u91cd\u3001\u5fb7\u667a\u4f53\u7f8e\u52b3\u5168\u9762\u53d1\u5c55\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5404\u4e13\u4e1a\u57f9\u517b\u65b9\u6848\u54a8\u8be2\u65b9\u5f0f\u89c1\u672c\u79d1\u62db\u751f\u7f51\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u516d\u3001\u5176\u4ed6\u8bf4\u660e<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e00\uff09\u5f3a\u57fa\u751f\u5165\u5b66\u540e\u539f\u5219\u4e0a\u4e0d\u5f97\u8c03\u6574\u4e13\u4e1a\uff0c\u5165\u5b66\u540e\u5c06\u6309\u7167\u57f9\u517b\u65b9\u6848\u89c4\u5b9a\u5b9e\u884c\u9636\u6bb5\u6027\u8003\u6838\u548c\u5206\u6d41\u673a\u5236\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e8c\uff09\u5173\u4e8e\u5b66\u751f\u7efc\u5408\u7d20\u8d28\u6863\u6848\uff0c\u5bf9\u4e8e\u5df2\u5efa\u7acb\u7701\u7ea7\u7edf\u4e00\u4fe1\u606f\u5e73\u53f0\u7684\u7701\u4efd\uff0c\u5c06\u7531\u7701\u7ea7\u6559\u80b2\u884c\u653f\u90e8\u95e8\u76f4\u63a5\u4e0a\u4f20\u81f3\u5f3a\u57fa\u8ba1\u5212\u62a5\u540d\u7cfb\u7edf\u3002\u5bf9\u4e8e\u5c1a\u672a\u5efa\u7acb\u7701\u7ea7\u7edf\u4e00\u4fe1\u606f\u5e73\u53f0\u7684\u7701\u4efd\uff0c\u5c06\u7531\u5404\u7701\u7ea7\u6559\u80b2\u884c\u653f\u90e8\u95e8\u6c47\u603b\u672c\u5730\u5404\u4e2d\u5b66\u62a5\u8003\u5b66\u751f\u7684\u7efc\u5408\u7d20\u8d28\u6863\u6848\u540e\uff0c\u7edf\u4e00\u4e0a\u4f20\u81f3\u5f3a\u57fa\u8ba1\u5212\u62a5\u540d\u7cfb\u7edf\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e09\uff09\u5bf9\u4e8e\u7efc\u5408\u7d20\u8d28\u6863\u6848\u9020\u5047\u6216\u5728\u9ad8\u6821\u8003\u6838\u4e2d\u821e\u5f0a\u7684\u8003\u751f\uff0c\u5c06\u53d6\u6d88\u5f3a\u57fa\u8ba1\u5212\u7684\u62a5\u540d\u3001\u8003\u8bd5\u548c\u5f55\u53d6\u8d44\u683c\uff0c\u5e76\u5c06\u6709\u5173\u60c5\u51b5\u901a\u62a5\u76f8\u5173\u7701\u7ea7\u62db\u751f\u8003\u8bd5\u673a\u6784\u6216\u6559\u80b2\u884c\u653f\u90e8\u95e8\uff0c\u53d6\u6d88\u5176\u5f53\u5e74\u9ad8\u8003\u62a5\u540d\u3001\u8003\u8bd5\u548c\u5f55\u53d6\u8d44\u683c\uff0c\u5e76\u89c6\u60c5\u8282\u8f7b\u91cd\u7ed9\u4e883\u5e74\u5185\u6682\u505c\u53c2\u52a0\u5404\u7c7b\u56fd\u5bb6\u6559\u80b2\u8003\u8bd5\u7684\u5904\u7406\u3002\u5df2\u7ecf\u5165\u5b66\u7684\uff0c\u6309\u6559\u80b2\u90e8\u548c\u6211\u6821\u76f8\u5173\u89c4\u5b9a\u53d6\u6d88\u5b66\u7c4d\uff0c\u6bd5\u4e1a\u540e\u53d1\u73b0\u7684\u53d6\u6d88\u6bd5\u4e1a\u8bc1\u3001\u5b66\u4f4d\u8bc1\u3002\u4e2d\u5b66\u5e94\u5f53\u5bf9\u6240\u51fa\u5177\u7684\u6750\u6599\u8ba4\u771f\u6838\u5b9e\uff0c\u51fa\u73b0\u5f04\u865a\u4f5c\u5047\u60c5\u5f62\u7684\uff0c\u6211\u6821\u4fdd\u7559\u91c7\u53d6\u76f8\u5173\u63aa\u65bd\u7684\u6743\u5229\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u56db\uff09\u9009\u62d4\u6d4b\u8bd5\u671f\u95f4\uff0c\u8003\u751f\u7684\u4ea4\u901a\u3001\u98df\u5bbf\u7b49\u8d39\u7528\u81ea\u7406\u3002\u5165\u56f4\u9ad8\u6821\u8003\u6838\u4e14\u5bb6\u5ead\u7ecf\u6d4e\u56f0\u96be\u7684\u8003\u751f\u53ef\u5411\u6211\u6821\u63d0\u51fa\u7533\u8bf7\uff0c\u6211\u6821\u53ef\u914c\u60c5\u63d0\u4f9b\u4fdd\u969c\u6027\u8def\u8d39\u548c\u4f4f\u5bbf\u8865\u8d34\u3002\u7533\u8bf7\u8868\u89c1\u9644\u4ef62\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e94\uff09\u62a5\u540d\u6211\u6821\u5f3a\u57fa\u8ba1\u5212\u7684\u8003\u751f\uff0c\u8eab\u4f53\u6761\u4ef6\u987b\u6ee1\u8db3\u6559\u80b2\u90e8\u3001\u539f\u536b\u751f\u90e8\u3001\u4e2d\u56fd\u6b8b\u75be\u4eba\u8054\u5408\u4f1a\u5370\u53d1\u7684\u300a\u666e\u901a\u9ad8\u7b49\u5b66\u6821\u62db\u751f\u4f53\u68c0\u5de5\u4f5c\u6307\u5bfc\u610f\u89c1\u300b\u4e2d\u76f8\u5173\u4e13\u4e1a\u7684\u89c4\u5b9a\u53ca\u8981\u6c42\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u516d\uff09\u6211\u6821\u5f3a\u57fa\u8ba1\u5212\u5404\u9879\u5de5\u4f5c\u6309\u7167\u6559\u80b2\u90e8\u76f8\u5173\u653f\u7b56\u6267\u884c\uff0c\u5982\u9047\u653f\u7b56\u8c03\u6574\uff0c\u5219\u6309\u65b0\u653f\u6267\u884c\u5e76\u53ca\u65f6\u516c\u5e03\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e03\uff09\u5b66\u6821\u672a\u59d4\u6258\u4efb\u4f55\u4e2a\u4eba\u6216\u4e2d\u4ecb\u7ec4\u7ec7\u5f00\u5c55\u5f3a\u57fa\u8ba1\u5212\u57f9\u8bad\u6d3b\u52a8\uff0c\u4e0d\u4e3e\u529e\u4efb\u4f55\u5f62\u5f0f\u7684\u8425\u5229\u6027\u57f9\u8bad\u6d3b\u52a8\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e03\u3001\u76d1\u7763\u4fdd\u969c\u673a\u5236<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e00\uff09\u62db\u751f\u6539\u9769\u8bd5\u70b9\u5de5\u4f5c\u5728\u5b66\u6821\u62db\u751f\u59d4\u5458\u4f1a\u7684\u9886\u5bfc\u4e0b\uff0c\u7531\u62db\u751f\u529e\u516c\u5ba4\u8d1f\u8d23\u7ec4\u7ec7\u548c\u5b9e\u65bd\u3002\u6211\u6821\u5728\u5b9e\u65bd\u672c\u7b80\u7ae0\u7684\u8fc7\u7a0b\u4e2d\u505a\u5230\u62db\u751f\u65b9\u6848\u516c\u5f00\u3001\u9009\u62d4\u65b9\u6cd5\u516c\u5e73\u3001\u5f55\u53d6\u7ed3\u679c\u516c\u6b63\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e8c\uff09\u6211\u6821\u5c06\u5bf9\u5f55\u53d6\u7684\u5b66\u751f\u8fdb\u884c\u5165\u5b66\u8d44\u683c\u590d\u67e5\uff0c\u5bf9\u4e0d\u5177\u5907\u5165\u5b66\u8d44\u683c\u7684\u5b66\u751f\uff0c\u6309\u6559\u80b2\u90e8\u76f8\u5173\u89c4\u5b9a\u5904\u7406\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\uff08\u4e09\uff09\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u201c\u5f3a\u57fa\u8ba1\u5212\u201d\u62db\u751f\u5de5\u4f5c\u63a5\u53d7\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u7eaa\u68c0\u76d1\u5bdf\u673a\u6784\u5168\u7a0b\u76d1\u7763\uff0c\u5e76\u63a5\u53d7\u793e\u4f1a\u76d1\u7763\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u516b\u3001\u54a8\u8be2\u65b9\u5f0f<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5730\u5740\uff1a\u4e0a\u6d77\u5e02\u4e1c\u5ddd\u8def800\u53f7\u65b0\u884c\u653fB\u697c333\u5ba4\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u62db\u751f\u529e\u516c\u5ba4<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u90ae\u7f16\uff1a200240<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u62db\u751f\u54a8\u8be2\u7535\u8bdd\uff1a021-34200000<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4f20\u771f\uff1a021-34207255<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u7535\u5b50\u90ae\u7bb1\uff1azsb@sjtu.edu.cn<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u672c\u79d1\u62db\u751f\u7f51\uff1ahttps:\/\/admissions.sjtu.edu.cn<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5b98\u65b9\u5fae\u4fe1\u516c\u4f17\u53f7\uff1aapply_SJTU<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u5fae\u4fe1\u540d\uff1a\u4e0a\u4ea4\u5927<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u7eaa\u68c0\u76d1\u5bdf\u673a\u6784\u7535\u8bdd\uff1a021-34206217<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u9633\u5149\u9ad8\u8003\u4fe1\u606f\u5e73\u53f0\uff1ahttps:\/\/gaokao.chsi.com.cn\/<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\">\u4e5d\u3001\u672c\u7b80\u7ae0\u89e3\u91ca\u6743\u5c5e\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u62db\u751f\u529e\u516c\u5ba4\u3002<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: right;\">\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66\u62db\u751f\u529e\u516c\u5ba4<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: right;\">2026\u5e744\u6708<\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\"><a href=\"https:\/\/gaokao.chsi.com.cn\/gkxx\/qjjh\/202604\/20260414\/2293461887.html\" target=\"_self\">\u70b9\u51fb\u4e0b\u8f7d:\u9644\u4ef61\uff1a\u4e0a\u6d77\u4ea4\u901a\u5927\u5b662026\u5e74\u5f3a\u57fa\u8ba1\u5212\u4f53\u80b2\u6d4b\u8bd5\u65b9\u6848.docx<\/a><\/p>\n<p style=\"margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;\"><a href=\"https:\/\/gaokao.chsi.com.cn\/gkxx\/qjjh\/202604\/20260414\/2293461887.html\" target=\"_self\">\u70b9\u51fb\u4e0b\u8f7d:\u9644\u4ef62\uff1a\u4e0a\u6d77\u4ea4\u901a\u5927\u5b662026\u5e74\u5f3a\u57fa\u9009\u62d4\u7ecf\u6d4e\u8d44\u52a9\u7533\u8bf7\u8868.docx<\/a><\/p>\n","subtitle":"","pagecount":"1","sourceurl":"","description":"","thumb":"","url":"\/p\/587802.html","all_pv":344,"pages":1,"author":"","terms":{"2":["\u5f3a\u57fa\u8ba1\u5212","\u62db\u751f\u7b80\u7ae0","\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66"]},"menu":"","attachments":[],"relates":[],"article_thumb":"","galleries":[]});
+               
+        var wechat = {
+            title: "上海交通大学2026年强基计划招生简章",
+            desc: "",
+            link: location.href + '?v=' + (new Date()).getTime(),
+            imgUrl:imgUrl || "https://res.cetv.cn/assets/images/nopic.jpg" ,
+            appId: wechatData.appId,
+            timestamp: wechatData.timestamp,
+            nonceStr: wechatData.nonceStr,
+            signature: wechatData.signature,
+            debug: !!wechatData['debug']
+            // debug:true
+        };
+        
+        wx.config({
+            debug: wechat.debug, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: wechatData.appId, // 必填，公众号的唯一标识
+            timestamp: wechatData.timestamp, // 必填，生成签名的时间戳
+            nonceStr: wechatData.nonceStr, // 必填，生成签名的随机串
+            signature: wechatData.signature,// 必填，签名，见附录1
+            jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+        console.log('wechat'+JSON.stringify(wechat))
+        
+        wx.ready(function(){
+            //微信环境下重新加载音频
+            if(typeof loadAudio == "function"){
+                loadAudio();
+            }
+            //分享到朋友圈
+            wx.onMenuShareTimeline({
+                title: wechat.title, // 分享标题
+                link: wechat.link, // 分享链接
+                imgUrl: wechat.imgUrl, // 分享图标
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+            //获取“分享给朋友”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareAppMessage({
+                title: wechat.title, // 分享标题
+                desc: wechat.desc, // 分享描述
+                link: wechat.link, // 分享链接
+                imgUrl: wechat.imgUrl, // 分享图标,注意图标宽高要大于300px
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                   
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                },
+                fail:function (res) {
+//                    alert("分享失败：" +JSON.stringify(res));
+                    console.log("分享失败：" +JSON.stringify(res));
+                }
+            });
+            //获取“分享到QQ”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareQQ({
+                title: wechat.title, // 分享标题
+                desc: wechat.desc, // 分享描述
+                link: wechat.link, // 分享链接
+                imgUrl: wechat.imgUrl, // 分享图标
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+            //获取“分享到腾讯微博”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareWeibo({
+                title: wechat.title, // 分享标题
+                desc: wechat.desc, // 分享描述
+                link: wechat.link, // 分享链接
+                imgUrl: wechat.imgUrl, // 分享图标
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+            //获取“分享到QQ空间”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareQZone({
+                title: wechat.title, // 分享标题
+                desc: wechat.desc, // 分享描述
+                link: wechat.link, // 分享链接
+                imgUrl: wechat.imgUrl, // 分享图标
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+        });
+        wx.error(function(res){
+            // config信息验证失败会执行error函数
+            //alert(JSON.stringify(res));
+            console.log('wx.error'+JSON.stringify(res));
+        });
+            }
+            
+            })
+               
+           }
+
+    });
+</script>
+    <div id="main">
+
+		<div class="left-cont detail">
+
+				
+			<div class="detail-tit">上海交通大学2026年强基计划招生简章</div>
+			<h3 style="font-size: 20px; font-weight: blod;word-break: break-all;"></h3>
+			<div class="detail-info">
+				<ul class="detail-opera">
+				    <li style="float: left;background: none;">
+			            <div class="sharebox" data-contentid="587802">
+                            <a href="javascript:digg.set('587802', 'support');" class="digg" id="support"><i class="digg-icon" dignum="0"></i>点赞 0</a>
+                        </div>
+				    </li>
+					<li class="f-biger">A-</li>
+					<li class="f-small">A+</li>
+					<!--无外网则隐藏-云设置可设置-->
+
+    <li class="bdsharebuttonbox f-weibo"><a title="分享到新浪微博" data-cmd="tsina"></a></li>
+    <li class="bdsharebuttonbox f-weixin"><a title="分享到微信" data-cmd="weixin"></a></li>
+    <li class="bdsharebuttonbox f-zone"><a title="分享到QQ空间" data-cmd="qzone"></a></li>
+    <script>
+    window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};
+    // https:
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://fastly.jsdelivr.net/gh/codexlin/jsDelivr/company/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    // http:
+    // with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    
+    // if($){
+    //     $('.bdsharebuttonbox').on('click','[data-cmd]',function () {
+    //         var shareVariable={}
+    //         var aid,sid,cid,suffix,url;
+    //         aid = shareVariable.aid;
+    //         sid = shareVariable.sid;
+    //         cid = shareVariable.cid;
+    //         suffix = shareVariable.suffix;
+    //         $.getJSON('https://tj'+suffix+'/tj.gif?action=share&type=pc&cid='+cid+'&sid='+sid+'&aid='+aid);
+    //         console.log(aid,sid,cid,suffix,url)
+    //     });
+    // }
+    
+    </script>
+
+				</ul>
+				
+				<div>2026/04/22 15:06            	</div>
+			</div>
+			
+			
+			<div class="detail-con">
+			    <style>
+			        .left-cont { width:725px;}
+			        .detail-con iframe { width:100%;}
+			    </style>
+				<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">为全面落实全国教育大会精神，深入贯彻《国务院关于深化考试招生制度改革的实施意见》（国发〔2014〕35号）、《教育部关于在部分高校开展基础学科招生改革试点工作的意见》（教学〔2020〕1号）等文件要求，服务国家重大战略需求，加强基础学科拔尖创新人才选拔培养，经批准我校2026年继续开展基础学科招生改革试点（以下简称“强基计划”），探索多维度考核评价模式，旨在为国家重大战略领域输送后备人才。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">一、招生对象及报名条件</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">各省（区、市）符合2026年全国普通高等学校招生全国统一考试报名条件，有志于服务国家重大战略需求的学生。申请报名考生分为以下两类：</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">第一类：综合素质优秀、成绩优异的考生。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">第二类：基础学科拔尖，在高中阶段获得全国中学生奥林匹克竞赛（数学、物理、化学、生物、信息学）全国决赛二等奖及以上的考生。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">二、招生专业及招生计划</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">我校2026年强基计划各省（区、市）招生计划数以报名系统公布为准。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">我校2010年成立了“致远学院”，同年以其为依托的上海交通大学“基础学科拔尖学生培养试验计划”被正式纳入国家教育体制改革试点项目。2014年开始实施致远工科荣誉计划，2015年开始实施致远医科荣誉计划。2018年，在教育部“基础学科拔尖学生培养计划”实施十年总结评价中，学院代表上海交通大学获线上线下全优评价，得到教育部与评审专家们的高度肯定。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">结合文件精神，此次我校数学与应用数学、物理学、化学、生物科学、生物医学科学、工程力学、船舶与海洋工程、生物医学工程、材料科学与工程等九个专业开展“强基计划”招生，同时定制具有特色的培养方案，学生与相关专业导师双向选择后进行本博衔接培养，为服务国家重大战略需求培养拔尖创新人才。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">招生专业、科类和选考要求见下表：</p>
+<p style="text-align:center"><img src="https://res.cetv.cn/a/10001/202604/14f1c3a044a63aad72927ac90b8e82f3.png" data-mce-src="https://res.cetv.cn/a/10001/202604/14f1c3a044a63aad72927ac90b8e82f3.png" data-origin-src="https://res.cetv.cn/a/10001/202604/14f1c3a044a63aad72927ac90b8e82f3.png" data-mce-attachid="645656" data-mce-alias="2293461890.png"></p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">考生仅可选择一个专业组别进行报考，组内可报考多个专业，各专业组别单列计划，单独排队入围及录取。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">三、报名方式与选拔程序</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（一）报名时间和办法</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">即日起至4月30日24时前，考生可登录上海交通大学强基计划报名平台（https://bm.chsi.com.cn/jcxkzs/sch/10248），按要求准确、完整地完成网上报名。报考我校强基计划的考生不能兼报其他高校强基计划。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">第二类考生可于即日起至4月27日24时前，登录上海交通大学强基计划报名平台（https://bm.chsi.com.cn/jcxkzs/sch/10248）按照系统提示完成报名。我校将依据各学科全国决赛竞赛成绩排序对第二类考生进行审核，审核结果预计于4月28日在报名系统中公布。获得破格入围资格者将以第二类考生身份参与后续选拔流程，未获得破格入围资格者将以第一类考生身份参与后续选拔流程。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（二）考生参加统一高考</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（三）高校考核及志愿确认</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">1. 笔试</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">所有按要求完成报名的第一类考生可参加我校组织的笔试（高考后一周内），具体时间安排详见准考证。报考Ⅰ或Ⅱ组的笔试科目为“数学、物理”，报考Ⅲ组的笔试科目为“数学、化学”。我校将根据笔试成绩，按照不超过各省（区、市）各专业组别招生计划4倍的比例，分别确定各省（区、市）各专业组别笔试通过的考生名单，末位同分考生均予以入围。未通过笔试的考生不参与后续环节及录取成绩排序。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">2. 志愿确认</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">入围面试的考生（含笔试通过和破格入围）须在报名系统内进行上海交通大学强基计划志愿确认，签订并上传承诺书。未进行志愿确认的考生将视为放弃强基计划选拔。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">3. 综合面试和体育测试</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">在高考成绩公布前，对笔试通过且完成强基计划志愿确认的第一类考生进行综合面试和体育测试。具体安排详见准考证。综合面试包含科研潜质及创新素养评估，主要考察考生分析问题、解决问题的能力，表达能力和创新思维等。考生综合素质档案将提供给面试专家，作为面试评分的重要参考。面试采取专家、考生、考场“三随机”抽签的方式，全程录音录像。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">体育测试项目包括身高体重（BMI）、坐位体前屈、立定跳远、1分钟跳绳，体育测试成绩作为综合成绩同分排序的依据，体育测试无故缺席的考生取消录取资格。考生因身体原因（含残疾或重疾考生）不能参加体育测试的，经申请及审核通过后可免予参加体育测试，体育测试成绩计为60分。具体测试方案详见《体育测试方案》（附件1）。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">获得破格入围资格的第二类考生无需参加笔试，与第一类考生统一参加后续面试和体育测试，使用面试成绩作为高校考核成绩。体育测试要求相同。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">如遇不可抗力因素，招生流程所作调整，将另行通知。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（四）录取办法</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">1. 综合成绩计算办法</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">综合成绩（满分1000分）=高考成绩/高考成绩满分*850（四舍五入取2位小数）+ 高校考核成绩（四舍五入取2位小数）。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">高校考核成绩满分150分。第一类考生笔试成绩占100分，综合面试成绩占50分。 破格入围的第二类考生面试成绩（折算为满分150分）即为高校考核成绩。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">高考成绩不含任何政策加分。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">2. 确定录取名单</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">高考成绩出分后，对于第一类考生，依据各省（区、市）各专业组别强基计划数按综合成绩由高到低确定强基计划拟认定名单。若考生综合成绩相同时，再依次以高考成绩（不含任何政策加分）、高考数学成绩、高考外语成绩、高考语文成绩、体育测试成绩排序。录取专业采用“专业志愿平行”，分数优先原则，不设级差分。对达到综合成绩最低录取分数线，但未达到所填报专业分数要求、且愿意服从专业调剂的考生，在所报考专业组别内进行调剂录取。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">对于破格入围的第二类考生，综合成绩达到本省（区、市）第一类考生最低录取分数线的，予以录取，其录取专业参考综合面试成绩。该类考生不占用本省（区、市）第一类考生计划。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">拟录取的两类考生高考成绩总分不得低于所在省（区、市）本科一批录取最低控制分数线（合并录取批次省（区、市）为单独划定的相应分数线）。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">强基计划预录取名单经学校招生委员会审定后，报各省级招考机构审核并办理录取手续。被录取的考生不再参加本省（区、市）后续高考志愿录取；未被录取的考生可正常参加后续各批次高考志愿录取。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">四、本研转段方案</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">我校对符合培养要求的强基计划学生实行本博衔接培养。进入研究生阶段后，学生主要在强基计划所在基础学科专业进行培养，部分学生也可根据培养方案在高端芯片与软件、智能科技、新材料、先进制造和国家安全等关键领域进行学科交叉培养。本博衔接专业范围见各强基计划招生专业培养方案，具体专业招生名额以当年度学校公布的工作方案为准。强基计划学生转段成功须符合我校当年度免试攻读研究生要求且落实直博去向。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">五、培养特色</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">一支撑：以致远学院涵盖数、理、化、生、计算机、医学等基础学科的拔尖培养基地为支撑，充分发挥十余年拔尖人才培养的经验，结合各院系特色，为学生提供最坚实的基础。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">双协同：构建校院双协同的人才培养质控体系，通过院系的持续跟踪及学校的定期调研，建立学生成长档案，为学生成长保驾护航。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">三融合：专业融合，通过交叉课程模块、辅修专业、本科生研究计划（PRP）等打开专业边界，研究生阶段更是围绕国家重点领域给予学生更多的专业选择，既可以继续在原学科深造，也可以选择进入国家重大战略需求关键领域相关工科学科进行交叉培养。打造本博衔接培养模式，鼓励优秀本科生提前修读研究生课程。科教融合，注重科研训练，鼓励国家重点实验室等前沿研究中心为本科生提供科研平台。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">四模式：导师制，为学生配备高层次人才作为导师或班主任，在学业、研究、就业等方面给予全方位的引领与指导；奖助制，提供丰富多样的奖助学金激励，为学生的学习生活、学术交流等提供充足的保障；动态化，实行阶段性考核和分流机制，掌握学生动态给予最合适的培养方式；个性化，为学生打造多元化成才路径，鼓励院系实行“一人一案”的个性化培养。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">五育人：以价值引领、知识探究、能力建设、人格养成的培养理念为牵引，将思政与培养相结合，将理论与实践相结合，将个性化与均衡化相结合，坚持德育为先、能力为重、德智体美劳全面发展。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">各专业培养方案咨询方式见本科招生网。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">六、其他说明</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（一）强基生入学后原则上不得调整专业，入学后将按照培养方案规定实行阶段性考核和分流机制。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（二）关于学生综合素质档案，对于已建立省级统一信息平台的省份，将由省级教育行政部门直接上传至强基计划报名系统。对于尚未建立省级统一信息平台的省份，将由各省级教育行政部门汇总本地各中学报考学生的综合素质档案后，统一上传至强基计划报名系统。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（三）对于综合素质档案造假或在高校考核中舞弊的考生，将取消强基计划的报名、考试和录取资格，并将有关情况通报相关省级招生考试机构或教育行政部门，取消其当年高考报名、考试和录取资格，并视情节轻重给予3年内暂停参加各类国家教育考试的处理。已经入学的，按教育部和我校相关规定取消学籍，毕业后发现的取消毕业证、学位证。中学应当对所出具的材料认真核实，出现弄虚作假情形的，我校保留采取相关措施的权利。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（四）选拔测试期间，考生的交通、食宿等费用自理。入围高校考核且家庭经济困难的考生可向我校提出申请，我校可酌情提供保障性路费和住宿补贴。申请表见附件2。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（五）报名我校强基计划的考生，身体条件须满足教育部、原卫生部、中国残疾人联合会印发的《普通高等学校招生体检工作指导意见》中相关专业的规定及要求。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（六）我校强基计划各项工作按照教育部相关政策执行，如遇政策调整，则按新政执行并及时公布。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（七）学校未委托任何个人或中介组织开展强基计划培训活动，不举办任何形式的营利性培训活动。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">七、监督保障机制</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（一）招生改革试点工作在学校招生委员会的领导下，由招生办公室负责组织和实施。我校在实施本简章的过程中做到招生方案公开、选拔方法公平、录取结果公正。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（二）我校将对录取的学生进行入学资格复查，对不具备入学资格的学生，按教育部相关规定处理。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">（三）上海交通大学“强基计划”招生工作接受上海交通大学纪检监察机构全程监督，并接受社会监督。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">八、咨询方式</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">地址：上海市东川路800号新行政B楼333室上海交通大学招生办公室</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">邮编：200240</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">招生咨询电话：021-34200000</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">传真：021-34207255</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">电子邮箱：zsb@sjtu.edu.cn</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">上海交通大学本科招生网：https://admissions.sjtu.edu.cn</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">官方微信公众号：apply_SJTU</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">微信名：上交大</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">上海交通大学纪检监察机构电话：021-34206217</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">阳光高考信息平台：https://gaokao.chsi.com.cn/</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;">九、本简章解释权属上海交通大学招生办公室。</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: right;">上海交通大学招生办公室</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: right;">2026年4月</p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;"><a href="https://gaokao.chsi.com.cn/gkxx/qjjh/202604/20260414/2293461887.html" target="_self">点击下载:附件1：上海交通大学2026年强基计划体育测试方案.docx</a></p>
+<p style="margin-top: 1em; margin-bottom: 1em; line-height: 1.33; font-size: 18px; text-indent: 2em; text-align: justify;"><a href="https://gaokao.chsi.com.cn/gkxx/qjjh/202604/20260414/2293461887.html" target="_self">点击下载:附件2：上海交通大学2026年强基选拔经济资助申请表.docx</a></p>
+                                
+			</div>
+
+			
+        <!-- 相关阅读 -->
+        <!--相关阅读1-->
+           
+            <!-- 评论 -->
+            <!--无外网则隐藏-云设置可设置-->
+		</div>
+		
+        <!-- 右侧 -->
+		<div class="xinwen-right">
+			<!-- 微信/客户端二维码/关注 -->
+<div style="display:none;"><!-- 侧边栏微信二维码与客户端二维码块 -->
+<div class="weixin">
+    <div class="top">
+                <p class="tit">关注我们</p>
+        <ul class="ico-list">
+                        <li><a href="http://weibo.com/zhongguojiaoyu1" target="_blank"><img src="https://res.cetv.cn/assets/images/ico/sina.png?20171115000043" alt="新浪" width="24" height="24" title="新浪" class="ie6_png32"></a></li>
+                    </ul>
+                <ul class="ico-list" style="float:right;">
+            <li><a href="http://m.cetv.cn/wap/app/clienttype?type=ios&platform=pc" target="_blank"><img src="https://res.cetv.cn/assets/css/images/ico/ios.png" alt="iPhone版下载" width="24" height="24" title="iPhone版下载" class="ie6_png32"></a></li>
+            <li><a href="http://m.cetv.cn/wap/app/clienttype?type=android" target="_blank"><img src="https://res.cetv.cn/assets/css/images/ico/android.png" alt="Android版下载" width="24" height="24" title="Android版下载" class="ie6_png32"></a></li>
+        </ul>
+            </div>
+    <div class="qrcode">
+                <div class="left f-l mar-r-36">
+            <img src="https://res.cetv.cn/assets/resource/system/wechatqr.jpg?20171115000043" alt="CETV" width="120" height="120" title="CETV">
+            <p>微信公众号</p>
+        </div>
+                <div class="right f-l">
+                        <div class="qrcode-outter" style="position: relative">
+                <div qrcode="http://m.cetv.cn/wap/app/client" width="108" height="108" title="CETV">
+                </div>
+            </div>
+            <p>手机客户端</p>
+                    </div>
+    </div>
+</div>
+<div class="clear"></div>
+</div>
+
+<!-- 广告位 -->
+
+<!-- 热门文章列表 -->
+<div><!-- 侧边栏热门文章列表块 -->
+<div class="f-right" style="width: 100%;">
+	<h2 class="new-tit"><strong>热门推荐</strong></h2>
+	<ul class="new-list">
+	    <!—# 热点要闻 #—>
+                	<li><a href="http://www.centv.cn/z/598865" title="成语里的人生" target="_blank">成语里的人生</a></li>
+                	<li><a href="http://www.centv.cn/z/597454" title="2026年交通运输产教融合系列活动" target="_blank">2026年交通运输产教融合系列活动</a></li>
+                	<li><a href="http://www.centv.cn/z/577208" title="《戏“聚”校园》" target="_blank">《戏“聚”校园》</a></li>
+                	<li><a href="http://www.centv.cn/z/571712" title="“中华民族”系列教学资源" target="_blank">“中华民族”系列教学资源</a></li>
+                	<li><a href="http://www.centv.cn/z/569278" title="第六届“用英语讲中国故事大会”" target="_blank">第六届“用英语讲中国故事大会”</a></li>
+                	<li><a href="http://www.centv.cn/z/449185" title="“乡村振兴你我同行”典型案例短视频征集与宣传" target="_blank">“乡村振兴你我同行”典型案例短视频征集与宣传</a></li>
+        	</ul>
+</div></div>
+
+<!-- 推荐文章列表 -->
+<div><!-- 侧边栏推荐文章列表块 -->
+<div class="cetv-hot" style="width: 100%;">
+	<h2 class="new-tit"><strong>热点关注</strong></h2>
+	<ul class="new-list">
+	    <!—# 热点要闻 #—>
+                	<li><a href="http://www.centv.cn/z/598865" title="成语里的人生" target="_blank">成语里的人生</a></li>
+                	<li><a href="/p/601918.html" title="“梅姨”谢家梅，被提起公诉" target="_blank">“梅姨”谢家梅，被提起公诉</a></li>
+                	<li><a href="/p/601917.html" title="开学第一天，班级群33名家长被骗9108元" target="_blank">开学第一天，班级群33名家长被骗9108元</a></li>
+                	<li><a href="/p/601881.html" title="全国小学、初中已全部完成新教材替换，这些学科改动大→" target="_blank">全国小学、初中已全部完成新教材替换，这些学科改动大→</a></li>
+                	<li><a href="/p/601860.html" title="新学期开启 第一节体育课怎么上？" target="_blank">新学期开启 第一节体育课怎么上？</a></li>
+                	<li><a href="http://www.centv.cn/jylbct/p/601851.html" title="全国多地中小学迎来开学季 多彩新学期 暖心伴成长" target="_blank">全国多地中小学迎来开学季 多彩新学期 暖心伴成长</a></li>
+        	</ul>
+</div></div>		</div>
+
+	</div>
+
+   <!-- 页脚 -->
+   <div id="footer">
+	<ul>
+		<li><a href="http://www.cetv.cn" target="_blank">关于CETV</a></li>
+		<li><a href="http://www.centv.cn/p/281482.html" target="_blank">网站声明</a></li>
+		<li><a href="http://www.centv.cn/p/281484.html" target="_blank">广告服务</a></li>
+		<li><a href="http://www.centv.cn/p/281486.html" target="_blank">合作加盟</a></li>
+		<li><a href="http://www.centv.cn/p/325000.html" target="_blank">联系我们</a></li>
+		<li><a href="http://www.centv.cn/p/495367.html" target="_blank">企业查询</a></li>
+	</ul>
+	<p>中国教育电视台版权所有</p>
+	<p>国家互联网信息办公室准许从事互联网新闻信息服务业务的网站<br>主办：中国教育电视台 | 互联网新闻信息服务许可证编号：10120170081</p>
+	<p>违法和不良信息举报：cetvqmt@cetv.cn</p>
+	<p>2017 中国教育电视台 网络视听许可证0108262号</p>
+	<p><a href="https://beian.miit.gov.cn/" target="_blank"  style="color:#797979">京ICP备10056327号-3</a> | 京公网安备1101020030
+	<br><span style="display: none;">10056327</span>
+	</p>
+</div>
+
+<script type="text/javascript" src="https://res.cetv.cn/t/site/10001/d19dcef4610d4b40d3bebc30397b93e3/assets//js/new_cc.js?t=3"></script>
+<!-- Cmstop pv 统计代码，勿删 -->
+<script type="text/javascript">
+    var shareVariable = {
+        sid: '10001',
+        aid: '1',
+        cid: '587802',
+        suffix: '.cetv.cn'
+    };
+    window.TJ = 'http://tj.cetv.cn/tj.gif';
+
+    (function() {
+        var unique = (function () {
+            var time= (new Date()).getTime()+'-', i=0;
+            return function () {
+                return time + (i++);
+            }
+        })();
+        var imgLog = function (url) {
+            var data = window['imgLogData'] || (window['imgLogData'] = {});
+            var img = new Image();
+            var uid = unique();
+            img.onload = img.onerror = function () {//销毁一些对象
+                img.onload = img.onerror = null;
+                img = null;
+                delete data[uid];
+            };
+            img.src = url + '&_uid=' + uid;
+        };
+        var src = window.TJ + '?sid=' + shareVariable.sid + '&cid=' + shareVariable.cid + '&aid=' + shareVariable.aid + '&url='+location.href;
+        imgLog(src);
+        
+        //var src = window.TJ + '?sid=' + shareVariable.sid + '&cid=' + shareVariable.cid + '&aid=' + shareVariable.aid + '&url='+location.href;
+        //$.get(src);
+
+        // var imgLog = function (url) {
+        //     var img = new Image();
+        //     img.onload = img.onerror = function () {//销毁一些对象
+        //         img.onload = img.onerror = null;
+        //         img = null;
+        //     };
+        //     img.src = url;
+        // };
+        // 聚合页面统计代码
+        $('.pv-nav-stat').click(function () {
+	    var sid = '10001'
+	    var aid = -1
+	    var cid = $(this).data('cid')
+            var type = $(this).data('type')
+            var url = $(this).prop('href')
+            if (!url) return
+	    var src = window.TJ + '?sid=' + sid + '&cid=' + cid + '&aid=' + aid + '&action=pv' + '&url='+url + '&type=pc'
+	    imgLog(src);
+	    return true
+        })
+    })();
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?96883f0b40f94e2cba06134b4b0f8404";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</div>
+
+<script>
+    window.onload=function(){ 
+        var audio = $("audio")[0];
+        if (audio) {
+            audio.style.border="1px soild red";
+            audio.controls = true //这样控件才能显示出来
+            var audiop= $("audio").parent();
+            audiop.css("float","left");   
+        }
+    }
+</script>
+</body>
+
+</html>

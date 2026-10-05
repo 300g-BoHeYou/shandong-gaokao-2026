@@ -22,7 +22,8 @@ global.document = {
 global.localStorage = { _d:{}, getItem(k){return this._d[k]||null;}, setItem(k,v){this._d[k]=String(v);} };
 
 const root = path.join(__dirname, "..");
-eval(fs.readFileSync(path.join(root, "data_qiangji.js"), "utf8"));
+const dataFile = process.argv[2] || "data_qiangji.js";
+eval(fs.readFileSync(path.join(root, dataFile), "utf8"));
 const qj = require(path.join(root, "qiangji.js"));
 const QJ = global.window.QJ2026;
 
@@ -52,12 +53,13 @@ ok(qh.majors.find((m) => m.cat === "哲学类").subj === "数学、语文、历�
 const pku = QJ.schools.find((s) => s.name === "北京大学");
 ok(pku.ratio === "6倍" && pku.majors.length === 10, "北大 6倍/10 专业类");
 const fd = QJ.schools.find((s) => s.name === "复旦大学");
-ok(fd.examTime.indexOf("6月12日") >= 0, "复旦初试6月12日");
+ok(fd.examTime.indexOf("6月15日") >= 0, "复旦初试6月15日前(官方简章): " + fd.examTime);
 ok(fd.majors.find((m) => m.cat === "基础医学").subj === "数理化综合", "复旦基础医学考查数理化综合");
 const ustc = QJ.schools.find((s) => s.name === "中国科学技术大学");
 ok(ustc.majors.length === 9 && ustc.majors[0].subj === "数学、物理", "中科大 9 类, 笔试数学+物理");
 const csu = QJ.schools.find((s) => s.name === "中南大学");
-ok(csu.ratio === "5倍" && csu.entry.indexOf("145") >= 0, "中南 5倍 + 数学≥145破格");
+ok(csu.ratio === "5倍", "中南入围比例 5倍(官方简章)");
+ok((csu.entry + csu.brk + csu.note).indexOf("145") >= 0, "中南 数学≥145 破格/直接入围");
 const scut = QJ.schools.find((s) => s.name === "华南理工大学");
 ok(scut.note.indexOf("取消竞赛破格") >= 0, "华南理工取消竞赛破格");
 const gk = QJ.schools.find((s) => s.name === "国防科技大学");
@@ -84,8 +86,9 @@ ok(out.indexOf("class=\"dirc\"") >= 0, "方向备注以醒目徽章显示");
 ok(out.indexOf("简章原名：") < 0, "不再显示冗长的'简章原名'提示(仅保留括号内容)");
 ok(out.indexOf("refscore") >= 0 && out.indexOf("refrank") >= 0, "参考分显示为 分数（排名）");
 ok(out.indexOf("score-box") < 0, "不再展示院校级分数块");
-ok(out.indexOf("官方招生简章 ↗") >= 0, "院校卡片含官方招生简章链接");
-ok(out.indexOf("mp.weixin.qq.com") >= 0, "链接指向官方公众号简章");
+ok(out.indexOf("官方简章（阳光高考） ↗") >= 0, "院校卡片含阳光高考官方简章链接");
+ok(out.indexOf("bm.chsi.com.cn/jcxkzs/sch/") >= 0, "链接指向阳光高考强基报名平台");
+ok(qj.DATA.filter((x) => x.jzLink).length >= 10, "部分院校附学校官网简章直链: " + qj.DATA.filter((x) => x.jzLink).length + " 所");
 ok(out.indexOf("该校未收录软科") >= 0, "软科未收录院校显示'该校未收录软科'(而非'未排名')");
 ok(out.indexOf('class="majors"') >= 0, "专业类表格渲染");
 const stats = document.getElementById("stats").innerHTML;
@@ -96,7 +99,8 @@ console.log("== 报名时间/官方链接(官方汇总) ==");
 const allSignup = qj.DATA.filter((s) => s.signup).length;
 ok(allSignup === 39, "39 校报名时间齐全, 实际 " + allSignup);
 ok(qj.DATA.every((s) => s.link), "39 校均有官方链接");
-ok(qj.DATA.find((s) => s.name === "北京大学").signup.indexOf("4月15日") >= 0, "北大报名时间来自官方汇总");
+ok(qj.DATA.find((s) => s.name === "北京大学").signup.indexOf("2026-04-15") >= 0, "北大报名时间为阳光高考平台精确时间");
+ok(qj.DATA.filter((x) => x.ratio).length === 39, "39 校入围比例齐全");
 
 console.log("== 第2条: 大类含该专业则填其分数(非专项最低分) ==");
 const xmu = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "数学类");
@@ -112,14 +116,14 @@ console.log("== 第4条规则: 专业名直接落入包含专业 ==");
 const chemRow = qj.DATA.find((s) => s.name === "清华大学").majors.find((m) => m.cat === "化学");
 ok(chemRow.inc === "化学", "'化学'(具体专业) 直接预填为包含专业");
 const chemLei = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "化学类");
-ok(chemLei.inc === "", "'化学类'(大类名) 保留待查证");
+ok(chemLei.inc.length > 0, "'化学类'已填包含专业: " + chemLei.inc);
 const gzw = qj.DATA.find((s) => s.name === "中国人民大学").majors.find((m) => m.cat.indexOf("古文字学") >= 0);
 ok(gzw.inc === "汉语言文学" && gzw.note.indexOf("古文字学") >= 0, "带括号方向: 去括号后预填+备注仅保留括号内容");
 const jlu = qj.DATA.find((s) => s.name === "吉林大学");
 ok(jlu.majors.length === 4, "吉林大学 4 个专业(官方简章), 实际 " + jlu.majors.length);
 ok(jlu.majors.map((m) => m.cat).join("、") === "数学与应用数学、物理学、化学、古文字学", "吉大专业与官方一致");
 const seu = qj.DATA.find((s) => s.name === "东南大学");
-ok(seu.majors.length === 1 && !seu.majors[0].cat, "东南大学专业类留空(官方专业表为图片)");
+ok(seu.majors.filter((m) => m.cat).length >= 2, "东南大学已补专业类: " + seu.majors.filter((m) => m.cat).map((m) => m.cat).join("/"));
 ok(seu.ratio.indexOf("4倍") >= 0, "东南大学入围比例 4倍(官网)");
 
 console.log("== 第7条: 清华按文理试验班标注 ==");
