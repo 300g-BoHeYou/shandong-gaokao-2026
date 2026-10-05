@@ -23,6 +23,7 @@ global.localStorage = { _d:{}, getItem(k){return this._d[k]||null;}, setItem(k,v
 
 const root = path.join(__dirname, "..");
 const dataFile = process.argv[2] || "data_qiangji.js";
+eval(fs.readFileSync(path.join(root, "data_catalog.js"), "utf8"));
 eval(fs.readFileSync(path.join(root, dataFile), "utf8"));
 const qj = require(path.join(root, "qiangji.js"));
 const QJ = global.window.QJ2026;
@@ -148,25 +149,34 @@ qj.S.mode = "出分前";
 ok(QJ.schools.filter(qj.schoolMatches).length === 11, "筛选出分前 = 11 所");
 qj.S.mode = "全部"; qj.S.form = "仅面试";
 ok(QJ.schools.filter(qj.schoolMatches).length === 16, "筛选仅面试 = 16 所");
-qj.S.form = "全部"; qj.S.major = "汉语言文学";
+qj.S.form = "全部";
+qj.setSel({ "汉语言文学": true });
 const gkSchools = QJ.schools.filter(qj.schoolMatches).length;
 ok(gkSchools > 8, "按专业'汉语言文学'筛选 = " + gkSchools + " 所");
-qj.S.major = "古文字学";
+qj.setSel({ "古文字学": true });
 ok(QJ.schools.filter(qj.schoolMatches).length >= 1, "按专业'古文字学'(仅少数校直接开设)筛选: "
   + QJ.schools.filter(qj.schoolMatches).length + " 所");
-qj.S.major = "数学与应用数学";
+// 整类选择: 数学类 -> 数学与应用数学/信息与计算科学... 命中同一组
+qj.setSel({ "数学与应用数学": true, "信息与计算科学": true });
 const mathSchools = QJ.schools.filter(qj.schoolMatches).length;
-ok(mathSchools > 20, "按专业'数学与应用数学'筛选 = " + mathSchools + " 所");
-qj.S.major = "";
+ok(mathSchools > 20, "按专业'数学与应用数学'+'信息与计算科学'(整类口径)筛选 = " + mathSchools + " 所");
+qj.setSel({});
+ok(QJ.schools.filter(qj.schoolMatches).length === 39, "清空选择后恢复 39 所");
 
-const uni = new Set();
-QJ.schools.forEach((s) => s.majors.forEach((m) => m.items.forEach((i) => { if (i.n) uni.add(i.n); })));
-ok(uni.size > 50, "可选专业(去重) " + uni.size + " 个, 适合下拉列表");
-ok(QJ.schools.every((s) => s.majors.every((m) => m.items.every((i) => i.fix === undefined))), "数据中不含我的修改痕迹字段");
+console.log("== 三级目录树(强基) ==");
+const cntMap = {};
+QJ.schools.forEach((s) => s.majors.forEach((m) => m.items.forEach((i) => { if (i.n) cntMap[i.n] = (cntMap[i.n] || 0) + 1; })));
+const t3 = qj.buildTree(cntMap);
+ok(t3.length > 5, "按目录生成门类分组: " + t3.length + " 个门类");
+ok(t3.every((m) => m.leis.every((l) => l.majors.length > 0)), "树中不包含空专业类");
+const leiCnt = t3.reduce((n, m) => n + m.leis.length, 0);
+const majCnt = t3.reduce((n, m) => n + m.leis.reduce((a, l) => a + l.majors.length, 0), 0);
+ok(majCnt > 50 && leiCnt > 15, "强基可选专业 " + majCnt + " 个 / 专业类 " + leiCnt + " 个");
+ok(t3.some((m) => m.men.indexOf("理学") >= 0) && t3.some((m) => m.men.indexOf("工学") >= 0), "含理学/工学门类");
 
 console.log("== 页面元素 ==");
 const qjHtml = fs.readFileSync(path.join(root, "qiangji.html"), "utf8");
-["modeBox", "formBox", "kw", "majorSel", "resetBtn", "results", "stats"].forEach((id) => {
+["modeBox", "formBox", "kw", "pkToggle", "pkPanel", "pkSearch", "pkTree", "selChips", "pkClear", "resetBtn", "results", "stats"].forEach((id) => {
   ok(qjHtml.indexOf('id="' + id + '"') >= 0, "qiangji.html 含 #" + id);
 });
 ok(qjHtml.indexOf('href="index.html"') >= 0 && qjHtml.indexOf('href="qiangji.html"') >= 0, "强基页含切换入口");

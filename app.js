@@ -233,7 +233,8 @@
   var ALL_TYPES = (function () { var s = {}, i; for (i = 0; i < TD.length; i++) s[TD[i][7]] = 1; return Object.keys(s).sort(); })();
 
   var S = {
-    intent: {},            // 意向专业名 -> true
+    intent: {},            // 展开后的意向专业名 -> true (由三级选择器推导)
+    sel: { mens: {}, leis: {}, majors: {} },   // 三级目录原始选择
     schoolKw: "",
     textKw: "",
     subject: {},           // 我的选科: 科目名 -> true (3+3, 最多3科)
@@ -392,55 +393,69 @@
    * ============================================================ */
   if (typeof document !== "undefined") {
     var $ = function (id) { return document.getElementById(id); };
-    var resultsEl, statsEl, pageEl, intentChipsEl, intentInput, intentDrop;
+    var resultsEl, statsEl, pageEl, intentChipsEl, pkPicker;
 
-    function setIntents(list) {
-      S.intent = {};
-      for (var i = 0; i < list.length; i++) S.intent[list[i]] = true;
+    /* ---- 三级目录选择器(门类→专业类→专业) ---- */
+    // 选中单个专业(供"热门专业"与详情表快捷设置调用)
+    function selectMajorByName(name) {
+      if (!name) return;
+      S.sel.majors[name] = true;
+      S.intent = pkPicker ? pkPicker.expanded() : S.intent;
+      if (pkPicker) { pkPicker.sel.majors[name] = true; pkPicker.render(); }
       S.page = 0;
-      renderIntentChips();
       applyAndRender();
     }
-    function addIntent(name) { setIntents(Object.keys(S.intent).concat([name])); }
-    function removeIntent(name) {
-      var k = Object.keys(S.intent).filter(function (x) { return x !== name; });
-      setIntents(k);
-    }
 
-    function renderIntentChips() {
-      var names = Object.keys(S.intent);
-      intentChipsEl.innerHTML = names.map(function (n) {
-        return '<span class="chip intent-chip">' + esc(n) + '<button class="x" data-rm="' + esc(n) + '" title="移除">×</button></span>';
-      }).join("");
-    }
-
-    /* ---- 意向专业自动补全 ---- */
-    function intentMatches(q) {
-      var nq = normStr(q);
-      if (!nq) return [];
-      var out = [], i, it;
-      var hay;
-      for (i = 0; i < INTENT.length; i++) {
-        it = INTENT[i];
-        hay = normStr(it.n + it.code + it.l);
-        if (hay.indexOf(nq) >= 0) {
-          out.push(it);
-          if (out.length >= 60) break;
+    function buildPickerTree() {
+      var cat = W.CAT2026 || null;
+      var tree = [];
+      var known = {};
+      if (cat && cat.men) {
+        for (var i = 0; i < cat.men.length; i++) {
+          var men = cat.men[i], leisObj = cat.tree[men] || {}, leis = [];
+          var leiNames = Object.keys(leisObj);
+          for (var j = 0; j < leiNames.length; j++) {
+            var lei = leiNames[j], majs = [];
+            for (var k = 0; k < leisObj[lei].length; k++) {
+              var n = leisObj[lei][k];
+              known[n] = true;
+              majs.push({ n: n, cnt: (META[NAME2KEYS[n] && NAME2KEYS[n][0]] || {}).count });
+            }
+            leis.push({ lei: lei, majors: majs });
+          }
+          tree.push({ men: men, leis: leis });
         }
       }
-      return out;
-    }
-    function renderDrop(items) {
-      if (!items.length) { intentDrop.classList.add("hidden"); return; }
-      var html = "", lastMen = null;
-      for (var i = 0; i < items.length; i++) {
-        var it = items[i];
-        if (it.m !== lastMen) { html += '<div class="drop-men">' + esc(it.m) + '</div>'; lastMen = it.m; }
-        html += '<div class="drop-item" data-n="' + esc(it.n) + '"><span class="dn">' + esc(it.n) + "</span>"
-          + '<span class="dl">' + esc(it.l) + (it.code ? " · " + esc(it.code) : "") + "</span></div>";
+      // 投档表/软科特有名称(不在目录中)归入"其他"
+      var extraMap = {};
+      for (var a = 0; a < INTENT.length; a++) {
+        var it = INTENT[a];
+        if (!known[it.n]) extraMap[it.l || "其他"] = extraMap[it.l || "其他"] || [];
+        if (!known[it.n]) extraMap[it.l || "其他"].push({ n: it.n, cnt: (META[NAME2KEYS[it.n] && NAME2KEYS[it.n][0]] || {}).count });
       }
-      intentDrop.innerHTML = html;
-      intentDrop.classList.remove("hidden");
+      var extraLeis = Object.keys(extraMap);
+      if (extraLeis.length) {
+        tree.push({
+          men: "其他名称（投档表/软科特有，非目录专业类）",
+          leis: extraLeis.map(function (l) { return { lei: l, majors: extraMap[l] }; })
+        });
+      }
+      return tree;
+    }
+
+    function initPicker() {
+      if (!W.MajorPicker) return;
+      pkPicker = W.MajorPicker.create({
+        tree: buildPickerTree(),
+        sel: S.sel,
+        ids: { toggle: "pkToggle", panel: "pkPanel", search: "pkSearch", tree: "pkTree",
+               chips: "intentChips", clear: "pkClear", count: "pkCount" },
+        onChange: function (expandedSet) {
+          S.intent = expandedSet;
+          S.page = 0;
+          applyAndRender();
+        }
+      });
     }
 
     /* ---- 渲染 ---- */
@@ -729,39 +744,8 @@
       statsEl = $("stats");
       pageEl = $("pager");
       intentChipsEl = $("intentChips");
-      intentInput = $("intentInput");
-      intentDrop = $("intentDrop");
+      initPicker();
 
-      // 意向专业输入
-      intentInput.addEventListener("input", function () {
-        var q = intentInput.value;
-        if (!q) { intentDrop.classList.add("hidden"); return; }
-        renderDrop(intentMatches(q));
-      });
-      intentInput.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-          var q = intentInput.value;
-          var items = intentMatches(q);
-          if (items.length) { addIntent(items[0].n); intentInput.value = ""; intentDrop.classList.add("hidden"); }
-        } else if (e.key === "Escape") {
-          intentDrop.classList.add("hidden");
-        }
-      });
-      intentDrop.addEventListener("click", function (e) {
-        var el = e.target.closest(".drop-item");
-        if (!el) return;
-        addIntent(el.getAttribute("data-n"));
-        intentInput.value = "";
-        intentDrop.classList.add("hidden");
-      });
-      document.addEventListener("click", function (e) {
-        if (!intentDrop.contains(e.target) && e.target !== intentInput) intentDrop.classList.add("hidden");
-      });
-      intentChipsEl.addEventListener("click", function (e) {
-        var b = e.target.closest("[data-rm]");
-        if (b) removeIntent(b.getAttribute("data-rm"));
-      });
-      $("intentClear").addEventListener("click", function () { setIntents([]); });
       $("intentOnlyDirect").addEventListener("change", function (e) { S.onlyDirect = e.target.checked; S.page = 0; applyAndRender(); });
       $("onlyFav").addEventListener("change", function (e) { S.onlyFav = e.target.checked; S.page = 0; applyAndRender(); });
 
@@ -773,7 +757,8 @@
       }).join("");
       $("hotRow").addEventListener("click", function (e) {
         var b = e.target.closest("[data-hot]");
-        if (b) addIntent(b.getAttribute("data-hot"));
+        if (!b) return;
+        selectMajorByName(b.getAttribute("data-hot"));
       });
 
       // 院校/全文搜索
@@ -863,13 +848,14 @@
           return;
         }
         var pick = e.target.closest("[data-pick]");
-        if (pick) addIntent(pick.getAttribute("data-pick"));
+        if (pick) selectMajorByName(pick.getAttribute("data-pick"));
       });
 
       // 导出
       $("exportBtn").addEventListener("click", exportCSV);
       $("resetBtn").addEventListener("click", function () {
         S.schoolKw = ""; S.textKw = ""; S.intent = {};
+        S.sel = { mens: {}, leis: {}, majors: {} };
         S.subject = {};
         for (var j = 0; j < ALL_TYPES.length; j++) S.types[ALL_TYPES[j]] = true;
         S.scoreMin = S.scoreMax = S.rankMin = S.rankMax = null;
@@ -878,7 +864,7 @@
         ["schoolKw", "textKw", "scoreMin", "scoreMax", "rankMin", "rankMax", "myRank"].forEach(function (id) { $(id).value = ""; });
         $("intentOnlyDirect").checked = false;
         $("onlyFav").checked = false;
-        renderIntentChips();
+        if (pkPicker) pkPicker.render();
         renderSubj();
         updateSubjHint();
         renderTypeButtons();

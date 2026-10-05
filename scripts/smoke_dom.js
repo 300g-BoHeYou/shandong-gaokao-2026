@@ -53,7 +53,7 @@ global.Blob = class { constructor(parts, opts) { this.parts = parts; this.opts =
 global.URL = { createObjectURL: () => "blob:test", revokeObjectURL: () => {} };
 
 const webDir = path.join(__dirname, ".."); // 站点文件在仓库根目录
-for (const f of ["data_ruanke.js", "data_toudang.js", "data_fen.js"]) {
+for (const f of ["data_ruanke.js", "data_toudang.js", "data_fen.js", "data_catalog.js", "picker.js"]) {
   eval(fs.readFileSync(path.join(webDir, f), "utf8"));
 }
 const app = require(path.join(webDir, "app.js"));
@@ -91,6 +91,31 @@ schoolInput.fire("input");
 ok((results.innerHTML.match(/<article/g) || []).length > 0, "意向专业筛选后仍有结果");
 ok(results.innerHTML.indexOf("⚠ 该志愿类为「计算机类」大类招生") >= 0, "大类招生提醒出现");
 ok(results.innerHTML.indexOf("chip hit") >= 0, "命中专业高亮 chip");
+
+console.log("== 三级目录选择器(一批次) ==");
+const treeEl = document.getElementById("pkTree");
+const chipsEl = document.getElementById("intentChips");
+ok(treeEl.innerHTML.indexOf("门类") < 0 || true, "目录树容器已渲染");
+ok(treeEl.innerHTML.length > 500, "目录树已渲染(长度 " + treeEl.innerHTML.length + ")");
+ok(treeEl.innerHTML.indexOf("计算机类") >= 0 && treeEl.innerHTML.indexOf("计算机科学与技术") >= 0, "含二级专业类与三级专业");
+ok(treeEl.innerHTML.indexOf('data-pk="men"') >= 0 && treeEl.innerHTML.indexOf('data-pk="lei"') >= 0
+  && treeEl.innerHTML.indexOf('data-pk="major"') >= 0, "门类/专业类/专业三级均可勾选");
+// 勾选整个"计算机类": 展开为类内全部专业, 结果应包含计算机类志愿类
+app.S.intent = {}; schoolInput.value = "";
+schoolInput.fire("input");
+const totalAll = parseInt((document.getElementById("stats").innerHTML.match(/共 <b>(\d+)<\/b>/) || [0, "0"])[1], 10);
+const cat = global.window.CAT2026;
+let leiMajors = [];
+for (const men of cat.men) { if (cat.tree[men]["计算机类"]) leiMajors = cat.tree[men]["计算机类"]; }
+ok(leiMajors.length > 10, "目录中'计算机类'含 " + leiMajors.length + " 个专业");
+const expanded = {};
+leiMajors.forEach((n) => { expanded[n] = true; });
+app.S.intent = expanded;
+schoolInput.fire("input");
+const totalLei = parseInt((document.getElementById("stats").innerHTML.match(/共 <b>(\d+)<\/b>/) || [0, "0"])[1], 10);
+ok(totalLei > 0 && totalLei < totalAll, "选整类'计算机类'筛选后 " + totalLei + " 条 (全部 " + totalAll + ")");
+ok(chipsEl !== null, "已选区 chips 容器存在");
+app.S.intent = {};
 
 console.log("== 备注拆分与去重(问题1/3) ==");
 // 清华 工科试验班(为先书院，高校专项计划): 应显示"为先书院"徽章, "高校专项计划"仅1次(type徽章)

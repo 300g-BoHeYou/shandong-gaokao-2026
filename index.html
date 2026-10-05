@@ -40,7 +40,30 @@
   .intent-box{flex:1 1 420px;min-width:280px;position:relative;}
   .autocomplete{position:relative;}
   #intentInput{width:100%;}
-  #intentChips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;}
+  #intentChips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+  .pk-count{font-size:12px;color:#1d4ed8;margin-left:6px;}
+  .pk-panel{margin-top:6px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;padding:8px;max-width:760px;}
+  .pk-panel input[type=text]{width:100%;}
+  .pk-tip{font-size:12px;color:#94a3b8;margin:4px 0 6px;}
+  .pk-tree{max-height:340px;overflow:auto;border-top:1px solid #eef2f7;}
+  .pk-men{border-bottom:1px solid #f1f5f9;padding:2px 0;}
+  .pk-row{display:flex;align-items:center;gap:6px;padding:2px 0;}
+  .pk-men-row{font-weight:700;}
+  .pk-lei-row{padding-left:16px;font-weight:600;color:#334155;}
+  .pk-majors{display:flex;flex-wrap:wrap;gap:2px 14px;padding:2px 0 6px 38px;}
+  .pk-major{font-size:12.5px;color:#475569;display:inline-flex;align-items:center;gap:4px;}
+  .pk-name{cursor:pointer;}
+  .pk-cnt{font-style:normal;color:#94a3b8;font-size:11px;margin-left:4px;}
+  .pk-arrow{margin-left:auto;border:none;background:none;cursor:pointer;color:#64748b;font-size:12px;}
+  .pk-empty{color:#94a3b8;padding:8px;font-size:13px;}
+  .sel-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+  .sel-chip{background:#eff6ff;border-color:#93c5fd;color:#1e3a8a;font-weight:600;}
+  .sel-chip .pk-exp{border:none;background:none;cursor:pointer;color:#1d4ed8;padding:0 2px;}
+  .sel-chip .x{border:none;background:none;cursor:pointer;color:#b91c1c;padding:0 2px;font-weight:700;}
+  .pk-detail{flex-basis:100%;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:6px;
+    padding:4px 8px;font-size:12px;color:#475569;position:relative;margin-top:2px;}
+  .pk-detail-x{position:absolute;right:4px;top:2px;border:none;background:none;cursor:pointer;color:#64748b;}
+  .pk-hint{font-size:12px;color:#94a3b8;}
   .intent-chip{background:#dbeafe;border-color:#60a5fa;color:#1e40af;padding-right:4px;}
   .intent-chip .x{border:none;background:transparent;color:#1e40af;font-size:13px;cursor:pointer;margin-left:2px;}
   .drop{position:absolute;top:100%;left:0;right:0;z-index:50;background:#fff;border:1px solid #cbd5e1;
@@ -175,7 +198,7 @@
     <summary>📖 使用说明与数据口径 ｜ 点击展开/收起</summary>
     <ul>
       <li><b>志愿类</b>：山东高考志愿的单位是「志愿类」＝ 一所高校的一个或多个专业，每位考生最多填报 96 个志愿类，<b>不是</b>其他省份的「专业组」。本页每一行就是一个志愿类。</li>
-      <li><b>三步使用</b>：① 输入意向专业，含该专业的大类招生也会被筛出，并会<b>提醒您该大类还包含其他专业</b>；② 选择<b>我的选科</b>（物理/化学/生物/政治/历史/地理，3+3 选 3 科），查看该组合可报考的志愿类，未选满的科目会标注"缺：××"；③ 输入您的预估位次查看「冲 / 稳 / 保」判断；④ 收藏对比、导出 CSV。</li>
+      <li><b>三步使用</b>：① 点「按目录选择专业」，按 门类 → 专业类 → 专业 三级勾选（可只选某个专业，也可整类或整门类选择）；已选内容显示在下方，可随时 × 取消，也可点 <b>▾</b> 展开查看该类包含哪些专业。含所选专业/类的大类招生也会被筛出，并<b>提醒您该大类还包含其他专业</b>。② 选择<b>我的选科</b>（物理/化学/生物/政治/历史/地理，3+3 选 3 科），查看该组合可报考的志愿类，未选满的科目会标注"缺：××"；③ 输入您的预估位次查看「冲 / 稳 / 保」判断；④ 收藏对比、导出 CSV。</li>
       <li><b>包含专业</b>：志愿类为「××类」大类招生时，所含具体专业按教育部《普通高等学校本科专业目录（2026年）》定位范围，再按<b>该校实际开设情况筛减</b>（软科收录/2026投档/人工查证口径）；人工查证的标「已查证」，无法确定的标「目录口径」。⚠️ 以上均为推断口径，<b>实际以院校当年招生简章和计划为准</b>；试验班/特色班共 312 个志愿类，其中 249 个已查证、16 个标注「任选」、47 个待补。</li>
       <li><b>软科排名口径</b>：四种状态——<b>第X名</b>为软科2026上榜前50%；<b>未上榜</b>表示该专业软科发布排名但该校未进前50%，≠未开设；<b>特色专业</b>是开设院校&lt;4所的少设专业，软科仅发布开设名单、不计算排名；<b>未排名</b>是不在软科2026发布的838个专业内。威海/深圳/医学部等校区沿用<b>校本部</b>口径，有徽章标注；软科未收录的院校无排名。</li>
       <li><b>官方参考</b>：<a href="https://www.shanghairanking.cn/rankings/bcmr/2026" target="_blank" rel="noopener">软科2026中国大学专业排名</a> ｜ <a href="https://www.shanghairanking.cn/methodology/bcmr/2026" target="_blank" rel="noopener">软科排名方法说明</a>。展开各志愿类的「排名明细与说明」，点击专业名可直接跳转软科官网查看该专业完整排名。</li>
@@ -204,12 +227,15 @@
     <h2>② 筛选</h2>
     <div class="rowgroup">
       <div class="intent-box">
-        <div id="intentChips"></div>
-        <div class="autocomplete">
-          <input type="text" id="intentInput" placeholder="输入意向专业，支持专业代码/名称，如：计算机 / 临床 / 080901 …">
-          <div id="intentDrop" class="drop hidden"></div>
+        <button class="btn ghost" id="pkToggle" type="button">按目录选择专业 ▾</button>
+        <span id="pkCount" class="pk-count"></span>
+        <button class="btn ghost" id="pkClear" type="button" style="margin-left:6px;">清空已选</button>
+        <div id="pkPanel" class="pk-panel" hidden>
+          <input type="text" id="pkSearch" placeholder="搜索专业 / 专业类 / 门类，如 计算机、临床、080901 …">
+          <div class="pk-tip">可勾选单个专业、整个专业类或整个门类；已选内容显示在下方，可随时取消。</div>
+          <div id="pkTree" class="pk-tree"></div>
         </div>
-        <button class="btn ghost" id="intentClear" style="margin-top:4px;">清空意向专业</button>
+        <div id="intentChips" class="sel-chips"></div>
       </div>
       <label>院校：<input type="text" id="schoolKw" placeholder="如 山东大学" style="width:150px;"></label>
       <label>全文：<input type="text" id="textKw" placeholder="志愿类名称关键字" style="width:150px;"></label>
@@ -269,6 +295,8 @@
 <script src="data_ruanke.js"></script>
 <script src="data_toudang.js"></script>
 <script src="data_fen.js"></script>
+<script src="data_catalog.js"></script>
+<script src="picker.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

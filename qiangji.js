@@ -8,7 +8,10 @@
   "use strict";
 
   var DATA = (window.QJ2026 && window.QJ2026.schools) || [];
-  var S = { mode: "全部", form: "全部", kw: "", major: "" };
+  var S = { mode: "全部", form: "全部", kw: "", major: "", sel: { mens: {}, leis: {}, majors: {} } };
+  var SEL = {};          // 展开后的专业名集合(用于匹配与高亮)
+  var HAS_SEL = false;   // 是否有选择
+  var PICKER = null;
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -17,6 +20,32 @@
   }
   function todo() { return '<span class="todo">待查证</span>'; }
   function val(v) { return (v === undefined || v === null || String(v).trim() === "") ? todo() : esc(v); }
+
+  // 按 2026 本科专业目录三级结构, 只保留强基实际招生的专业(带计数); 目录查不到的归入"其他"
+  function buildTree(cnt) {
+    var cat = window.CAT2026 || null;
+    var tree = [], known = {};
+    if (cat && cat.men) {
+      for (var i = 0; i < cat.men.length; i++) {
+        var men = cat.men[i], leisObj = cat.tree[men] || {}, leis = [];
+        var leiNames = Object.keys(leisObj);
+        for (var j = 0; j < leiNames.length; j++) {
+          var lei = leiNames[j], majs = [];
+          for (var k = 0; k < leisObj[lei].length; k++) {
+            var n = leisObj[lei][k];
+            known[n] = true;
+            if (cnt[n]) majs.push({ n: n, cnt: cnt[n] });
+          }
+          if (majs.length) leis.push({ lei: lei, majors: majs });
+        }
+        if (leis.length) tree.push({ men: men, leis: leis });
+      }
+    }
+    var extra = [];
+    Object.keys(cnt).forEach(function (n) { if (!known[n]) extra.push({ n: n, cnt: cnt[n] }); });
+    if (extra.length) tree.push({ men: "其他（不在本科专业目录中）", leis: [{ lei: "其他名称", majors: extra }] });
+    return tree;
+  }
 
   // 软科2026排名状态标签
   function rkBadge(info) {
@@ -44,11 +73,11 @@
       if (S.form === "笔试" && f.indexOf("笔试") < 0) return false;
     }
     if (S.kw && s.name.indexOf(S.kw) < 0) return false;
-    if (S.major) {
+    if (HAS_SEL) {
       var hit = false;
       for (var i = 0; i < s.majors.length; i++) {
         for (var j = 0; j < (s.majors[i].items || []).length; j++) {
-          if (s.majors[i].items[j].n === S.major) { hit = true; break; }
+          if (SEL[s.majors[i].items[j].n]) { hit = true; break; }
         }
         if (hit) break;
       }
@@ -57,9 +86,11 @@
     return true;
   }
 
-  // 包含专业单元格: 单个专业 + 软科排名标签
+  // 包含专业单元格: 单个专业 + 软科排名标签 (+命中高亮)
   function majorCell(it) {
-    return esc(it.n) + rkBadge({ st: it.st, rk: it.rk, cnt: it.cnt, inList: it.inList });
+    var hit = HAS_SEL && SEL[it.n];
+    return '<span' + (hit ? ' class="hit"' : "") + ">" + esc(it.n) + "</span>"
+      + rkBadge({ st: it.st, rk: it.rk, cnt: it.cnt, inList: it.inList });
   }
 
   // 对应普通批参考: 分数（排名），并注明所参考的志愿类
@@ -77,18 +108,19 @@
     var groups = [];
     for (var i = 0; i < s.majors.length; i++) {
       var g = s.majors[i];
-      var items = [];
+      var items = [], matched = 0;
       for (var k = 0; k < g.items.length; k++) {
-        var it = g.items[k];
-        if (S.major && it.n !== S.major) continue;
-        items.push(it);
+        items.push(g.items[k]);                       // 组内专业全部展示
+        if (SEL[g.items[k].n]) matched++;
       }
+      // 有选择时: 组内任一专业命中即保留该组(用户口径)
+      if (HAS_SEL && !matched) continue;
       if (!items.length) continue;
       groups.push({ g: g, items: items });
     }
     if (!groups.length) {
       if (!s.majors.length) return '<tr><td colspan="4" class="dim">专业类待查证</td></tr>';
-      return '<tr><td colspan="4" class="dim">该校无此专业</td></tr>';
+      return '<tr><td colspan="4" class="dim">该校无匹配专业</td></tr>';
     }
     var html = "";
     for (var gi = 0; gi < groups.length; gi++) {
@@ -161,33 +193,25 @@
         + (f === "全部" ? "全部" : f === "仅面试" ? "仅面试（无笔试）" : "有笔试") + "</button>";
     }).join("");
 
-    // 专业下拉列表(全部强基专业)
-    var sel = document.getElementById("majorSel");
-    if (sel && !sel.getAttribute("data-built")) {
-      var names = {};
-      for (var i = 0; i < DATA.length; i++) {
-        for (var j = 0; j < DATA[i].majors.length; j++) {
-          for (var k = 0; k < DATA[i].majors[j].items.length; k++) {
-            var n = DATA[i].majors[j].items[k].n;
-            if (n) names[n] = 1;
+    // 三级目录选择器(门类→专业类→专业), 仅列出强基实际招生的专业
+    if (window.MajorPicker && !PICKER) {
+      var cnt = {};
+      for (var a = 0; a < DATA.length; a++) {
+        for (var b2 = 0; b2 < DATA[a].majors.length; b2++) {
+          for (var c2 = 0; c2 < DATA[a].majors[b2].items.length; c2++) {
+            var nm = DATA[a].majors[b2].items[c2].n;
+            if (nm) cnt[nm] = (cnt[nm] || 0) + 1;
           }
         }
       }
-      var list = Object.keys(names).sort(function (a, b) { return a.localeCompare(b, "zh"); });
-      sel.innerHTML = '<option value="">全部专业</option>' + list.map(function (n) {
-        var cnt = 0;
-        for (var i2 = 0; i2 < DATA.length; i2++) {
-          for (var j2 = 0; j2 < DATA[i2].majors.length; j2++) {
-            for (var k2 = 0; k2 < DATA[i2].majors[j2].items.length; k2++) {
-              if (DATA[i2].majors[j2].items[k2].n === n) cnt++;
-            }
-          }
-        }
-        return '<option value="' + esc(n) + '">' + esc(n) + "（" + cnt + "）</option>";
-      }).join("");
-      sel.setAttribute("data-built", "1");
+      PICKER = window.MajorPicker.create({
+        tree: buildTree(cnt),
+        sel: S.sel,
+        ids: { toggle: "pkToggle", panel: "pkPanel", search: "pkSearch", tree: "pkTree",
+               chips: "selChips", clear: "pkClear", count: "pkCount" },
+        onChange: function (expanded) { SEL = expanded; HAS_SEL = Object.keys(expanded).length > 0; render(); }
+      });
     }
-    if (sel) sel.value = S.major;
 
     document.getElementById("modeBox").addEventListener("click", function (e) {
       var b = e.target.closest("[data-mode]");
@@ -203,13 +227,12 @@
     });
     var kw = document.getElementById("kw");
     kw.addEventListener("input", function () { S.kw = kw.value.trim(); render(); });
-    if (sel) {
-      sel.addEventListener("change", function () { S.major = sel.value; render(); });
-    }
     document.getElementById("resetBtn").addEventListener("click", function () {
-      S = { mode: "全部", form: "全部", kw: "", major: "" };
+      S.mode = "全部"; S.form = "全部"; S.kw = "";
+      S.sel = { mens: {}, leis: {}, majors: {} };
+      SEL = {}; HAS_SEL = false;
       kw.value = "";
-      if (sel) sel.value = "";
+      if (PICKER) { PICKER.sel.mens = {}; PICKER.sel.leis = {}; PICKER.sel.majors = {}; PICKER.render(); }
       init(); render();
     });
 
@@ -222,6 +245,10 @@
   }
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { DATA: DATA, schoolMatches: schoolMatches, S: S };
+    module.exports = {
+      DATA: DATA, schoolMatches: schoolMatches, S: S,
+      setSel: function (map) { SEL = map || {}; HAS_SEL = Object.keys(SEL).length > 0; },
+      buildTree: buildTree
+    };
   }
 })();
