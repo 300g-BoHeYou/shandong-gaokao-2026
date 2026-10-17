@@ -83,20 +83,30 @@ ok(upcN === 26, "中石大 26 个招生专业(类), 实际 " + upcN);
   ok(upc.groups.some((g) => g.entries.some((e) => e.n === m)), "中石大含 " + m);
 });
 const upcFlat = flat(upc);
-ok(upcFlat.length >= 60, "中石大类展开后具体专业 " + upcFlat.length + " 个");
+ok(upcFlat.length >= 25 && upcFlat.length <= 50, "中石大类展开后具体专业 " + upcFlat.length + " 个(按该校实际开设筛减)");
 ok(upcFlat.filter((x) => x.st === "ranked").length >= 20, "中石大有软科排名的专业 " + upcFlat.filter((x) => x.st === "ranked").length + " 个");
 
 const sdu = byName("山东大学");
 ok(sdu.hasGroup && sdu.hasClass, "山大 有专业组 + 有「类」展开(3 层)");
 const sduCs = sdu.groups[1].entries.find((e) => e.cls === "计算机类");
-ok(!!sduCs && sduCs.kind === "lei" && sduCs.subs.length > 10, "山大 2 组「计算机类」展开为 " + (sduCs ? sduCs.subs.length : 0) + " 个具体专业");
+ok(!!sduCs && sduCs.kind === "lei" && sduCs.subs.length >= 4 && sduCs.subs.length <= 8,
+  "山大 2 组「计算机类」按该校实际开设筛减为 " + (sduCs ? sduCs.subs.length : 0) + " 个具体专业(非目录全集)");
 ok(sduCs.subs.some((x) => x.n === "计算机科学与技术" && x.st === "ranked" && x.rk > 0),
   "计算机科学与技术 带软科排名: #" + (sduCs.subs.find((x) => x.n === "计算机科学与技术") || {}).rk);
+ok(sduCs.subs.every((x) => ["计算机科学与技术", "软件工程", "数字媒体技术", "数据科学与大数据技术",
+  "网络空间安全", "密码科学与技术"].indexOf(x.n) >= 0), "展开后均为该校实际开设专业");
+const sduSh = sdu.groups[0].entries.find((e) => e.cls === "社会学类");
+ok(sduSh.subs.length === 2, "山大「社会学类」仅 " + sduSh.subs.length + " 个实际开设专业: "
+  + sduSh.subs.map((x) => x.n).join("/"));
+const sduSubs = flat(sdu).length;
+ok(sduSubs <= 50, "山大具体专业收敛到 " + sduSubs + " 个(目录全集口径为 209)");
 const haida = byName("中国海洋大学");
 ok(!haida.hasGroup && !haida.hasClass, "海大 无专业组、无「类」(1 层)");
 ok(flat(haida).length === 4, "海大 4 个具体专业");
 const others = DATA.reduce((n, s) => n + flat(s).filter((x) => x.st === "nodir").length, 0);
 ok(others <= 6, "无法解析到目录的条目仅 " + others + " 条(试验班等)");
+const unrankedAll = DATA.reduce((n, s) => n + flat(s).filter((x) => x.st === "unranked").length, 0);
+ok(unrankedAll < 60, "「未上榜」噪声已消除: 仅 " + unrankedAll + " 条(目录全集口径为 464)");
 const rankedAll = DATA.reduce((n, s) => n + flat(s).filter((x) => x.st === "ranked").length, 0);
 ok(rankedAll > 250, "全部院校有软科排名的专业条目 " + rankedAll + " 条");
 
