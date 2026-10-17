@@ -9,19 +9,20 @@
   *{box-sizing:border-box;}
   body{margin:0;background:#f8fafc;color:var(--ink);
     font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
-  header{background:linear-gradient(135deg,#5b21b6,#7c3aed 55%,#a78bfa);color:#fff;padding:18px 16px 14px;}
-  header h1{margin:0 0 4px;font-size:19px;letter-spacing:.3px;}
-  header .sub{font-size:12.5px;opacity:.92;}
+  header{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;padding:14px 18px;}
+  header h1{margin:0;font-size:20px;}
+  header .sub{opacity:.88;font-size:12px;margin-top:2px;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 14px 60px;}
-  .tabbar{display:flex;gap:8px;margin:12px 0 0;flex-wrap:wrap;}
-  .tabbar a{background:rgba(255,255,255,.16);color:#fff;text-decoration:none;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;}
-  .tabbar a.on{background:#fff;color:#5b21b6;}
+  .tabbar{max-width:1180px;margin:10px auto 0;padding:0 14px;display:flex;gap:8px;flex-wrap:wrap;}
+  .tab{display:inline-block;padding:6px 16px;border-radius:8px 8px 0 0;background:#e2e8f0;color:#334155;
+    text-decoration:none;font-size:14px;font-weight:600;border:1px solid #cbd5e1;border-bottom:none;}
+  .tab.active{background:#fff;color:#7c3aed;}
   section.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:14px;}
   section.panel h2{font-size:15px;margin:0 0 10px;}
   .rowgroup{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;font-size:13px;}
-  .chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #cbd5e1;background:#fff;color:#334155;
-    border-radius:999px;padding:3px 11px;font-size:12.5px;cursor:pointer;user-select:none;}
-  .chip.on{background:#ede9fe;border-color:var(--brand2);color:#5b21b6;font-weight:700;}
+  .chip{display:inline-block;border:1px solid #cbd5e1;background:#f8fafc;border-radius:999px;
+    padding:1px 10px;font-size:12px;cursor:pointer;line-height:1.9;white-space:nowrap;}
+  .chip.on{background:#f3e8ff;border-color:#7c3aed;color:#6b21a8;font-weight:700;}
   .chip.date.on{background:#dbeafe;border-color:#93c5fd;color:#1e40af;}
   .btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer;}
   .btn.ghost{background:#f8fafc;}
@@ -61,10 +62,22 @@
   .exam-time{font-weight:800;color:#b45309;font-size:14px;font-variant-numeric:tabular-nums;}
   .mini{font-size:12px;color:var(--dim);}
   table.majors{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px;}
+  .mjd{margin-top:8px;}
+  .mjd>summary{cursor:pointer;font-weight:700;color:#5b21b6;font-size:13px;padding:3px 0;list-style:none;}
+  .mjd>summary::before{content:"▸ ";color:#a78bfa;}
+  .mjd[open]>summary::before{content:"▾ ";}
   table.majors th,table.majors td{border:1px solid var(--line);padding:4px 7px;vertical-align:top;}
   table.majors th{background:#f8fafc;color:#475569;font-weight:700;white-space:nowrap;}
   table.majors td.grp{background:#faf5ff;font-weight:700;color:#5b21b6;white-space:nowrap;}
+  table.majors td.cls{background:#f5f3ff;font-weight:600;color:#4c1d95;}
   table.majors td.plan{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .rk{display:inline-block;border-radius:5px;padding:0 5px;font-size:11.5px;font-weight:700;
+    border:1px solid #cbd5e1;color:#64748b;background:#f8fafc;white-space:nowrap;}
+  .rk.ranked{background:#dbeafe;border-color:#93c5fd;color:#1e40af;}
+  .rk.special{background:#fef3c7;border-color:#fde68a;color:#92400e;}
+  .rk.unranked{background:#f1f5f9;border-color:#e2e8f0;color:#94a3b8;}
+  .rk.notpub{background:#f5f3ff;border-color:#ddd6fe;color:#6d28d9;}
+  .rk.nosc{background:#fff;border-color:#e2e8f0;color:#cbd5e1;}
   .tl{margin-top:8px;font-size:12.5px;color:#475569;}
   .tl span{display:inline-block;background:#f1f5f9;border-radius:5px;padding:1px 7px;margin:2px 4px 2px 0;}
   .tl b{color:#5b21b6;}
@@ -108,13 +121,13 @@
   <div class="wrap">
     <h1>2026 山东本科综合评价招生（综招）</h1>
     <div class="sub">19 所高校 · 校测时间对照与兼报分析 · 依据各校 2026 年官方简章（山东省教育厅 鲁教学函〔2026〕13 号试点）</div>
-    <div class="tabbar">
-      <a href="index.html">一批次投档</a>
-      <a href="qiangji.html">强基计划</a>
-      <a href="zongzhao.html" class="on">综合评价招生</a>
-    </div>
   </div>
 </header>
+<div class="tabbar">
+  <a class="tab" href="index.html">一批次（常规批）</a>
+  <a class="tab" href="qiangji.html">强基计划</a>
+  <a class="tab active" href="zongzhao.html">综合评价招生</a>
+</div>
 
 <div class="wrap">
   <div class="notice">

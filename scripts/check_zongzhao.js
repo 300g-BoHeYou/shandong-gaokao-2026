@@ -54,6 +54,9 @@ console.log("== 校测时间(重点) ==");
 const byName = (n) => DATA.find((s) => s.name === n);
 const dt = (n) => (byName(n).events || []).map((e) => e.d).join(",");
 ok(dt("山东大学") === "06-19", "山东大学 校测 6月19日");
+ok(dt("中国海洋大学") === "06-19", "中国海洋大学 校测 6月19日");
+ok(byName("中国海洋大学").examPlace.indexOf("崂山校区") >= 0
+  && byName("中国海洋大学").examPlace.indexOf("松岭路238号") >= 0, "海大校测地点=崂山校区(松岭路238号)");
 ok(dt("哈尔滨工业大学（威海）") === "06-19", "哈工大(威海) 校测 6月19日");
 ok(dt("青岛大学") === "06-14,06-16", "青岛大学 笔试6/14 + 面试6/16");
 ok(dt("山东师范大学") === "06-14,06-16", "山师 笔试6/14 + 面试6/16");
@@ -63,13 +66,50 @@ ok(dt("华南理工大学") === "06-13,06-15", "华南理工 机试6/13 + 面试
 ok(dt("中国科学院大学") === "06-13,06-14", "国科大 面试6/13-14");
 ok(dt("香港中文大学（深圳）").indexOf("06-13") >= 0, "港中深 机考6/13");
 
+console.log("== 招生专业: 目录解析 + 软科排名 ==");
+const flat = (s) => {
+  const out = [];
+  (s.groups || []).forEach((g) => (g.entries || []).forEach((e) => {
+    if (e.subs && e.subs.length) e.subs.forEach((x) => out.push(x));
+    else out.push({ n: e.n, st: "nodir" });
+  }));
+  return out;
+};
+const upc = byName("中国石油大学（华东）");
+const upcN = upc.groups.reduce((n, g) => n + g.entries.length, 0);
+ok(upcN === 26, "中石大 26 个招生专业(类), 实际 " + upcN);
+["地质学", "勘查技术与工程", "资源勘查工程", "海洋油气工程", "石油工程", "化工与制药类",
+ "环保设备工程", "测控技术与仪器", "智能科学与技术", "汉语言文学"].forEach((m) => {
+  ok(upc.groups.some((g) => g.entries.some((e) => e.n === m)), "中石大含 " + m);
+});
+const upcFlat = flat(upc);
+ok(upcFlat.length >= 60, "中石大类展开后具体专业 " + upcFlat.length + " 个");
+ok(upcFlat.filter((x) => x.st === "ranked").length >= 20, "中石大有软科排名的专业 " + upcFlat.filter((x) => x.st === "ranked").length + " 个");
+
+const sdu = byName("山东大学");
+ok(sdu.hasGroup && sdu.hasClass, "山大 有专业组 + 有「类」展开(3 层)");
+const sduCs = sdu.groups[1].entries.find((e) => e.cls === "计算机类");
+ok(!!sduCs && sduCs.kind === "lei" && sduCs.subs.length > 10, "山大 2 组「计算机类」展开为 " + (sduCs ? sduCs.subs.length : 0) + " 个具体专业");
+ok(sduCs.subs.some((x) => x.n === "计算机科学与技术" && x.st === "ranked" && x.rk > 0),
+  "计算机科学与技术 带软科排名: #" + (sduCs.subs.find((x) => x.n === "计算机科学与技术") || {}).rk);
+const haida = byName("中国海洋大学");
+ok(!haida.hasGroup && !haida.hasClass, "海大 无专业组、无「类」(1 层)");
+ok(flat(haida).length === 4, "海大 4 个具体专业");
+const others = DATA.reduce((n, s) => n + flat(s).filter((x) => x.st === "nodir").length, 0);
+ok(others <= 6, "无法解析到目录的条目仅 " + others + " 条(试验班等)");
+const rankedAll = DATA.reduce((n, s) => n + flat(s).filter((x) => x.st === "ranked").length, 0);
+ok(rankedAll > 250, "全部院校有软科排名的专业条目 " + rankedAll + " 条");
+
 console.log("== 渲染 ==");
 const html = els.results.innerHTML;
 ok((html.match(/<article class="school/g) || []).length === 19, "渲染 19 张院校卡片");
 ok(html.indexOf("校测时间") >= 0 && html.indexOf("exam-time") >= 0, "卡片含醒目的校测时间");
-ok((html.match(/rowspan=/g) || []).length > 20, "专业组单元格合并(rowspan " + (html.match(/rowspan=/g) || []).length + ")");
+ok((html.match(/rowspan=/g) || []).length > 20, "专业组/类单元格合并(rowspan " + (html.match(/rowspan=/g) || []).length + ")");
 ok(html.indexOf("加入兼报") >= 0, "含加入兼报按钮");
-ok(html.indexOf("待查证") < 0 || true, "缺数据处显示待查证");
+ok(html.indexOf("软科排名") >= 0 && html.indexOf('class="rk ranked"') >= 0, "专业表含软科排名徽章");
+ok(html.indexOf("<th>计划</th>") < 0 && html.indexOf("<th>校区</th>") < 0, "已去掉计划/校区列");
+ok(html.indexOf("<th>专业组</th>") >= 0 && html.indexOf("<th>招生专业（类）</th>") >= 0
+  && html.indexOf("<th>具体专业（目录）</th>") >= 0, "山大等含 组/类/具体专业 三列");
 ok(els.stats.innerHTML.indexOf("19") >= 0, "统计条含院校总数");
 ok(els.dateBox.innerHTML.indexOf("6月14日") >= 0, "日期筛选含 6月14日");
 

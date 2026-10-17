@@ -22,7 +22,10 @@
   function allMajors(s) {
     var out = [];
     (s.groups || []).forEach(function (g) {
-      (g.majors || []).forEach(function (m) { out.push(m); });
+      (g.entries || []).forEach(function (e) {
+        if (e.subs && e.subs.length) e.subs.forEach(function (x) { out.push({ n: x.n }); });
+        else out.push({ n: e.n });
+      });
     });
     return out;
   }
@@ -142,34 +145,104 @@
   }
 
   /* ---------- 卡片 ---------- */
+  function rkBadge(sub) {
+    if (!sub) return '<span class="rk nosc" title="无数据">—</span>';
+    var st = sub.st, txt = "—", cls = "rk", tip = "";
+    if (st === "ranked") {
+      txt = "#" + sub.rk; cls += " ranked";
+      tip = "软科2026 全国第" + sub.rk + "名（该专业全国上榜 " + sub.cnt + " 所）";
+    } else if (st === "special") {
+      txt = "特色"; cls += " special";
+      tip = "软科2026特色专业（开设<4所，不计算排名）";
+    } else if (st === "unranked") {
+      txt = "未上榜"; cls += " unranked";
+      tip = "软科2026该专业有排名，但该校未进前50%（或未开设），全国上榜 " + sub.cnt + " 所";
+    } else if (st === "notpub") {
+      txt = "未发布"; cls += " notpub";
+      tip = "该专业在《本科专业目录》内，但软科2026未发布其排名";
+    } else if (st === "nosc") {
+      txt = "—"; cls += " nosc";
+      tip = "该校未收录于软科2026专业排名";
+    }
+    return '<span class="' + cls + '" title="' + tip + '">' + txt + "</span>";
+  }
+
   function majorsTable(s) {
-    var rows = "";
-    (s.groups || []).forEach(function (g) {
-      var ms = g.majors || [];
-      if (!ms.length) return;
-      ms.forEach(function (m, i) {
-        rows += "<tr>";
-        if (i === 0) {
-          rows += '<td class="grp" rowspan="' + ms.length + '">' + esc(g.name)
-            + (g.req ? '<div class="mini">' + esc(g.req) + "</div>" : "") + "</td>";
+    var hasG = !!s.hasGroup, hasC = !!s.hasClass;
+    var groups = s.groups || [];
+    if (!groups.length) return "";
+    var head = "<tr>";
+    if (hasG) head += "<th>专业组</th>";
+    if (hasC) head += "<th>招生专业（类）</th><th>具体专业（目录）</th>";
+    else head += "<th>招生专业</th>";
+    head += "<th>软科排名</th></tr>";
+
+    var body = "";
+    groups.forEach(function (g) {
+      var rows = 0, cells = "";
+      (g.entries || []).forEach(function (e) {
+        var subs = e.subs || [];
+        if (hasC) {
+          if (e.kind === "lei" && subs.length) {
+            rows += subs.length;
+            subs.forEach(function (sub, i) {
+              cells += "<tr>";
+              if (i === 0) {
+                cells += '<td class="cls" rowspan="' + subs.length + '">' + esc(e.n)
+                  + (e.req ? '<div class="mini">' + esc(e.req) + "</div>" : "") + "</td>";
+              }
+              cells += "<td>" + (HAS_SEL && SEL[sub.n] ? '<span class="hit">' + esc(sub.n) + "</span>"
+                : esc(sub.n)) + "</td><td>" + rkBadge(sub) + "</td></tr>";
+            });
+          } else {
+            rows += 1;
+            cells += '<tr><td colspan="2">' + esc(e.n)
+              + (e.req ? ' <span class="mini">' + esc(e.req) + "</span>" : "") + "</td><td>"
+              + (subs.length ? rkBadge(subs[0]) : rkBadge(null)) + "</td></tr>";
+          }
+        } else {
+          var list = subs.length ? subs : [{ n: e.n, st: "nodir" }];
+          rows += list.length;
+          list.forEach(function (sub) {
+            cells += "<tr><td>" + (HAS_SEL && SEL[sub.n] ? '<span class="hit">' + esc(sub.n) + "</span>"
+              : esc(sub.n))
+              + (sub.st === "nodir" && e.req ? ' <span class="mini">' + esc(e.req) + "</span>" : "")
+              + "</td><td>" + rkBadge(sub.st === "nodir" ? null : sub) + "</td></tr>";
+          });
         }
-        var b = baseName(m.n), hit = HAS_SEL && SEL[b];
-        rows += "<td>" + (hit ? '<span class="hit">' + esc(m.n) + "</span>" : esc(m.n)) + "</td>"
-          + '<td class="plan">' + (m.plan == null ? '<span class="mini">—</span>' : esc(m.plan)) + "</td>"
-          + "<td>" + (m.req ? esc(m.req) : '<span class="mini">—</span>') + "</td>"
-          + "<td>" + (m.campus ? esc(m.campus) : '<span class="mini">—</span>') + "</td>";
-        rows += "</tr>";
       });
+      if (hasG) {
+        // 组单元格(行合并)
+        var first = cells.indexOf("<tr>");
+        if (first >= 0) {
+          cells = cells.slice(0, first) + '<tr><td class="grp" rowspan="' + rows + '">' + esc(g.name)
+            + (g.req ? '<div class="mini">' + esc(g.req) + "</div>" : "") + "</td>"
+            + cells.slice(first + 4);
+        }
+      }
+      body += cells;
     });
-    if (!rows) return "";
-    return '<table class="majors"><thead><tr><th>专业组</th><th>招生专业（类）</th><th>计划</th>'
-      + "<th>选考科目</th><th>校区</th></tr></thead><tbody>" + rows + "</tbody></table>";
+    return '<table class="majors"><thead>' + head + "</thead><tbody>" + body + "</tbody></table>"
+      + '<div class="mini" style="margin-top:3px;">'
+      + (hasC ? "「类」按《本科专业目录(2026)》展开为具体专业；" : "")
+      + "软科排名为该专业该校在全国的名次（前50%上榜）。实际招生包含专业以院校简章为准。</div>";
   }
 
   function card(s) {
     var evs = (s.events || []).map(function (e) {
       return '<span class="ev">' + esc(e.md) + "·" + esc(e.label) + (e.slot ? "（" + esc(e.slot) + "）" : "") + "</span>";
     }).join("") || '<span class="mini">待查证（见简章说明）</span>';
+    var nEntry = 0, nSub = 0;
+    (s.groups || []).forEach(function (g) {
+      (g.entries || []).forEach(function (e) {
+        nEntry++;
+        nSub += (e.subs && e.subs.length) ? e.subs.length : 1;
+      });
+    });
+    var mjHtml = nEntry
+      ? '<details class="mjd"' + (nSub > 40 ? "" : " open") + '><summary>招生专业（'
+        + nEntry + " 个招生条目 → " + nSub + " 个具体专业）</summary>" + majorsTable(s) + "</details>"
+      : "";
     var tl = (s.schedule || []).map(function (x) {
       return "<span><b>" + esc(x[0]) + "</b> " + esc(x[1]) + "</span>";
     }).join("");
@@ -196,7 +269,7 @@
       + "</div>"
       + (s.conditions ? '<div class="cond"><b>报考条件要点：</b>' + esc(s.conditions) + "</div>" : "")
       + (s.planNote ? '<div class="cond"><b>计划说明：</b>' + esc(s.planNote) + "</div>" : "")
-      + majorsTable(s)
+      + mjHtml
       + (tl ? '<div class="tl">' + tl + "</div>" : "")
       + (s.note ? '<div class="micro mini" style="margin-top:6px;">' + esc(s.note) + "</div>" : "")
       + '<div class="links">官方简章：<a href="' + esc(s.url) + '" target="_blank" rel="noopener">'
