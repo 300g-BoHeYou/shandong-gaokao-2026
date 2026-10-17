@@ -130,6 +130,24 @@ const seu = qj.DATA.find((s) => s.name === "东南大学");
 ok(seu.majors.filter((m) => m.cat).length >= 2, "东南大学已补专业类: " + seu.majors.filter((m) => m.cat).map((m) => m.cat).join("/"));
 ok(seu.ratio.indexOf("4倍") >= 0, "东南大学入围比例 4倍(官网)");
 
+console.log("== 方向备注(防跨组传染) ==");
+let noteGroups = 0, badNote = [];
+QJ.schools.forEach((s) => s.majors.forEach((m) => {
+  if (!m.note) return;
+  noteGroups++;
+  const mm = String(m.cat).match(/[（(]([^（()）]+)[)）]\s*$/);
+  if (!mm || mm[1].trim() !== m.note) badNote.push(s.name + "|" + m.cat + "|备注=" + m.note);
+}));
+ok(badNote.length === 0, "备注只出现在带括号的专业类上且与括号内容一致" + (badNote.length ? ": " + badNote.slice(0, 3).join("; ") : ""));
+ok(noteGroups > 5 && noteGroups <= 40, "有方向备注的专业类数量合理: " + noteGroups + " 个");
+const guwenBad = [];
+QJ.schools.forEach((s) => s.majors.forEach((m) => {
+  if (m.note && m.note.indexOf("古文字") >= 0 && String(m.cat).indexOf("古文字") < 0) {
+    guwenBad.push(s.name + "|" + m.cat);
+  }
+}));
+ok(guwenBad.length === 0, "'古文字学'备注不会出现在无关专业类上" + (guwenBad.length ? ": " + guwenBad.slice(0, 3).join("; ") : ""));
+
 console.log("== 第7条: 清华按文理试验班标注 ==");
 const tsinghua = qj.DATA.find((s) => s.name === "清华大学");
 const thMath = tsinghua.majors.find((m) => m.cat === "数学与应用数学").items[0];

@@ -2,6 +2,7 @@
 """把 39 校官方简章抽取结果合并进 强基查证清单.xlsx (官方数据覆盖人工填写)。"""
 import json
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -11,7 +12,8 @@ from openpyxl.utils import get_column_letter
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "qj_cache"
-XLSX = ROOT / "强基查证清单.xlsx"
+XLSX = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "强基查证清单.xlsx"
+OUT_SHEET = Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / "强基查证清单_官方核对.xlsx"
 
 FINAL = json.loads((CACHE / "final_fields.json").read_text(encoding="utf-8")) if (CACHE / "final_fields.json").exists() else {}
 CORPUS = json.loads((CACHE / "corpus.json").read_text(encoding="utf-8"))
@@ -102,8 +104,14 @@ def win_of(name, t):
                     parts.append(m.group(1))
                     break
     if not parts:
-        f = FINAL.get(name, {})
-        ds = [d for d in f.get("dates", []) if d.startswith(("6月", "7月"))]
+        # 兜底: 扫描简章正文中 6/7 月且上下文含考核类词的日期
+        ds = []
+        for m in re.finditer(r"([67])月(\d{1,2})日", t):
+            ctx = t[max(0, m.start() - 30):m.start() + 12]
+            if any(k in ctx for k in ["考核", "测试", "初试", "复试", "笔试", "面试", "入围", "公布", "打印", "确认"]):
+                d = f"{m.group(1)}月{int(m.group(2))}日"
+                if d not in ds:
+                    ds.append(d)
         if ds:
             parts.append("、".join(ds[:3]))
     return "；".join(parts)
@@ -161,7 +169,7 @@ def subj_of(t):
 
 
 def main():
-    out_path = ROOT / "强基查证清单_官方核对.xlsx"
+    out_path = OUT_SHEET
     wb = load_workbook(XLSX)
     ws1, ws2 = wb["院校信息"], wb["专业信息"]
     hdr1 = [c.value for c in ws1[1]]
@@ -170,7 +178,7 @@ def main():
     changes = []
     for r in range(2, ws1.max_row + 1):
         name = ws1.cell(row=r, column=ix["院校名称"]).value
-        if not name or name not in FINAL:
+        if not name:
             continue
         t = text_of(name)
         subs = subj_of(t)

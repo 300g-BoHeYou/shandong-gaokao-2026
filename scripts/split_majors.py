@@ -249,34 +249,29 @@ def main():
     wb = load_workbook(SRC)
     ws1, ws2 = wb["院校信息"], wb["专业信息"]
     hdr = [c.value for c in ws2[1]]
-    ixc = {h: i + 1 for i, h in enumerate(hdr)}
     already = "包含专业" in hdr          # 已是拆分后的表(再次运行)
     inc_col = "包含专业" if already else "包含专业（顿号分隔）"
     note_col = "备注" if "备注" in hdr else "备注（括号内方向）"
+
+    # 合并单元格: 用"展开后"的值(不再向下填充, 避免备注/考核科目跨组传染)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from xlsx_util import read_rows
+    src_rows = read_rows(SRC, "专业信息")
+
+    def note_from_lei(lei):
+        """备注 = 专业类名称括号内的方向说明(汉语言文学（古文字学方向）-> 古文字学方向)"""
+        m = re.search(r"[（(]([^（()）]+)[)）]\s*$", lei or "")
+        return m.group(1).strip() if m else ""
+
     rows = []
-    last_lei, last_subj, last_note = "", "", ""
-    for r in range(2, ws2.max_row + 1):
-        vals = {h: ws2.cell(row=r, column=i).value for h, i in ixc.items()}
-        school = str(vals.get("院校名称") or "").strip()
+    for rec in src_rows:
+        school = str(rec.get("院校名称") or "").strip()
         if not school:
             continue
-        # 合并单元格: 非首行读到的类名/科目/备注为空, 向下填充
-        lei = str(vals.get("强基专业类名称") or "").strip()
-        subj = str(vals.get("考查科目") or "").strip()
-        note = str(vals.get(note_col) or "").strip()
-        if lei:
-            last_lei = lei
-        else:
-            lei = last_lei
-        if subj:
-            last_subj = subj
-        else:
-            subj = last_subj
-        if note:
-            last_note = note
-        else:
-            note = last_note
-        inc = str(vals.get(inc_col) or "").strip()
+        lei = str(rec.get("强基专业类名称") or "").strip()
+        subj = str(rec.get("考查科目") or "").strip()
+        note = note_from_lei(lei) or str(rec.get(note_col) or "").strip()
+        inc = str(rec.get(inc_col) or "").strip()
         parts = [inc] if already else ([p for p in inc.split("、") if p.strip()] or [""])
         for p in parts:
             rows.append(dict(school=school, lei=lei, raw=str(p).strip(), subj=subj, note=note))
