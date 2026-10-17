@@ -82,7 +82,7 @@ ok(out.indexOf("清北模式") < 0 && out.indexOf("复交南模式") < 0, "不�
 ok(out.indexOf("待查证") >= 0, "未填字段显示'待查证'");
 ok(out.indexOf("无笔试") >= 0, "仅面试院校考查科目显示'无笔试'");
 ok(out.indexOf("class=\"rk") >= 0, "包含专业带软科排名标签");
-ok(out.indexOf("class=\"dirc\"") >= 0, "方向备注以醒目徽章显示");
+ok(out.indexOf("class=\"dirc\"") < 0, "不再显示方向标签徽章");
 ok(out.indexOf("简章原名：") < 0, "不再显示冗长的'简章原名'提示(仅保留括号内容)");
 ok(out.indexOf("refscore") >= 0 && out.indexOf("refrank") >= 0, "参考分显示为 分数（排名）");
 ok(out.indexOf("score-box") < 0, "不再展示院校级分数块");
@@ -122,7 +122,7 @@ ok(chemRow.n === "化学", "'化学'(具体专业) 逐条列出");
 const chemLei = qj.DATA.find((s) => s.name === "厦门大学").majors.find((m) => m.cat === "化学类");
 ok(chemLei.items.length > 1, "'化学类'已拆分多个专业: " + chemLei.items.map((i) => i.n).join("/"));
 const gzw = qj.DATA.find((s) => s.name === "中国人民大学").majors.find((m) => m.cat.indexOf("古文字学") >= 0);
-ok(gzw.items[0].n === "汉语言文学" && gzw.note.indexOf("古文字学") >= 0, "带括号方向: 去括号后作为专业+备注仅保留括号内容");
+ok(gzw.items[0].n === "汉语言文学" && !gzw.note, "带括号方向: 去括号后作为专业名, 不再单独标注方向");
 const jlu = qj.DATA.find((s) => s.name === "吉林大学");
 ok(jlu.majors.length === 4, "吉林大学 4 个专业(官方简章), 实际 " + jlu.majors.length);
 ok(jlu.majors.map((m) => m.cat).join("、") === "数学与应用数学、物理学、化学、古文字学", "吉大专业与官方一致");
@@ -130,23 +130,12 @@ const seu = qj.DATA.find((s) => s.name === "东南大学");
 ok(seu.majors.filter((m) => m.cat).length >= 2, "东南大学已补专业类: " + seu.majors.filter((m) => m.cat).map((m) => m.cat).join("/"));
 ok(seu.ratio.indexOf("4倍") >= 0, "东南大学入围比例 4倍(官网)");
 
-console.log("== 方向备注(防跨组传染) ==");
-let noteGroups = 0, badNote = [];
-QJ.schools.forEach((s) => s.majors.forEach((m) => {
-  if (!m.note) return;
-  noteGroups++;
-  const mm = String(m.cat).match(/[（(]([^（()）]+)[)）]\s*$/);
-  if (!mm || mm[1].trim() !== m.note) badNote.push(s.name + "|" + m.cat + "|备注=" + m.note);
-}));
-ok(badNote.length === 0, "备注只出现在带括号的专业类上且与括号内容一致" + (badNote.length ? ": " + badNote.slice(0, 3).join("; ") : ""));
-ok(noteGroups > 5 && noteGroups <= 40, "有方向备注的专业类数量合理: " + noteGroups + " 个");
-const guwenBad = [];
-QJ.schools.forEach((s) => s.majors.forEach((m) => {
-  if (m.note && m.note.indexOf("古文字") >= 0 && String(m.cat).indexOf("古文字") < 0) {
-    guwenBad.push(s.name + "|" + m.cat);
-  }
-}));
-ok(guwenBad.length === 0, "'古文字学'备注不会出现在无关专业类上" + (guwenBad.length ? ": " + guwenBad.slice(0, 3).join("; ") : ""));
+console.log("== 方向标签已移除 ==");
+let groupWithNote = 0;
+QJ.schools.forEach((s) => s.majors.forEach((m) => { if (m.note) groupWithNote++; }));
+ok(groupWithNote === 0, "数据中不再包含专业类级的方向标签, 实际 " + groupWithNote + " 个");
+const gzwCat = QJ.schools.find((s) => s.name === "中国人民大学").majors.filter((m) => m.cat.indexOf("古文字") >= 0);
+ok(gzwCat.length > 0, "专业类名称仍保留官方原名(含括号方向), 如: " + (gzwCat[0] ? gzwCat[0].cat : "-"));
 
 console.log("== 第7条: 清华按文理试验班标注 ==");
 const tsinghua = qj.DATA.find((s) => s.name === "清华大学");

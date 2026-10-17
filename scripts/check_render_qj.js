@@ -40,7 +40,7 @@ ok((html.match(/rowspan=/g) || []).length > 100, "专业类/考查科目单元�
 ok(html.indexOf("已修正名称") < 0 && html.indexOf("待核") < 0, "不含我的修改痕迹");
 ok(html.indexOf("官方简章（阳光高考）") >= 0, "含官方简章链接");
 const dircCount = (html.match(/class="dirc"/g) || []).length;
-ok(dircCount === 22, "方向徽章只出现在 22 个带括号的专业类上, 实际 " + dircCount + " 个");
+ok(dircCount === 0, "不再显示方向标签徽章, 实际 " + dircCount + " 个");
 
 console.log("== 三级目录选择器(强基) ==");
 ok(!!els.pkTree && els.pkTree.innerHTML.length > 500, "目录树已渲染(" + (els.pkTree ? els.pkTree.innerHTML.length : 0) + " 字符)");

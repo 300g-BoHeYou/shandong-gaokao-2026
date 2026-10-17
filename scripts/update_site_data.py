@@ -93,8 +93,7 @@ for _, r in s1.iterrows():
     for _, mr in rows.iterrows():
         cat = clean(mr.get("强基专业类名称", ""))
         if cat not in majors:
-            majors[cat] = {"cat": cat, "subj": clean(mr.get("考查科目", "")),
-                           "note": clean(mr.get("备注（括号内方向）", mr.get("备注", ""))), "items": []}
+            majors[cat] = {"cat": cat, "subj": clean(mr.get("考查科目", "")), "items": []}
             order.append(cat)
         if SPLIT_MODE:
             majors[cat]["items"].append(item_of(mr))

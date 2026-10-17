@@ -130,8 +130,7 @@
         var it2 = grp.items[j];
         html += "<tr" + (first ? ' class="grp-start"' : "") + ">";
         if (first) {
-          html += '<td rowspan="' + grp.items.length + '">' + esc(grp.g.cat)
-            + (grp.g.note ? '<span class="dirc">' + esc(grp.g.note) + "</span>" : "") + "</td>";
+          html += '<td rowspan="' + grp.items.length + '">' + esc(grp.g.cat) + "</td>";
         }
         html += "<td>" + (it2.n ? majorCell(it2) : todo()) + "</td>";
         if (first) {

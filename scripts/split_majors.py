@@ -251,17 +251,11 @@ def main():
     hdr = [c.value for c in ws2[1]]
     already = "包含专业" in hdr          # 已是拆分后的表(再次运行)
     inc_col = "包含专业" if already else "包含专业（顿号分隔）"
-    note_col = "备注" if "备注" in hdr else "备注（括号内方向）"
 
-    # 合并单元格: 用"展开后"的值(不再向下填充, 避免备注/考核科目跨组传染)
+    # 合并单元格: 用"展开后"的值(不再向下填充, 避免考核科目跨组传染)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from xlsx_util import read_rows
     src_rows = read_rows(SRC, "专业信息")
-
-    def note_from_lei(lei):
-        """备注 = 专业类名称括号内的方向说明(汉语言文学（古文字学方向）-> 古文字学方向)"""
-        m = re.search(r"[（(]([^（()）]+)[)）]\s*$", lei or "")
-        return m.group(1).strip() if m else ""
 
     rows = []
     for rec in src_rows:
@@ -270,11 +264,10 @@ def main():
             continue
         lei = str(rec.get("强基专业类名称") or "").strip()
         subj = str(rec.get("考查科目") or "").strip()
-        note = note_from_lei(lei) or str(rec.get(note_col) or "").strip()
         inc = str(rec.get(inc_col) or "").strip()
         parts = [inc] if already else ([p for p in inc.split("、") if p.strip()] or [""])
         for p in parts:
-            rows.append(dict(school=school, lei=lei, raw=str(p).strip(), subj=subj, note=note))
+            rows.append(dict(school=school, lei=lei, raw=str(p).strip(), subj=subj))
 
     report, out = [], []
     for i, r in enumerate(rows, 1):
@@ -301,7 +294,7 @@ def main():
                         软科状态={"ranked": "上榜", "unranked": "未上榜", "special": "特色专业",
                                   "notpub": "未发布", "nosc": "该校未收录软科"}.get(ri.get("st", ""), ""),
                         对应普通批最低分=sc, 对应普通批最低位次=rk_, 参考志愿类=refcat, 参考口径=kind,
-                        考查科目=r["subj"], 备注=r["note"], 校验=warn2))
+                        考查科目=r["subj"], 校验=warn2))
         if warn2:
             report.append((r["school"], r["lei"], nm, warn2))
 
@@ -352,7 +345,7 @@ def main():
         ws.freeze_panes = "A2"
 
         # 同一(院校, 专业类)的类级列纵向合并单元格
-        merge_cols = [cols.index(x) + 1 for x in ("强基专业类名称", "考查科目", "备注") if x in cols]
+        merge_cols = [cols.index(x) + 1 for x in ("强基专业类名称", "考查科目") if x in cols]
         r = 2
         while r <= ws.max_row:
             sch = ws.cell(row=r, column=cols.index("院校名称") + 1).value
