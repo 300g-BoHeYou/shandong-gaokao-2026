@@ -189,7 +189,8 @@ const qjHtml = fs.readFileSync(path.join(root, "qiangji.html"), "utf8");
 ok(qjHtml.indexOf('href="index.html"') >= 0 && qjHtml.indexOf('href="qiangji.html"') >= 0, "强基页含切换入口");
 const idxHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
 ok(idxHtml.indexOf('href="qiangji.html"') >= 0, "一批次页含强基入口");
-ok(idxHtml.indexOf("综合评价（敬请期待）") >= 0 && qjHtml.indexOf("综合评价（敬请期待）") >= 0, "两页均含综招占位");
+ok(idxHtml.indexOf('href="zongzhao.html"') >= 0 && qjHtml.indexOf('href="zongzhao.html"') >= 0,
+  "两页均含综招入口链接");
 
 console.log("\n结果: " + pass + " 通过, " + fail + " 失败");
 process.exit(fail ? 1 : 0);
