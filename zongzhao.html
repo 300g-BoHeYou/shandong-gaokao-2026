@@ -12,7 +12,7 @@
   header{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;padding:14px 18px;}
   header h1{margin:0;font-size:20px;}
   header .sub{opacity:.88;font-size:12px;margin-top:2px;}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 14px 60px;}
+  main{max-width:1180px;margin:0 auto;padding:12px 14px 40px;}
   .tabbar{max-width:1180px;margin:10px auto 0;padding:0 14px;display:flex;gap:8px;flex-wrap:wrap;}
   .tab{display:inline-block;padding:6px 16px;border-radius:8px 8px 0 0;background:#e2e8f0;color:#334155;
     text-decoration:none;font-size:14px;font-weight:600;border:1px solid #cbd5e1;border-bottom:none;}
@@ -110,18 +110,17 @@
     padding:4px 8px;font-size:12px;color:#5b21b6;position:relative;margin-top:2px;}
   .pk-detail-x{position:absolute;right:4px;top:2px;border:none;background:none;cursor:pointer;color:#7c3aed;}
   .pk-hint{font-size:12px;color:#94a3b8;}
-  .notice{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#78350f;margin-top:14px;}
-  .notice b{color:#b45309;}
+  .notice{background:#fff7ed;border:2px solid #f97316;border-radius:10px;color:#7c2d12;
+    padding:10px 14px;margin:10px 0;font-size:13px;line-height:1.7;}
+  .notice b{color:#9a3412;}
   .empty{color:#94a3b8;text-align:center;padding:24px;}
   footer{text-align:center;color:#94a3b8;font-size:12px;padding:18px 0 30px;}
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap">
-    <h1>2026 山东本科综合评价招生（综招）</h1>
-    <div class="sub">19 所高校 · 校测时间对照与兼报分析 · 依据各校 2026 年官方简章（山东省教育厅 鲁教学函〔2026〕13 号试点）</div>
-  </div>
+  <h1>2026 山东本科综合评价招生（综招） <span style="font-weight:400;font-size:14px;">供 2027 届考生参考</span></h1>
+  <div class="sub">19 所高校 · 校测时间对照与兼报分析 · 依据各校 2026 年官方简章（山东省教育厅 鲁教学函〔2026〕13 号试点）</div>
 </header>
 <div class="tabbar">
   <a class="tab" href="index.html">一批次（常规批）</a>
@@ -129,7 +128,7 @@
   <a class="tab active" href="zongzhao.html">综合评价招生</a>
 </div>
 
-<div class="wrap">
+<main>
   <div class="notice">
     <b>先看校测时间</b>：综招可同时报考多所，但①报名系统内<b>校测时间冲突时只能确认 1 所</b>；②提前批只能填报 1 所。
     因此实际能"兼报并参加测试"的数量，取决于各校笔试/面试是否同日。勾选院校加入下方「兼报分析」即可看到冲突。
@@ -171,7 +170,7 @@
   </div>
 
   <div id="results"></div>
-</div>
+</main>
 
 <footer>数据整理自各校本科招生网 / 阳光高考 / 山东省教育招生考试院，2026 年 10 月更新 · 以院校当年公布为准</footer>
 
